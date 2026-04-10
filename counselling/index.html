@@ -544,6 +544,13 @@ html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-seri
     <span>🎤</span><span id="status-text">Listening...</span>
   </div>
 
+  <!-- Safari notice -->
+  <div class="safari-notice" id="safari-notice">
+    <span>🍎</span>
+    <span>You're on Safari — tap 🔊 under each message to hear Aaroha speak. For voice input, please type your message.</span>
+    <button onclick="document.getElementById('safari-notice').classList.remove('show')" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#92400e;font-size:16px">✕</button>
+  </div>
+
   <!-- Crisis banner -->
   <div class="crisis-banner" id="crisis-banner">
     <div class="crisis-title">💙 If you are in crisis or having thoughts of harming yourself</div>
@@ -589,7 +596,7 @@ html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-seri
       <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Speak">🎤</button>
       <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
     </div>
-    <div class="input-hint" id="input-hint">🎤 Tap to speak · ⌨️ Or type · Aaroha is listening</div>
+    <div class="input-hint" id="input-hint" id="input-hint">🎤 Tap mic to speak (Chrome) · ⌨️ Type your message · Aaroha is listening</div>
   </div>
 
 </div>
@@ -659,6 +666,7 @@ function showChat() {
   document.getElementById('screen-welcome').classList.remove('active');
   document.getElementById('screen-setup').classList.remove('active');
   document.getElementById('screen-chat').classList.add('active');
+  showSafariNoticeIfNeeded();
 }
 
 // ══════════════════════════════════════════════════════
@@ -900,17 +908,27 @@ function checkForCrisis(text) {
 }
 
 // ══════════════════════════════════════════════════════
-//  TTS — Google Translate (free, all Indian languages)
+//  TTS ENGINE
+//  Priority: Server TTS proxy (all langs) → Browser TTS fallback
 // ══════════════════════════════════════════════════════
-function chunkText(text, maxLen = 180) {
-  const sentences = text.match(/[^।|.!?]+[।|.!?]*/g) || [text];
+
+// Detect platform
+const IS_IOS    = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const HAS_STT   = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+function chunkText(text, maxLen = 160) {
+  // Split on sentence endings, keeping the punctuation
+  const parts = text.match(/[^.!?।
+]+[.!?।
+]*/g) || [text];
   const chunks = []; let curr = '';
-  for (const s of sentences) {
+  for (const s of parts) {
     if ((curr + s).length > maxLen && curr) { chunks.push(curr.trim()); curr = s; }
     else curr += s;
   }
   if (curr.trim()) chunks.push(curr.trim());
-  return chunks.length ? chunks : [text.slice(0, maxLen)];
+  return chunks.length ? chunks : [text.substring(0, maxLen)];
 }
 
 async function speak(text) {
@@ -922,113 +940,192 @@ async function speak(text) {
   const rate = parseFloat(document.getElementById('rate-slider').value);
   for (const chunk of chunks) {
     if (!isSpeaking) break;
-    await playChunk(chunk, vol, rate);
+    await speakChunk(chunk, vol, rate);
   }
   isSpeaking = false;
   document.getElementById('speaking-badge').classList.remove('active');
 }
 
-function playChunk(text, vol, rate) {
+// Single chunk — tries server TTS first, falls back to browser TTS
+function speakChunk(text, vol, rate) {
   return new Promise(resolve => {
-    window._ttsResolve = resolve; // allow stopSpeaking to cancel
+    if (!isSpeaking) { resolve(); return; }
+
+    // Store resolver so stopSpeaking() can cancel mid-chunk
+    window._ttsResolve = resolve;
+
+    const finish = () => {
+      window._ttsResolve = null;
+      resolve();
+    };
+
     const tl = profile.lang?.tl || 'en';
-    const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}`;
-    const audio = new Audio(url);
-    audio.volume = vol; audio.playbackRate = rate;
+
+    // iOS Safari: Audio from fetch requires user-gesture context per chunk
+    // Use browser TTS directly on iOS — it supports Indian langs on newer devices
+    if (IS_IOS) {
+      doBrowserTTS(text, vol, rate, finish);
+      return;
+    }
+
+    // Desktop/Android: use server proxy
+    const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}&t=${Date.now()}`;
+    const audio = new Audio();
+    audio.volume = vol;
+    audio.playbackRate = Math.min(rate, 1.5);
     currentAudio = audio;
-    let settled = false;
-    const done = () => {
-      if (!settled) {
-        settled = true;
-        window._ttsResolve = null;
-        resolve();
-      }
+
+    // Timeout — if audio doesn't start in 4s, fall back to browser TTS
+    const timeout = setTimeout(() => {
+      if (!isSpeaking) { finish(); return; }
+      audio.pause();
+      doBrowserTTS(text, vol, rate, finish);
+    }, 4000);
+
+    audio.oncanplaythrough = () => {
+      clearTimeout(timeout);
+      if (!isSpeaking) { finish(); return; }
+      audio.play().catch(() => {
+        clearTimeout(timeout);
+        doBrowserTTS(text, vol, rate, finish);
+      });
     };
-    const fallback = () => {
-      if (!settled) {
-        settled = true;
-        window._ttsResolve = null;
-        browserTTS(text, vol, rate).then(resolve);
-      }
+
+    audio.onended  = () => { clearTimeout(timeout); finish(); };
+
+    // On error — use browser TTS but DON'T do it twice
+    let errorHandled = false;
+    audio.onerror  = () => {
+      if (errorHandled) return;
+      errorHandled = true;
+      clearTimeout(timeout);
+      doBrowserTTS(text, vol, rate, finish);
     };
-    audio.onended = done;
-    audio.onerror = fallback;
-    audio.play().catch(fallback);
+
+    audio.src = url;
+    audio.load();
   });
 }
 
-function browserTTS(text, vol, rate) {
-  return new Promise(resolve => {
-    if (!window.speechSynthesis) { resolve(); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = profile.lang?.code || 'en-IN';
-    u.volume = vol; u.rate = rate;
-    const voices = window.speechSynthesis.getVoices();
-    const match = voices.find(v => v.lang.startsWith(profile.lang?.tl || 'en'));
-    if (match) u.voice = match;
-    u.onend = u.onerror = () => resolve();
-    window.speechSynthesis.speak(u);
-  });
+// Browser built-in TTS (works on all platforms including iOS Safari)
+function doBrowserTTS(text, vol, rate, done) {
+  if (!isSpeaking) { done(); return; }
+  if (!window.speechSynthesis) { done(); return; }
+
+  window.speechSynthesis.cancel(); // clear queue first
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang   = profile.lang?.code || 'en-IN';
+  u.volume = vol;
+  u.rate   = rate;
+
+  // Try to find best matching voice
+  const voices = window.speechSynthesis.getVoices();
+  const tl = profile.lang?.tl || 'en';
+  // Exact match first, then partial
+  const voice = voices.find(v => v.lang === profile.lang?.code)
+             || voices.find(v => v.lang.startsWith(tl))
+             || voices.find(v => v.lang.startsWith('en'));
+  if (voice) u.voice = voice;
+
+  u.onend   = () => done();
+  u.onerror = () => done();
+
+  window.speechSynthesis.speak(u);
 }
 
 function stopSpeaking() {
   isSpeaking = false;
+  // Stop server TTS audio
   if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.src = '';  // force release
+    try { currentAudio.pause(); currentAudio.src = ''; } catch(e){}
     currentAudio = null;
   }
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  // Resolve any pending chunk promise immediately
-  if (window._ttsResolve) { window._ttsResolve(); window._ttsResolve = null; }
+  // Stop browser TTS
+  if (window.speechSynthesis) {
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
+  // Resolve any pending promise to exit the chunk loop
+  if (window._ttsResolve) {
+    window._ttsResolve();
+    window._ttsResolve = null;
+  }
   document.getElementById('speaking-badge').classList.remove('active');
 }
 
 // ══════════════════════════════════════════════════════
-//  STT — Web Speech API
+//  STT — Speech Recognition
+//  Chrome/Android: Web Speech API (full support)
+//  Safari/iOS: No SpeechRecognition API — type input only
 // ══════════════════════════════════════════════════════
 function toggleMic() {
+  if (!HAS_STT) {
+    // Safari/iOS — focus the text input instead
+    const inp = document.getElementById('user-input');
+    inp.focus();
+    showStatus('Voice not supported on Safari — please type your message');
+    setTimeout(hideStatus, 3000);
+    return;
+  }
   if (isListening) { stopListening(); return; }
   startListening();
 }
 
 function startListening() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { alert('Please use Chrome for voice input.'); return; }
+  if (!HAS_STT) return;
   stopSpeaking();
-  recognition = new SR();
-  recognition.lang = profile.lang?.stt || 'en-IN';
-  recognition.continuous = false; recognition.interimResults = true;
-  recognition.onstart = () => {
-    isListening = true;
-    document.getElementById('mic-btn').classList.add('listening');
-    document.getElementById('mic-btn').textContent = '🔴';
-    showStatus('Listening in ' + (profile.lang?.label || 'English') + '...');
-  };
-  recognition.onresult = (e) => {
-    const t = Array.from(e.results).map(r => r[0].transcript).join('');
-    document.getElementById('user-input').value = t;
-    autoResize(document.getElementById('user-input'));
-  };
-  recognition.onend = () => {
+
+  try {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = profile.lang?.stt || 'en-IN';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      isListening = true;
+      document.getElementById('mic-btn').classList.add('listening');
+      document.getElementById('mic-btn').textContent = '🔴';
+      showStatus('Listening in ' + (profile.lang?.label || 'English') + '...');
+    };
+
+    recognition.onresult = (e) => {
+      const t = Array.from(e.results).map(r => r[0].transcript).join('');
+      document.getElementById('user-input').value = t;
+      autoResize(document.getElementById('user-input'));
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      document.getElementById('mic-btn').classList.remove('listening');
+      document.getElementById('mic-btn').textContent = '🎤';
+      hideStatus();
+      const t = document.getElementById('user-input').value.trim();
+      if (t) sendMessage();
+    };
+
+    recognition.onerror = (e) => {
+      isListening = false;
+      document.getElementById('mic-btn').classList.remove('listening');
+      document.getElementById('mic-btn').textContent = '🎤';
+      hideStatus();
+      if (e.error === 'not-allowed') {
+        showStatus('Microphone permission denied. Please allow mic access.');
+        setTimeout(hideStatus, 3000);
+      }
+    };
+
+    recognition.start();
+  } catch(err) {
     isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('mic-btn').textContent = '🎤';
-    hideStatus();
-    const t = document.getElementById('user-input').value.trim();
-    if (t) sendMessage();
-  };
-  recognition.onerror = (e) => {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('mic-btn').textContent = '🎤';
-    hideStatus();
-  };
-  recognition.start();
+    showStatus('Could not start microphone. Please type instead.');
+    setTimeout(hideStatus, 3000);
+  }
 }
 
 function stopListening() {
-  if (recognition) { recognition.stop(); recognition = null; }
+  try { if (recognition) { recognition.stop(); recognition = null; } } catch(e){}
   isListening = false;
   document.getElementById('mic-btn').classList.remove('listening');
   document.getElementById('mic-btn').textContent = '🎤';
@@ -1038,21 +1135,105 @@ function stopListening() {
 // ══════════════════════════════════════════════════════
 //  UI HELPERS
 // ══════════════════════════════════════════════════════
+let msgCounter = 0;
 function addMessage(role, text) {
   const c = document.getElementById('chat-messages');
   const time = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   const persona = PERSONAS[profile.persona] || PERSONAS.priya;
   const av = role === 'companion' ? persona.avatar : '🙂';
+  const msgId = 'msg-' + (++msgCounter);
   const d = document.createElement('div');
   d.className = 'msg ' + role;
+  d.id = msgId;
+
+  // On Safari/iOS, show "Tap to hear" button for companion messages
+  const safariHearBtn = (role === 'companion' && (IS_IOS || IS_SAFARI))
+    ? `<button class="tap-hear-btn" id="btn-${msgId}" onclick="tapToHear('${msgId}', this)">🔊 Tap to hear</button>`
+    : '';
+
   d.innerHTML = `
     <div class="msg-av">${av}</div>
     <div class="msg-body">
       <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>
+      ${safariHearBtn}
       <div class="msg-time">${time}</div>
     </div>`;
   c.appendChild(d);
   c.scrollTop = c.scrollHeight;
+}
+
+// Called when user taps the "Tap to hear" button — satisfies Safari autoplay policy
+function tapToHear(msgId, btn) {
+  const msgEl = document.getElementById(msgId);
+  if (!msgEl) return;
+  const bubble = msgEl.querySelector('.msg-bubble');
+  if (!bubble) return;
+  const text = bubble.innerText || bubble.textContent;
+
+  // Update button state
+  btn.textContent = '⏸ Playing...';
+  btn.classList.add('playing');
+
+  // Stop any current audio first
+  stopSpeaking();
+
+  // Now speak — user gesture context is active so autoplay works
+  speakSafari(text, btn);
+}
+
+async function speakSafari(text, btn) {
+  isSpeaking = true;
+  document.getElementById('speaking-badge').classList.add('active');
+
+  const chunks = chunkText(text);
+  const vol  = parseFloat(document.getElementById('vol-slider').value);
+  const rate = parseFloat(document.getElementById('rate-slider').value);
+
+  for (const chunk of chunks) {
+    if (!isSpeaking) break;
+    await speakChunkSafari(chunk, vol, rate);
+  }
+
+  isSpeaking = false;
+  document.getElementById('speaking-badge').classList.remove('active');
+  if (btn) {
+    btn.textContent = '✅ Done';
+    btn.classList.remove('playing');
+    btn.classList.add('done');
+  }
+}
+
+function speakChunkSafari(text, vol, rate) {
+  return new Promise(resolve => {
+    window._ttsResolve = resolve;
+    const finish = () => { window._ttsResolve = null; resolve(); };
+
+    // Try server TTS first (user gesture is active so autoplay allowed)
+    const tl = profile.lang?.tl || 'en';
+    const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}&t=${Date.now()}`;
+    const audio = new Audio(url);
+    audio.volume = vol;
+    audio.playbackRate = rate;
+    currentAudio = audio;
+
+    let errorHandled = false;
+    const fallback = () => {
+      if (errorHandled) return;
+      errorHandled = true;
+      doBrowserTTS(text, vol, rate, finish);
+    };
+
+    const timeout = setTimeout(fallback, 5000);
+    audio.oncanplaythrough = () => {
+      clearTimeout(timeout);
+      if (!isSpeaking) { finish(); return; }
+      audio.play().catch(fallback);
+    };
+    audio.onended = () => { clearTimeout(timeout); finish(); };
+    audio.onerror = () => { clearTimeout(timeout); fallback(); };
+    audio.src = url;
+    audio.load();
+  });
 }
 
 function showTyping(show) {
@@ -1071,7 +1252,34 @@ function showStatus(t) { document.getElementById('status-text').textContent = t;
 function hideStatus()   { document.getElementById('status-bar').classList.remove('active'); }
 function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 
-if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  // Pre-load voices
+  window.speechSynthesis.getVoices();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Update UI for Safari/iOS
+  if (IS_IOS || IS_SAFARI) {
+    // Mic button — show keyboard icon since STT not available
+    const micBtn = document.getElementById('mic-btn');
+    if (micBtn) {
+      micBtn.textContent = '⌨️';
+      micBtn.title = 'Tap to focus text input';
+      micBtn.style.background = 'linear-gradient(135deg,#64748b,#475569)';
+    }
+    const hint = document.getElementById('input-hint');
+    if (hint) hint.textContent = '⌨️ Type your message · Tap 🔊 on any message to hear it';
+  }
+});
+
+// Show Safari notice when chat screen becomes active
+function showSafariNoticeIfNeeded() {
+  if (IS_IOS || IS_SAFARI) {
+    const n = document.getElementById('safari-notice');
+    if (n) n.classList.add('show');
+  }
+}
 </script>
 </body>
 </html>
