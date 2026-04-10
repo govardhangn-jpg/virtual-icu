@@ -929,9 +929,10 @@ async function speak(text) {
 function playChunk(text, vol, rate) {
   return new Promise(resolve => {
     const tl = profile.lang?.tl || 'en';
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${tl}&client=tw-ob`;
+    // Use server-side proxy to avoid CORS block
+    const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}`;
     const audio = new Audio(url);
-    audio.volume = vol; audio.playbackRate = rate; audio.crossOrigin = 'anonymous';
+    audio.volume = vol; audio.playbackRate = rate;
     currentAudio = audio;
     let settled = false;
     const done = () => { if (!settled) { settled = true; resolve(); } };

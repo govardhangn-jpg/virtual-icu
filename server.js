@@ -128,6 +128,35 @@ app.post('/api/counsel', async (req, res) => {
 });
 
 // ════════════════════════════════
+//  TTS PROXY — Google Translate TTS
+//  Routes audio through server to avoid CORS
+// ════════════════════════════════
+app.get('/api/tts', async (req, res) => {
+  const { text, lang } = req.query;
+  if (!text || !lang) return res.status(400).send('Missing text or lang');
+  try {
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${lang}&client=tw-ob`;
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://translate.google.com/'
+      }
+    });
+    if (!response.ok) throw new Error('Google TTS returned ' + response.status);
+    const buffer = await response.arrayBuffer();
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'public, max-age=3600',
+      'Access-Control-Allow-Origin': '*'
+    });
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    console.error('TTS proxy error:', err.message);
+    res.status(500).send('TTS error');
+  }
+});
+
+// ════════════════════════════════
 //  TEST CALL ENDPOINT
 // ════════════════════════════════
 app.get('/api/test-call', async (req, res) => {
