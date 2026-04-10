@@ -4,850 +4,477 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Samarthaa Hospital — Patient Counselling</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0e1a">
+<title>VitalWatch ICU — Samarthaa Hospital</title>
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Tiro+Kannada&display=swap">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:       #f0f4f8;
-  --bg2:      #ffffff;
-  --bg3:      #e8f0fe;
-  --teal:     #0891b2;
-  --teal-lt:  #cffafe;
-  --teal-dk:  #0e7490;
-  --green:    #059669;
-  --green-lt: #d1fae5;
-  --red:      #dc2626;
-  --red-lt:   #fee2e2;
-  --amber:    #d97706;
-  --amber-lt: #fef3c7;
-  --text1:    #0f172a;
-  --text2:    #475569;
-  --text3:    #94a3b8;
-  --border:   #e2e8f0;
-  --shadow:   0 4px 24px rgba(0,0,0,0.08);
-  --r:        16px;
-}
-
-html, body {
-  min-height: 100vh;
-  background: var(--bg);
-  font-family: 'Nunito', sans-serif;
-  color: var(--text1);
-}
-
-/* ── Header ── */
-.header {
-  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
-  padding: 20px 24px;
-  display: flex; align-items: center; gap: 14px;
-  box-shadow: 0 2px 12px rgba(8,145,178,0.3);
-}
-.header-icon {
-  width: 48px; height: 48px; background: rgba(255,255,255,0.2);
-  border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-}
-.header-title { color: #fff; }
-.header-title h1 { font-size: 20px; font-weight: 700; }
-.header-title p  { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-.header-lang {
-  margin-left: auto;
-  display: flex; align-items: center; gap: 8px;
-}
-.lang-label { color: rgba(255,255,255,0.8); font-size: 12px; }
-
-/* ── Main Layout ── */
-.main {
-  max-width: 860px; margin: 0 auto;
-  padding: 24px 16px 40px;
-  display: flex; flex-direction: column; gap: 20px;
-}
-
-/* ── Who are you card ── */
-.role-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); padding: 24px;
-}
-.card-title {
-  font-size: 15px; font-weight: 700; color: var(--text2);
-  text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;
-}
-.role-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-}
-.role-btn {
-  padding: 16px 12px; border-radius: 12px;
-  border: 2px solid var(--border); background: var(--bg);
-  cursor: pointer; text-align: center; transition: all 0.2s;
-  font-family: 'Nunito', sans-serif;
-}
-.role-btn:hover { border-color: var(--teal); background: var(--teal-lt); }
-.role-btn.active { border-color: var(--teal); background: var(--teal-lt); }
-.role-btn .role-icon { font-size: 28px; margin-bottom: 6px; }
-.role-btn .role-name { font-size: 14px; font-weight: 700; color: var(--text1); }
-.role-btn .role-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-/* ── Language picker ── */
-.lang-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); padding: 20px 24px;
-}
-.lang-grid {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
-}
-.lang-chip {
-  padding: 8px 16px; border-radius: 20px;
-  border: 1.5px solid var(--border); background: var(--bg);
-  cursor: pointer; font-size: 13px; font-weight: 600;
-  font-family: 'Nunito', sans-serif; transition: all 0.15s;
-}
-.lang-chip:hover { border-color: var(--teal); color: var(--teal); }
-.lang-chip.active { background: var(--teal); border-color: var(--teal); color: #fff; }
-
-/* ── Topic picker ── */
-.topics-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); padding: 20px 24px;
-}
-.topics-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px; margin-top: 12px;
-}
-.topic-btn {
-  padding: 14px; border-radius: 12px;
-  border: 1.5px solid var(--border); background: var(--bg);
-  cursor: pointer; text-align: left; transition: all 0.15s;
-  font-family: 'Nunito', sans-serif;
-}
-.topic-btn:hover { border-color: var(--teal); background: var(--teal-lt); }
-.topic-icon { font-size: 22px; margin-bottom: 6px; }
-.topic-name { font-size: 13px; font-weight: 700; color: var(--text1); }
-.topic-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-/* ── Chat / Conversation ── */
-.chat-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); overflow: hidden;
-}
-.chat-header {
-  background: linear-gradient(135deg, #0891b2, #0e7490);
-  padding: 16px 20px; display: flex; align-items: center; gap: 12px;
-}
-.chat-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  display: flex; align-items: center; justify-content: center; font-size: 20px;
-}
-.chat-header-info h3 { color: #fff; font-size: 15px; font-weight: 700; }
-.chat-header-info p  { color: rgba(255,255,255,0.75); font-size: 12px; }
-
-.speaking-badge {
-  margin-left: auto; display: flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.2); border-radius: 20px;
-  padding: 5px 12px; color: #fff; font-size: 12px; font-weight: 600;
-  display: none;
-}
-.speaking-badge.active { display: flex; }
-.speaking-wave { display: flex; align-items: center; gap: 2px; }
-.speaking-wave span {
-  display: block; width: 3px; background: #fff; border-radius: 2px;
-  animation: wave-bar 0.8s ease-in-out infinite;
-}
-.speaking-wave span:nth-child(1){ height:8px;  animation-delay:0s; }
-.speaking-wave span:nth-child(2){ height:14px; animation-delay:0.1s; }
-.speaking-wave span:nth-child(3){ height:10px; animation-delay:0.2s; }
-.speaking-wave span:nth-child(4){ height:16px; animation-delay:0.3s; }
-.speaking-wave span:nth-child(5){ height:8px;  animation-delay:0.4s; }
-@keyframes wave-bar {
-  0%,100%{ transform:scaleY(0.5); opacity:0.6; }
-  50%    { transform:scaleY(1.2); opacity:1;   }
-}
-
-.chat-messages {
-  height: 340px; overflow-y: auto; padding: 20px;
-  display: flex; flex-direction: column; gap: 14px;
-  background: #f8fafc;
-}
-
-.msg { display: flex; gap: 10px; max-width: 85%; }
-.msg.assistant { align-self: flex-start; }
-.msg.user      { align-self: flex-end; flex-direction: row-reverse; }
-
-.msg-avatar {
-  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 16px;
-}
-.msg.assistant .msg-avatar { background: var(--teal-lt); }
-.msg.user      .msg-avatar { background: var(--green-lt); }
-
-.msg-bubble {
-  padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.6;
-}
-.msg.assistant .msg-bubble {
-  background: #fff; border: 1px solid var(--border);
-  border-top-left-radius: 4px; color: var(--text1);
-}
-.msg.user .msg-bubble {
-  background: var(--teal); color: #fff;
-  border-top-right-radius: 4px;
-}
-
-.msg-time { font-size: 10px; color: var(--text3); margin-top: 4px; }
-
-.typing-indicator {
-  display: flex; align-items: center; gap: 6px;
-  padding: 12px 16px; background: #fff; border: 1px solid var(--border);
-  border-radius: 16px; border-top-left-radius: 4px; width: fit-content;
-}
-.typing-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--text3);
-  animation: typing 1.2s ease-in-out infinite;
-}
-.typing-dot:nth-child(2){ animation-delay:0.2s; }
-.typing-dot:nth-child(3){ animation-delay:0.4s; }
-@keyframes typing { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-
-/* ── Input area ── */
-.chat-input-area {
-  padding: 16px 20px; border-top: 1px solid var(--border);
-  background: #fff;
-}
-
-.input-row {
-  display: flex; gap: 10px; align-items: flex-end;
-}
-.text-input {
-  flex: 1; border: 1.5px solid var(--border); border-radius: 12px;
-  padding: 12px 16px; font-family: 'Nunito', sans-serif; font-size: 14px;
-  color: var(--text1); resize: none; min-height: 48px; max-height: 120px;
-  transition: border-color 0.2s; background: var(--bg);
-}
-.text-input:focus { outline: none; border-color: var(--teal); background: #fff; }
-
-.mic-btn {
-  width: 48px; height: 48px; border-radius: 50%; border: none;
-  background: var(--teal); color: #fff; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; transition: all 0.2s; flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(8,145,178,0.4);
-}
-.mic-btn:hover { background: var(--teal-dk); transform: scale(1.05); }
-.mic-btn.listening {
-  background: var(--red); animation: mic-pulse 1s ease-in-out infinite;
-  box-shadow: 0 2px 8px rgba(220,38,38,0.4);
-}
-@keyframes mic-pulse {
-  0%,100%{ transform:scale(1);   box-shadow:0 2px 8px rgba(220,38,38,0.4); }
-  50%    { transform:scale(1.1); box-shadow:0 4px 20px rgba(220,38,38,0.6); }
-}
-
-.send-btn {
-  width: 48px; height: 48px; border-radius: 50%; border: none;
-  background: var(--green); color: #fff; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; transition: all 0.2s; flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(5,150,105,0.4);
-}
-.send-btn:hover { background: #047857; transform: scale(1.05); }
-
-.input-hint {
-  font-size: 11px; color: var(--text3); margin-top: 8px; text-align: center;
-}
-
-/* ── Quick questions ── */
-.quick-qs {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
-}
-.quick-q {
-  padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--teal);
-  background: var(--teal-lt); color: var(--teal-dk); font-size: 12px;
-  font-weight: 600; cursor: pointer; font-family: 'Nunito', sans-serif;
-  transition: all 0.15s;
-}
-.quick-q:hover { background: var(--teal); color: #fff; }
-
-/* ── Volume / Speed controls ── */
-.voice-controls {
-  display: flex; align-items: center; gap: 16px; padding: 12px 20px;
-  border-top: 1px solid var(--border); background: #f8fafc;
-  flex-wrap: wrap;
-}
-.vc-label { font-size: 11px; color: var(--text2); font-weight: 600; white-space: nowrap; }
-.vc-slider { width: 80px; accent-color: var(--teal); cursor: pointer; }
-.stop-btn {
-  margin-left: auto; padding: 6px 14px; border-radius: 8px;
-  border: 1.5px solid var(--red); background: var(--red-lt);
-  color: var(--red); font-size: 12px; font-weight: 700;
-  cursor: pointer; font-family: 'Nunito', sans-serif; transition: all 0.15s;
-}
-.stop-btn:hover { background: var(--red); color: #fff; }
-
-/* ── Status bar ── */
-.status-bar {
-  display: flex; align-items: center; gap: 8px; padding: 10px 20px;
-  background: var(--amber-lt); border-top: 1px solid #fde68a;
-  font-size: 12px; color: var(--amber); font-weight: 600;
-  display: none;
-}
-.status-bar.active { display: flex; }
-
-/* ── Welcome screen ── */
-.welcome {
-  text-align: center; padding: 40px 20px;
-}
-.welcome-icon { font-size: 56px; margin-bottom: 16px; }
-.welcome h2 { font-size: 22px; font-weight: 700; color: var(--text1); }
-.welcome p  { font-size: 14px; color: var(--text2); margin-top: 8px; max-width: 420px; margin-left: auto; margin-right: auto; }
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-/* ── Mobile ── */
-@media (max-width: 600px) {
-  .role-grid { grid-template-columns: 1fr 1fr; }
-  .topics-grid { grid-template-columns: 1fr 1fr; }
-  .chat-messages { height: 280px; }
-  .header-title h1 { font-size: 16px; }
-}
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-icon">🏥</div>
-  <div class="header-title">
-    <h1>Samarthaa Hospital</h1>
-    <p>ICU Patient & Attender Counselling · Ward 6A</p>
+<!-- Login Screen -->
+<div id="login-screen" class="screen active">
+  <div class="login-bg">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+  </div>
+  <div class="login-container">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2 L16 8 M16 24 L16 30 M2 16 L8 16 M24 16 L30 16" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="7" stroke="#00d4aa" stroke-width="2"/>
+          <path d="M4 16 L9 11 L13 15 L16 8 L20 18 L23 14 L28 16" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-name">VitalWatch</h1>
+        <p class="brand-sub">ICU Monitoring System</p>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <h2 class="login-title">Staff Sign In</h2>
+      <p class="login-desc">Authorized medical personnel only</p>
+
+      <div class="form-group">
+        <label>Staff ID</label>
+        <input type="text" id="staff-id" placeholder="e.g. DR-2024-001" value="DR-2024-001">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" value="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Ward / Unit</label>
+        <select id="ward-select">
+          <option value="icu-4b">ICU — Ward 6A</option>
+          <option value="icu-3a">ICU — Ward 3A · Samarthaa Hospital</option>
+          <option value="ccu">Cardiac Care Unit · Samarthaa Hospital</option>
+          <option value="nicu">Neuro ICU</option>
+        </select>
+      </div>
+
+      <button class="btn-login" onclick="doLogin()">
+        <span>Sign In to Dashboard</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="login-roles">
+        <span>Quick login:</span>
+        <button onclick="quickLogin('doctor')">Doctor</button>
+        <button onclick="quickLogin('nurse')">Nurse</button>
+        <button onclick="quickLogin('admin')">Admin</button>
+      </div>
+    </div>
+
+    <p class="login-footer">Samarthaa Hospital · VitalWatch v2.4.1 · DISHA Compliant</p>
   </div>
 </div>
 
-<!-- Main -->
-<div class="main">
+<!-- Main App -->
+<div id="app-screen" class="screen">
 
-  <!-- Step 1: Who are you? -->
-  <div class="role-card">
-    <div class="card-title">Step 1 — Who are you?</div>
-    <div class="role-grid">
-      <button class="role-btn" onclick="selectRole('patient')" id="role-patient">
-        <div class="role-icon">🛏️</div>
-        <div class="role-name">Patient</div>
-        <div class="role-desc">I am the patient</div>
-      </button>
-      <button class="role-btn" onclick="selectRole('attender')" id="role-attender">
-        <div class="role-icon">👨‍👩‍👧</div>
-        <div class="role-name">Attender / Family</div>
-        <div class="role-desc">I am with the patient</div>
-      </button>
-    </div>
-  </div>
-
-  <!-- Step 2: Language -->
-  <div class="lang-card">
-    <div class="card-title">Step 2 — Choose your language</div>
-    <div class="lang-grid" id="lang-grid">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-
-  <!-- Step 3: Topic -->
-  <div class="topics-card">
-    <div class="card-title">Step 3 — What do you want to know?</div>
-    <div class="topics-grid">
-      <button class="topic-btn" onclick="startTopic('icu')">
-        <div class="topic-icon">🏨</div>
-        <div class="topic-name">About the ICU</div>
-        <div class="topic-desc">What is ICU, what to expect, procedures</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('medicines')">
-        <div class="topic-icon">💊</div>
-        <div class="topic-name">Medicines & Treatment</div>
-        <div class="topic-desc">What medicines are given and why</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('attender')">
-        <div class="topic-icon">📋</div>
-        <div class="topic-name">Dos & Don'ts</div>
-        <div class="topic-desc">Rules for attenders in ICU</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('equipment')">
-        <div class="topic-icon">🔬</div>
-        <div class="topic-name">Equipment & Monitors</div>
-        <div class="topic-desc">What the machines and wires do</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('diet')">
-        <div class="topic-icon">🥗</div>
-        <div class="topic-name">Diet & Nutrition</div>
-        <div class="topic-desc">Feeding, fluids, and nutrition in ICU</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('discharge')">
-        <div class="topic-icon">🏠</div>
-        <div class="topic-name">Going Home</div>
-        <div class="topic-desc">Discharge process, home care, follow-up</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('emotional')">
-        <div class="topic-icon">💙</div>
-        <div class="topic-name">Emotional Support</div>
-        <div class="topic-desc">Fear, anxiety, coping with ICU stay</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('freeask')">
-        <div class="topic-icon">💬</div>
-        <div class="topic-name">Ask Anything</div>
-        <div class="topic-desc">Ask any question in your language</div>
-      </button>
-    </div>
-  </div>
-
-  <!-- Chat Interface -->
-  <div class="chat-card" id="chat-card" style="display:none">
-    <div class="chat-header">
-      <div class="chat-avatar">🤝</div>
-      <div class="chat-header-info">
-        <h3 id="chat-title">ICU Counsellor</h3>
-        <p id="chat-subtitle">Samarthaa Hospital · Ward 6A</p>
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="7" stroke="#00d4aa" stroke-width="2"/>
+          <path d="M4 16 L9 11 L13 15 L16 8 L20 18 L23 14 L28 16" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>VitalWatch</span>
       </div>
-      <div class="speaking-badge" id="speaking-badge">
-        <div class="speaking-wave">
-          <span></span><span></span><span></span><span></span><span></span>
+      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+    </div>
+
+    <div class="ward-badge">
+      <div class="ward-dot"></div>
+      <span id="sidebar-ward">ICU — Ward 6A</span>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">Monitoring</p>
+      <a class="nav-item active" onclick="showPage('dashboard')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+        All Patients
+      </a>
+      <a class="nav-item" onclick="showPage('alerts')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 015 5v3l1.5 2.5H1.5L3 9V6a5 5 0 015-5z" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3"/></svg>
+        Alert Center
+        <span class="nav-badge" id="alert-nav-count">3</span>
+      </a>
+      <a class="nav-item" onclick="showPage('trends')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 12 L4 8 L7 10 L10 4 L13 7 L15 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Trends & History
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">Communication</p>
+      <a class="nav-item" onclick="showPage('reports')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Reports
+      </a>
+      <a class="nav-item" onclick="showPage('stakeholders')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M12 10c1.66 0 3 1.34 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Care Team
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">System</p>
+      <a class="nav-item" onclick="showPage('settings')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.22 3.22l1.41 1.41M11.37 11.37l1.41 1.41M3.22 12.78l1.41-1.41M11.37 4.63l1.41-1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Settings
+      </a>
+      <a class="nav-item" onclick="doLogout()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign Out
+      </a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">DK</div>
+      <div>
+        <p class="user-name" id="sidebar-name">Dr. Kavya R.</p>
+        <p class="user-role" id="sidebar-role">Intensivist · On Call</p>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main Area -->
+  <div class="main-area">
+
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="header-breadcrumb" id="breadcrumb">All Patients</div>
+      </div>
+      <div class="header-center">
+        <div class="live-indicator">
+          <span class="live-pulse"></span>
+          <span>LIVE</span>
         </div>
-        Speaking...
+        <div class="header-clock" id="header-clock">--:--:--</div>
+      </div>
+      <div class="header-right">
+        <button class="header-btn" onclick="showPage('alerts')" title="Alerts">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 015 5v3l1.5 2.5H1.5L3 9V6a5 5 0 015-5z" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3"/></svg>
+          <span class="header-badge" id="header-alert-badge">3</span>
+        </button>
+        <button class="header-btn" onclick="sendReport()" title="Quick Report">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Critical Alert Banner -->
+    <div class="critical-banner" id="critical-banner" style="display:none">
+      <div class="banner-pulse"></div>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L15 14H1L8 1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span id="banner-text">Critical alert active</span>
+      <button onclick="acknowledgeAlert()" class="banner-ack">Acknowledge</button>
+      <button onclick="document.getElementById('critical-banner').style.display='none'" class="banner-close">✕</button>
+    </div>
+
+    <!-- PAGE: Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Patient Overview</h2>
+          <p class="page-sub" id="ward-label">ICU — Ward 6A · 4 patients monitored</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline" onclick="showPage('reports')">Send Report</button>
+          <button class="btn-primary" onclick="showAddPatient()">+ Add Patient</button>
+        </div>
+      </div>
+
+      <div class="patients-grid" id="patients-grid">
+        <!-- Dynamically rendered -->
       </div>
     </div>
 
-    <!-- Status bar -->
-    <div class="status-bar" id="status-bar">
-      <span>🎤</span>
-      <span id="status-text">Listening...</span>
-    </div>
+    <!-- PAGE: Patient Detail -->
+    <div class="page" id="page-patient">
+      <div class="page-header">
+        <div>
+          <button class="back-btn" onclick="showPage('dashboard')">← Back</button>
+          <h2 class="page-title" id="detail-patient-name">Patient Name</h2>
+          <p class="page-sub" id="detail-patient-meta">Bed · Age · Diagnosis</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline" onclick="callCareTeam()">Call Care Team</button>
+          <button class="btn-primary" onclick="sendPatientReport()">Send Report</button>
+        </div>
+      </div>
 
-    <!-- Messages -->
-    <div class="chat-messages" id="chat-messages">
-      <div class="welcome">
-        <div class="welcome-icon">👋</div>
-        <h2>Hello! Namaste! ನಮಸ್ಕಾರ!</h2>
-        <p>Select a topic above to begin. I will speak to you and also show the text here. You can type or use the microphone to ask questions.</p>
+      <div class="detail-layout">
+        <!-- ECG -->
+        <div class="ecg-card">
+          <div class="ecg-header">
+            <span class="ecg-label">ECG · Lead II</span>
+            <span class="ecg-hr" id="detail-hr-wave">-- bpm</span>
+          </div>
+          <canvas id="detail-ecg" height="70"></canvas>
+        </div>
+
+        <!-- Vital Cards -->
+        <div class="detail-vitals-grid" id="detail-vitals-grid">
+          <!-- Dynamically rendered -->
+        </div>
+
+        <!-- Side info -->
+        <div class="detail-side">
+          <div class="detail-side-card">
+            <h3 class="side-card-title">Patient Info</h3>
+            <div class="info-row"><span>Bed</span><strong id="d-bed">—</strong></div>
+            <div class="info-row"><span>Age / Sex</span><strong id="d-age">—</strong></div>
+            <div class="info-row"><span>Diagnosis</span><strong id="d-dx">—</strong></div>
+            <div class="info-row"><span>Admitted</span><strong id="d-admit">—</strong></div>
+            <div class="info-row"><span>Attending</span><strong id="d-doc">—</strong></div>
+          </div>
+
+          <div class="detail-side-card">
+            <h3 class="side-card-title">Alert History</h3>
+            <div id="patient-alert-log" class="mini-alert-log">
+              <p class="no-alerts">No alerts in past 24h</p>
+            </div>
+          </div>
+
+          <div class="detail-side-card">
+            <h3 class="side-card-title">Threshold Settings</h3>
+            <div class="threshold-row">
+              <span>HR low / high</span>
+              <input type="number" class="thresh-input" value="50" id="thresh-hr-lo"> /
+              <input type="number" class="thresh-input" value="120" id="thresh-hr-hi">
+            </div>
+            <div class="threshold-row">
+              <span>SpO₂ min</span>
+              <input type="number" class="thresh-input" value="94" id="thresh-spo2">
+            </div>
+            <div class="threshold-row">
+              <span>SBP low / high</span>
+              <input type="number" class="thresh-input" value="90" id="thresh-sbp-lo"> /
+              <input type="number" class="thresh-input" value="160" id="thresh-sbp-hi">
+            </div>
+            <button class="btn-primary" style="width:100%;margin-top:10px;font-size:12px;padding:8px" onclick="saveThresholds()">Save Thresholds</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Voice controls -->
-    <div class="voice-controls">
-      <span class="vc-label">🔊 Volume</span>
-      <input type="range" class="vc-slider" id="vol-slider" min="0" max="1" step="0.1" value="1">
-      <span class="vc-label">⚡ Speed</span>
-      <input type="range" class="vc-slider" id="rate-slider" min="0.5" max="1.5" step="0.1" value="0.9">
-      <button class="stop-btn" onclick="stopSpeaking()">⏹ Stop</button>
+    <!-- PAGE: Alert Center -->
+    <div class="page" id="page-alerts">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Alert Center</h2>
+          <p class="page-sub">Real-time alerts across all patients</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline" onclick="clearAllAlerts()">Clear All</button>
+        </div>
+      </div>
+      <div class="alerts-list" id="alerts-list">
+        <!-- Dynamically rendered -->
+      </div>
     </div>
 
-    <!-- Quick questions -->
-    <div style="padding:10px 20px 0">
-      <div class="quick-qs" id="quick-qs"></div>
+    <!-- PAGE: Trends -->
+    <div class="page" id="page-trends">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Trends & History</h2>
+          <p class="page-sub">Vital sign trends over time</p>
+        </div>
+        <div class="page-actions">
+          <select class="btn-outline" id="trend-patient-select" onchange="renderTrends()">
+            <!-- Dynamically populated -->
+          </select>
+          <select class="btn-outline" id="trend-range">
+            <option value="1">Last 1 hour</option>
+            <option value="6">Last 6 hours</option>
+            <option value="24" selected>Last 24 hours</option>
+          </select>
+        </div>
+      </div>
+      <div class="trends-grid">
+        <div class="trend-card"><div class="trend-title">Heart Rate (bpm)</div><canvas id="trend-hr" height="120"></canvas></div>
+        <div class="trend-card"><div class="trend-title">Blood Pressure (mmHg)</div><canvas id="trend-bp" height="120"></canvas></div>
+        <div class="trend-card"><div class="trend-title">SpO₂ (%)</div><canvas id="trend-spo2" height="120"></canvas></div>
+        <div class="trend-card"><div class="trend-title">Temperature (°C)</div><canvas id="trend-temp" height="120"></canvas></div>
+      </div>
     </div>
 
-    <!-- Input -->
-    <div class="chat-input-area">
-      <div class="input-row">
-        <textarea class="text-input" id="user-input"
-          placeholder="Type your question here or use the microphone..."
-          rows="1"
-          onkeydown="handleKey(event)"
-          oninput="autoResize(this)"></textarea>
-        <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Speak your question">🎤</button>
-        <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
+    <!-- PAGE: Reports -->
+    <div class="page" id="page-reports">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Reports</h2>
+          <p class="page-sub">Periodic reporting & communication</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-primary" onclick="generateReport()">Generate Now</button>
+        </div>
       </div>
-      <div class="input-hint" id="input-hint">
-        🎤 Tap mic to speak in your language · ⌨️ Or type your question
+
+      <div class="reports-layout">
+        <div class="report-config-card">
+          <h3>Schedule Reports</h3>
+          <div class="form-group">
+            <label>Frequency</label>
+            <select id="report-freq">
+              <option>Every 4 hours</option>
+              <option>Every 6 hours</option>
+              <option>Every 8 hours (shift change)</option>
+              <option>Every 12 hours</option>
+              <option>Daily at 6:00 AM</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Recipients</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" checked> Attending Doctors</label>
+              <label class="checkbox-item"><input type="checkbox" checked> Nursing Staff</label>
+              <label class="checkbox-item"><input type="checkbox"> Hospital Admin</label>
+              <label class="checkbox-item"><input type="checkbox"> On-call Specialists</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Delivery Method</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" checked> Email</label>
+              <label class="checkbox-item"><input type="checkbox" checked> WhatsApp</label>
+              <label class="checkbox-item"><input type="checkbox"> SMS</label>
+              <label class="checkbox-item"><input type="checkbox"> In-app only</label>
+            </div>
+          </div>
+          <button class="btn-primary" style="width:100%" onclick="saveReportConfig()">Save Schedule</button>
+        </div>
+
+        <div class="report-preview-card">
+          <h3>Latest Report Preview</h3>
+          <div class="report-preview" id="report-preview">
+            <div class="report-header-block">
+              <div class="report-logo">VitalWatch ICU</div>
+              <div class="report-meta">Ward 4B · <span id="report-date"></span></div>
+            </div>
+            <div id="report-body"></div>
+          </div>
+          <div class="report-actions">
+            <button class="btn-outline" onclick="printReport()">Print / PDF</button>
+            <button class="btn-primary" onclick="sendReportNow()">Send to Team</button>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- PAGE: Care Team -->
+    <div class="page" id="page-stakeholders">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Care Team</h2>
+          <p class="page-sub">Manage stakeholders & alert contacts</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-primary" onclick="showAddStakeholder()">+ Add Member</button>
+        </div>
+      </div>
+      <div class="stakeholders-grid" id="stakeholders-grid">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+
+    <!-- PAGE: Settings -->
+    <div class="page" id="page-settings">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Settings</h2>
+          <p class="page-sub">System configuration & preferences</p>
+        </div>
+      </div>
+      <div class="settings-layout">
+        <div class="settings-section">
+          <h3>Alert Configuration</h3>
+          <div class="setting-row">
+            <div><p class="setting-name">Auto-call on Critical Alert</p><p class="setting-desc">Automatically call on-duty doctor when vitals hit critical range</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div><p class="setting-name">SMS Fallback</p><p class="setting-desc">Send SMS if call goes unanswered for 60 seconds</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div><p class="setting-name">WhatsApp Alerts</p><p class="setting-desc">Send WhatsApp messages for warning-level alerts</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div><p class="setting-name">Escalation Timeout</p><p class="setting-desc">Escalate to next contact after</p></div>
+            <select class="btn-outline" style="width:auto">
+              <option>2 minutes</option>
+              <option selected>5 minutes</option>
+              <option>10 minutes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Device Integration</h3>
+          <div class="device-status-list">
+            <div class="device-row"><span class="device-name">BP Monitor (Philips IntelliVue)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">Pulse Oximeter (Nellcor)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">Thermometer (BIOT-200)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">Ventilator (Hamilton C6)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">ECG (GE CASE)</span><span class="device-badge warning">Intermittent</span></div>
+            <div class="device-row"><span class="device-name">HL7 Gateway</span><span class="device-badge connected">Active</span></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Report Integration</h3>
+          <div class="form-group"><label>SMTP Email Server</label><input type="text" value="smtp.hospital.gov.in:587" class="full-input"></div>
+          <div class="form-group"><label>Twilio Account SID</label><input type="text" value="AC••••••••••••••••••••••••" class="full-input"></div>
+          <div class="form-group"><label>WhatsApp Business API</label><input type="text" value="https://api.whatsapp.business/v1/" class="full-input"></div>
+          <button class="btn-primary" onclick="testConnections()">Test All Connections</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /app-screen -->
+
+<!-- Modal: Add Patient -->
+<div class="modal-overlay" id="modal-add-patient" style="display:none">
+  <div class="modal">
+    <div class="modal-header"><h3>Add Patient</h3><button onclick="closeModal('modal-add-patient')">✕</button></div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="new-pt-name" placeholder="Patient full name"></div>
+    <div class="form-group"><label>Age</label><input type="number" id="new-pt-age" placeholder="Age in years"></div>
+    <div class="form-group"><label>Sex</label><select id="new-pt-sex"><option>Male</option><option>Female</option><option>Other</option></select></div>
+    <div class="form-group"><label>Bed Number</label><input type="text" id="new-pt-bed" placeholder="e.g. Bed 05"></div>
+    <div class="form-group"><label>Diagnosis</label><input type="text" id="new-pt-dx" placeholder="Primary diagnosis"></div>
+    <div class="form-group"><label>Attending Doctor</label><input type="text" id="new-pt-doc" placeholder="Doctor name"></div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal('modal-add-patient')">Cancel</button>
+      <button class="btn-primary" onclick="addPatient()">Add Patient</button>
     </div>
   </div>
+</div>
 
-</div><!-- /main -->
+<!-- Modal: Toast -->
+<div class="toast" id="toast"></div>
 
-<script>
-// ══════════════════════════════════════════════
-//  CONFIGURATION
-// ══════════════════════════════════════════════
-const HOSPITAL = 'Samarthaa Hospital, ICU Ward 6A';
-
-// Languages with their Web Speech API codes
-const LANGUAGES = [
-  { label: 'English',    code: 'en-IN', voice: 'en-IN', flag: '🇮🇳' },
-  { label: 'ಕನ್ನಡ',      code: 'kn-IN', voice: 'kn-IN', flag: '🌟' },
-  { label: 'हिंदी',      code: 'hi-IN', voice: 'hi-IN', flag: '🇮🇳' },
-  { label: 'తెలుగు',     code: 'te-IN', voice: 'te-IN', flag: '🌟' },
-  { label: 'தமிழ்',      code: 'ta-IN', voice: 'ta-IN', flag: '🌟' },
-  { label: 'മലയാളം',    code: 'ml-IN', voice: 'ml-IN', flag: '🌟' },
-  { label: 'मराठी',      code: 'mr-IN', voice: 'mr-IN', flag: '🌟' },
-  { label: 'বাংলা',      code: 'bn-IN', voice: 'bn-IN', flag: '🌟' },
-  { label: 'اردو',       code: 'ur-PK', voice: 'ur-PK', flag: '🌟' },
-  { label: 'Français',   code: 'fr-FR', voice: 'fr-FR', flag: '🇫🇷' },
-  { label: 'العربية',    code: 'ar-SA', voice: 'ar-SA', flag: '🌟' },
-  { label: 'Español',    code: 'es-ES', voice: 'es-ES', flag: '🇪🇸' },
-];
-
-// Topic quick questions per topic
-const QUICK_QUESTIONS = {
-  icu:       ['What is ICU?', 'Why is my family member here?', 'How long will they stay?', 'Is it serious?'],
-  medicines: ['What medicines are being given?', 'Are there side effects?', 'Why is there a drip?', 'What is the injection for?'],
-  attender:  ['When can I visit?', 'Can I bring food?', 'How many can visit?', 'What should I not do?'],
-  equipment: ['What are the wires for?', 'Why is there a beeping machine?', 'What is the oxygen mask?', 'What is the ventilator?'],
-  diet:      ['Can the patient eat?', 'What is the tube in the nose?', 'When will they eat normally?', 'Can I bring food?'],
-  discharge: ['When will they go home?', 'What medicines at home?', 'When is the follow-up?', 'What to watch for at home?'],
-  emotional: ['I am scared', 'Will they be okay?', 'How can I help?', 'I need support'],
-  freeask:   ['What should I ask the doctor?', 'How is the patient doing?', 'What happens next?', 'Who do I contact?']
-};
-
-// ── State ──
-let selectedRole = 'attender';
-let selectedLang = { label:'English', code:'en-IN', voice:'en-IN', flag:'🇮🇳' };
-let selectedTopic = null;
-let chatHistory = [];
-let isSpeaking = false;
-let isListening = false;
-let recognition = null;
-let currentUtterance = null;
-
-// ══════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  buildLangGrid();
-  selectLang(LANGUAGES[0]);
-  selectRole('attender');
-});
-
-function buildLangGrid() {
-  const grid = document.getElementById('lang-grid');
-  grid.innerHTML = LANGUAGES.map((l,i) => `
-    <button class="lang-chip ${i===0?'active':''}"
-      onclick='selectLang(${JSON.stringify(l)})'
-      id="lang-${l.code.replace('-','_')}">
-      ${l.flag} ${l.label}
-    </button>`).join('');
-}
-
-function selectRole(role) {
-  selectedRole = role;
-  document.getElementById('role-patient').classList.toggle('active', role==='patient');
-  document.getElementById('role-attender').classList.toggle('active', role==='attender');
-}
-
-function selectLang(lang) {
-  selectedLang = lang;
-  document.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
-  const el = document.getElementById('lang-' + lang.code.replace('-','_'));
-  if (el) el.classList.add('active');
-  // Update placeholder
-  const placeholders = {
-    'kn-IN': 'ನಿಮ್ಮ ಪ್ರಶ್ನೆ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮೈಕ್ ಬಳಸಿ...',
-    'hi-IN': 'अपना सवाल यहाँ टाइप करें या माइक का उपयोग करें...',
-    'te-IN': 'మీ ప్రశ్న టైప్ చేయండి లేదా మైక్ ఉపయోగించండి...',
-    'ta-IN': 'உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள் அல்லது மைக் பயன்படுத்துங்கள்...',
-    'ml-IN': 'നിങ്ങളുടെ ചോദ്യം ടൈപ്പ് ചെയ്യുക അല്ലെങ്കിൽ മൈക്ക് ഉപയോഗിക്കുക...',
-  };
-  const inp = document.getElementById('user-input');
-  inp.placeholder = placeholders[lang.code] || 'Type your question here or use the microphone...';
-}
-
-// ══════════════════════════════════════════════
-//  TOPIC SELECTION & INITIAL MESSAGE
-// ══════════════════════════════════════════════
-function startTopic(topic) {
-  selectedTopic = topic;
-  document.getElementById('chat-card').style.display = 'block';
-  document.getElementById('chat-card').scrollIntoView({ behavior:'smooth', block:'start' });
-
-  const topicTitles = {
-    icu: 'About the ICU', medicines: 'Medicines & Treatment',
-    attender: 'Dos & Don\'ts', equipment: 'Equipment & Monitors',
-    diet: 'Diet & Nutrition', discharge: 'Going Home',
-    emotional: 'Emotional Support', freeask: 'Ask Anything'
-  };
-
-  document.getElementById('chat-title').textContent = topicTitles[topic] || 'ICU Counsellor';
-
-  // Set quick questions
-  const qs = QUICK_QUESTIONS[topic] || [];
-  document.getElementById('quick-qs').innerHTML = qs.map(q =>
-    `<button class="quick-q" onclick="askQuick('${q.replace(/'/g,"\\'")}')">💬 ${q}</button>`
-  ).join('');
-
-  // Clear messages
-  document.getElementById('chat-messages').innerHTML = '';
-  chatHistory = [];
-
-  // Build system prompt
-  const systemPrompt = buildSystemPrompt(topic);
-  chatHistory.push({ role:'system', content: systemPrompt });
-
-  // Opening message
-  const opener = getOpener(topic);
-  sendToAI(opener, true);
-}
-
-function buildSystemPrompt(topic) {
-  const roleCtx = selectedRole === 'patient'
-    ? 'You are speaking DIRECTLY to the patient who is admitted in the ICU.'
-    : 'You are speaking to the FAMILY MEMBER or ATTENDER of a patient admitted in the ICU.';
-
-  return `You are a warm, compassionate ICU counsellor at ${HOSPITAL}.
-${roleCtx}
-You speak in ${selectedLang.label}. Always respond in ${selectedLang.label}.
-Keep responses simple, clear, and reassuring. Avoid medical jargon — use simple words.
-Be empathetic and calming. Never cause unnecessary worry.
-Keep each response to 3-5 sentences maximum — short and easy to understand when spoken aloud.
-If someone seems anxious, acknowledge their feelings first.
-Topic focus: ${topic}.
-Hospital: Samarthaa Hospital, ICU Ward 6A, Bengaluru.
-Doctors: Dr. Mahesh KM (Intensivist), Dr. Nagendra Prasad (Cardiologist), Dr. Rekha Jayaram (Physician).
-For urgent medical concerns always say: "Please speak to Nurse Asha or Dr. Mahesh immediately."
-Do not diagnose or give specific medical advice. Give general education only.`;
-}
-
-function getOpener(topic) {
-  const openers = {
-    icu:       `Please introduce yourself as the ICU counsellor and give a warm, reassuring welcome. Then briefly explain what the ICU at Samarthaa Hospital is and why it helps patients recover better. Keep it simple and calming. Respond in ${selectedLang.label}.`,
-    medicines: `Give a warm greeting and explain in simple terms why patients in ICU receive medicines through drips and injections instead of by mouth. Keep it reassuring. Respond in ${selectedLang.label}.`,
-    attender:  `Greet the family member warmly and explain the 3 most important rules for ICU attenders at Samarthaa Hospital — visiting hours, hygiene, and what to bring. Be kind and understanding. Respond in ${selectedLang.label}.`,
-    equipment: `Greet warmly and explain in very simple terms what the most common equipment in the ICU looks like — the monitor, the drip stand, and the oxygen. Reassure them that all these machines are helping the patient. Respond in ${selectedLang.label}.`,
-    diet:      `Greet warmly and explain why ICU patients often cannot eat normally at first and how they receive nutrition through other means. Be reassuring. Respond in ${selectedLang.label}.`,
-    discharge: `Give a warm, hopeful greeting and explain the general process for when a patient gets better and is ready to go home from the ICU — what happens, what to expect. Respond in ${selectedLang.label}.`,
-    emotional: `Give a very warm, compassionate greeting. Acknowledge that having a family member in the ICU is very stressful and scary. Offer words of comfort and let them know they are not alone and the team at Samarthaa Hospital is doing everything possible. Respond in ${selectedLang.label}.`,
-    freeask:   `Greet warmly and introduce yourself as the ICU counsellor. Let them know they can ask any question about the ICU, treatment, or what to expect, in any language, and you will do your best to help. Respond in ${selectedLang.label}.`
-  };
-  return openers[topic] || openers.freeask;
-}
-
-// ══════════════════════════════════════════════
-//  AI CALL (Claude API)
-// ══════════════════════════════════════════════
-async function sendToAI(userMsg, isSystem = false) {
-  showTyping(true);
-
-  if (!isSystem) {
-    chatHistory.push({ role:'user', content: userMsg });
-    addMessage('user', userMsg);
-  }
-
-  try {
-    const messages = chatHistory.filter(m => m.role !== 'system');
-    const systemMsg = chatHistory.find(m => m.role === 'system')?.content || '';
-
-    const response = await fetch('/api/counsel', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemMsg,
-        messages: isSystem
-          ? [{ role:'user', content: userMsg }]
-          : messages
-      })
-    });
-
-    const data = await response.json();
-    const reply = data.content?.[0]?.text || 'I am sorry, I could not get a response. Please try again.';
-
-    showTyping(false);
-    chatHistory.push({ role:'assistant', content: reply });
-    addMessage('assistant', reply);
-    speak(reply);
-
-  } catch (err) {
-    showTyping(false);
-    const errMsg = 'I am sorry, there was a connection issue. Please check your internet and try again.';
-    addMessage('assistant', errMsg);
-    speak(errMsg);
-  }
-}
-
-async function sendMessage() {
-  const input = document.getElementById('user-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  autoResize(input);
-  if (!selectedTopic) { startTopic('freeask'); return; }
-  stopSpeaking();
-  await sendToAI(text);
-}
-
-function askQuick(question) {
-  document.getElementById('user-input').value = question;
-  sendMessage();
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-
-// ══════════════════════════════════════════════
-//  TEXT TO SPEECH (Web Speech API — Free)
-// ══════════════════════════════════════════════
-function speak(text) {
-  if (!window.speechSynthesis) return;
-  stopSpeaking();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang   = selectedLang.code;
-  utterance.volume = parseFloat(document.getElementById('vol-slider').value);
-  utterance.rate   = parseFloat(document.getElementById('rate-slider').value);
-  utterance.pitch  = 1.05;
-
-  // Try to find a matching voice
-  const voices = window.speechSynthesis.getVoices();
-  const match = voices.find(v =>
-    v.lang.startsWith(selectedLang.code.split('-')[0]) ||
-    v.lang === selectedLang.code
-  );
-  if (match) utterance.voice = match;
-
-  utterance.onstart = () => {
-    isSpeaking = true;
-    document.getElementById('speaking-badge').classList.add('active');
-  };
-  utterance.onend = utterance.onerror = () => {
-    isSpeaking = false;
-    document.getElementById('speaking-badge').classList.remove('active');
-  };
-
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
-}
-
-function stopSpeaking() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  isSpeaking = false;
-  document.getElementById('speaking-badge').classList.remove('active');
-}
-
-// ══════════════════════════════════════════════
-//  SPEECH TO TEXT (Web Speech API — Free)
-// ══════════════════════════════════════════════
-function toggleMic() {
-  if (isListening) { stopListening(); return; }
-  startListening();
-}
-
-function startListening() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    alert('Speech recognition is not supported in this browser. Please use Chrome.');
-    return;
-  }
-
-  stopSpeaking();
-  recognition = new SpeechRecognition();
-  recognition.lang = selectedLang.code;
-  recognition.continuous = false;
-  recognition.interimResults = true;
-
-  recognition.onstart = () => {
-    isListening = true;
-    document.getElementById('mic-btn').classList.add('listening');
-    document.getElementById('mic-btn').textContent = '🔴';
-    showStatus('Listening in ' + selectedLang.label + '... Speak now');
-  };
-
-  recognition.onresult = (e) => {
-    const transcript = Array.from(e.results)
-      .map(r => r[0].transcript).join('');
-    document.getElementById('user-input').value = transcript;
-    autoResize(document.getElementById('user-input'));
-  };
-
-  recognition.onend = () => {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('mic-btn').textContent = '🎤';
-    hideStatus();
-    const text = document.getElementById('user-input').value.trim();
-    if (text) sendMessage();
-  };
-
-  recognition.onerror = (e) => {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('mic-btn').textContent = '🎤';
-    hideStatus();
-    if (e.error !== 'no-speech' && e.error !== 'aborted') {
-      showStatus('Could not understand. Please try again.');
-      setTimeout(hideStatus, 2000);
-    }
-  };
-
-  recognition.start();
-}
-
-function stopListening() {
-  if (recognition) { recognition.stop(); recognition = null; }
-  isListening = false;
-  document.getElementById('mic-btn').classList.remove('listening');
-  document.getElementById('mic-btn').textContent = '🎤';
-  hideStatus();
-}
-
-// ══════════════════════════════════════════════
-//  UI HELPERS
-// ══════════════════════════════════════════════
-function addMessage(role, text) {
-  const container = document.getElementById('chat-messages');
-  const time = new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
-  const avatar = role === 'assistant' ? '🤝' : (selectedRole === 'patient' ? '🛏️' : '👨‍👩‍👧');
-
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  div.innerHTML = `
-    <div class="msg-avatar">${avatar}</div>
-    <div>
-      <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>
-      <div class="msg-time">${time}</div>
-    </div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function showTyping(show) {
-  const container = document.getElementById('chat-messages');
-  const existing = document.getElementById('typing-msg');
-  if (existing) existing.remove();
-  if (!show) return;
-
-  const div = document.createElement('div');
-  div.className = 'msg assistant'; div.id = 'typing-msg';
-  div.innerHTML = `
-    <div class="msg-avatar">🤝</div>
-    <div class="typing-indicator">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    </div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function showStatus(text) {
-  document.getElementById('status-text').textContent = text;
-  document.getElementById('status-bar').classList.add('active');
-}
-
-function hideStatus() {
-  document.getElementById('status-bar').classList.remove('active');
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
-
-// Load voices on ready (some browsers need this)
-if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
-</script>
+<script src="js/data.js"></script>
+<script src="js/vitals.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
