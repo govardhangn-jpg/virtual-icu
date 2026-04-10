@@ -3,304 +3,268 @@
 ╔══════════════════════════════════════════════════════╗
 ║  OMRON HEM-7143T1-A — Bluetooth Bridge               ║
 ║  Samarthaa Hospital · ICU Ward 6A                    ║
-║                                                      ║
-║  Reads BP + HR from Omron via Bluetooth              ║
-║  Sends live data to VitalWatch dashboard             ║
-║                                                      ║
-║  Run this on the bedside laptop:                     ║
-║    python3 omron_bridge.py                           ║
+║  Compatible: Python 3.8+ · bleak 3.x                ║
 ╚══════════════════════════════════════════════════════╝
+
+Usage:
+  python omron_bridge.py              # Auto mode (every 15 min)
+  python omron_bridge.py --manual     # Manual menu
+  python omron_bridge.py --scan       # Scan Bluetooth devices
+  python omron_bridge.py --once       # Take one reading and exit
 """
 
 import asyncio
 import json
 import time
-import requests
-import logging
 import sys
 import os
+import logging
 from datetime import datetime
-from bleak import BleakScanner, BleakClient
 
-# ══════════════════════════════════════════
-#  CONFIGURATION — Edit these values
-# ══════════════════════════════════════════
+# ══════════════════════════════════════════════
+#  CONFIGURATION — Edit these
+# ══════════════════════════════════════════════
+VITALWATCH_URL         = "https://virtual-icu.onrender.com"
+PATIENT_ID             = "P001"
+PATIENT_NAME           = "Ramesh Kumar"
+BED_NUMBER             = "Bed 01"
+AUTO_INTERVAL_MINUTES  = 15
+VITALWATCH_API_KEY     = os.environ.get("VITALWATCH_API_KEY", "samarthaa-icu-2024")
 
-# Your VitalWatch server URL on Render
-VITALWATCH_URL = "https://virtual-icu.onrender.com"
+# Omron device — Samarthaa Hospital Ward 6A, Bed 01
+OMRON_MAC              = "FF:DF:7B:0D:14:9E"   # BLESmart_0000049CFFDF7B0D149E
+OMRON_NAME             = "BLESmart_0000049CFFDF7B0D149E" 
 
-# Patient this device is assigned to (must match patient ID in data.js)
-PATIENT_ID     = "P001"
-PATIENT_NAME   = "Ramesh Kumar"
-BED_NUMBER     = "Bed 01"
-
-# Auto-reading interval in minutes
-AUTO_INTERVAL_MINUTES = 15
-
-# Omron device name (as it appears in Bluetooth scan)
-OMRON_DEVICE_NAME = "BLEsmart_"   # Omron devices start with this
-
-# API key for your VitalWatch server (set in Render env vars)
-VITALWATCH_API_KEY = os.environ.get("VITALWATCH_API_KEY", "samarthaa-icu-2024")
-
-# ══════════════════════════════════════════
-#  OMRON BLUETOOTH GATT UUIDs
-#  (Standard Bluetooth Health Device Profile)
-# ══════════════════════════════════════════
-
-# Blood Pressure Service
-BP_SERVICE_UUID         = "00001810-0000-1000-8000-00805f9b34fb"
-BP_MEASUREMENT_UUID     = "00002a35-0000-1000-8000-00805f9b34fb"
-INTERMEDIATE_BP_UUID    = "00002a36-0000-1000-8000-00805f9b34fb"
-
-# Device Information
-DEVICE_INFO_UUID        = "0000180a-0000-1000-8000-00805f9b34fb"
-MANUFACTURER_UUID       = "00002a29-0000-1000-8000-00805f9b34fb"
-
-# Current Time (needed to sync with Omron)
-CURRENT_TIME_SERVICE    = "00001805-0000-1000-8000-00805f9b34fb"
-CURRENT_TIME_UUID       = "00002a2b-0000-1000-8000-00805f9b34fb"
-
-# ══════════════════════════════════════════
+# ══════════════════════════════════════════════
 #  LOGGING
-# ══════════════════════════════════════════
+# ══════════════════════════════════════════════
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
+    format='%(asctime)s  %(message)s',
     datefmt='%H:%M:%S',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler('omron_bridge.log')
+        logging.FileHandler('omron_bridge.log', encoding='utf-8')
     ]
 )
 log = logging.getLogger(__name__)
 
-# ══════════════════════════════════════════
-#  PARSE OMRON BP DATA
-#  Bluetooth BP measurement format (IEEE 11073)
-# ══════════════════════════════════════════
-def parse_bp_measurement(data: bytearray) -> dict:
-    """Parse raw Bluetooth BP measurement bytes from Omron."""
+# ══════════════════════════════════════════════
+#  CHECK DEPENDENCIES
+# ══════════════════════════════════════════════
+try:
+    from bleak import BleakScanner, BleakClient
     try:
-        flags = data[0]
-        unit_mmhg = not (flags & 0x01)  # bit 0: 0=mmHg, 1=kPa
-        has_timestamp = bool(flags & 0x02)
-        has_pulse_rate = bool(flags & 0x04)
+        import importlib.metadata
+        bv = importlib.metadata.version('bleak')
+    except Exception:
+        bv = '3.x'
+    log.info(f"✅ bleak {bv} loaded")
+except ImportError:
+    print("\n❌ bleak not installed. Run:")
+    print("   pip install bleak requests")
+    sys.exit(1)
 
-        # Bytes 1-6: systolic, diastolic, MAP (IEEE 11073 SFLOAT format)
-        def sfloat(b1, b2):
-            """Decode IEEE 11073 SFLOAT (2 bytes)."""
-            val = (b2 << 8) | b1
-            mantissa = val & 0x0FFF
-            if mantissa >= 0x0800:
-                mantissa -= 0x1000
-            exponent = (val >> 12) & 0x0F
-            if exponent >= 0x08:
-                exponent -= 0x10
+try:
+    import requests
+except ImportError:
+    print("\n❌ requests not installed. Run:")
+    print("   pip install bleak requests")
+    sys.exit(1)
+
+# ══════════════════════════════════════════════
+#  OMRON BLUETOOTH GATT UUIDs
+#  Standard Bluetooth Health Device Profile (HDP)
+# ══════════════════════════════════════════════
+BP_SERVICE_UUID      = "00001810-0000-1000-8000-00805f9b34fb"
+BP_MEASUREMENT_UUID  = "00002a35-0000-1000-8000-00805f9b34fb"
+CURRENT_TIME_UUID    = "00002a2b-0000-1000-8000-00805f9b34fb"
+
+# ══════════════════════════════════════════════
+#  PARSE OMRON BP DATA
+# ══════════════════════════════════════════════
+def parse_bp(data: bytearray) -> dict:
+    """Parse IEEE 11073 Blood Pressure Measurement characteristic."""
+    try:
+        flags         = data[0]
+        has_timestamp = bool(flags & 0x02)
+        has_pulse     = bool(flags & 0x04)
+
+        def sfloat(lo, hi):
+            """Decode 2-byte IEEE 11073 SFLOAT."""
+            raw      = (hi << 8) | lo
+            mantissa = raw & 0x0FFF
+            exponent = (raw >> 12) & 0x0F
+            if mantissa >= 0x0800: mantissa -= 0x1000
+            if exponent >= 0x08:   exponent -= 0x10
             return round(mantissa * (10 ** exponent), 1)
 
         systolic  = sfloat(data[1], data[2])
         diastolic = sfloat(data[3], data[4])
-        mean_ap   = sfloat(data[5], data[6])
-
-        result = {
+        result    = {
             "systolic":  systolic,
             "diastolic": diastolic,
-            "mean_ap":   mean_ap,
-            "unit":      "mmHg" if unit_mmhg else "kPa",
             "timestamp": datetime.now().isoformat(),
         }
 
         offset = 7
-
-        # Optional timestamp (7 bytes)
-        if has_timestamp and len(data) > offset + 6:
-            year   = (data[offset+1] << 8) | data[offset]
-            month  = data[offset+2]
-            day    = data[offset+3]
-            hour   = data[offset+4]
-            minute = data[offset+5]
-            second = data[offset+6]
-            result["device_timestamp"] = f"{year}-{month:02d}-{day:02d} {hour:02d}:{minute:02d}:{second:02d}"
+        if has_timestamp and len(data) >= offset + 7:
+            y = (data[offset+1] << 8) | data[offset]
+            result["device_time"] = f"{y}-{data[offset+2]:02d}-{data[offset+3]:02d} {data[offset+4]:02d}:{data[offset+5]:02d}"
             offset += 7
 
-        # Optional pulse rate
-        if has_pulse_rate and len(data) > offset + 1:
+        if has_pulse and len(data) >= offset + 2:
             result["pulse_rate"] = int(sfloat(data[offset], data[offset+1]))
 
         return result
 
     except Exception as e:
-        log.error(f"Failed to parse BP data: {e} | Raw: {data.hex()}")
+        log.error(f"Parse error: {e} | raw: {data.hex()}")
         return None
 
-
-# ══════════════════════════════════════════
+# ══════════════════════════════════════════════
 #  SEND TO VITALWATCH
-# ══════════════════════════════════════════
-def send_to_vitalwatch(reading: dict):
-    """Push a BP reading to the VitalWatch server."""
+# ══════════════════════════════════════════════
+def push_reading(reading: dict):
+    """Send BP reading to VitalWatch server."""
+    payload = {
+        "patient_id":   PATIENT_ID,
+        "patient_name": PATIENT_NAME,
+        "bed":          BED_NUMBER,
+        "source":       "omron_hem7143",
+        "vitals": {
+            "bps": reading.get("systolic"),
+            "bpd": reading.get("diastolic"),
+            "hr":  reading.get("pulse_rate"),
+        },
+        "timestamp": reading.get("timestamp"),
+        "api_key":   VITALWATCH_API_KEY,
+    }
+    payload["vitals"] = {k: v for k, v in payload["vitals"].items() if v is not None}
+
     try:
-        payload = {
-            "patient_id":   PATIENT_ID,
-            "patient_name": PATIENT_NAME,
-            "bed":          BED_NUMBER,
-            "source":       "omron_hem7143",
-            "vitals": {
-                "bps":  reading.get("systolic"),
-                "bpd":  reading.get("diastolic"),
-                "hr":   reading.get("pulse_rate"),
-                "map":  reading.get("mean_ap"),
-            },
-            "unit":       reading.get("unit", "mmHg"),
-            "timestamp":  reading.get("timestamp"),
-            "api_key":    VITALWATCH_API_KEY
-        }
-
-        # Remove None values
-        payload["vitals"] = {k: v for k, v in payload["vitals"].items() if v is not None}
-
-        response = requests.post(
-            f"{VITALWATCH_URL}/api/vitals",
-            json=payload,
-            timeout=10
-        )
-
-        if response.status_code == 200:
-            log.info(f"✅ Sent to VitalWatch: {PATIENT_NAME} — "
-                     f"BP {reading.get('systolic')}/{reading.get('diastolic')} mmHg, "
-                     f"HR {reading.get('pulse_rate', 'N/A')} bpm")
+        r = requests.post(f"{VITALWATCH_URL}/api/vitals", json=payload, timeout=10)
+        if r.status_code == 200:
+            log.info(f"✅ Sent → VitalWatch: BP {reading.get('systolic')}/{reading.get('diastolic')} mmHg  HR {reading.get('pulse_rate','--')} bpm")
         else:
-            log.warning(f"⚠️  VitalWatch returned {response.status_code}: {response.text[:100]}")
-
+            log.warning(f"⚠️  Server returned {r.status_code}")
+            save_offline(reading)
     except requests.exceptions.ConnectionError:
-        log.warning("⚠️  Cannot reach VitalWatch server — reading saved locally")
-        save_locally(reading)
+        log.warning("⚠️  No internet — saved offline")
+        save_offline(reading)
     except Exception as e:
-        log.error(f"❌ Failed to send to VitalWatch: {e}")
-        save_locally(reading)
+        log.error(f"Send error: {e}")
+        save_offline(reading)
 
-
-def save_locally(reading: dict):
-    """Save reading to local file if server unreachable."""
-    fname = f"offline_readings_{datetime.now().strftime('%Y%m%d')}.json"
+def save_offline(reading: dict):
+    fname = f"offline_{datetime.now().strftime('%Y%m%d')}.json"
     try:
-        existing = []
+        data = []
         if os.path.exists(fname):
-            with open(fname) as f:
-                existing = json.load(f)
-        existing.append({**reading, "patient_id": PATIENT_ID, "bed": BED_NUMBER})
-        with open(fname, 'w') as f:
-            json.dump(existing, f, indent=2)
-        log.info(f"💾 Saved offline: {fname}")
+            with open(fname) as f: data = json.load(f)
+        data.append({**reading, "patient_id": PATIENT_ID, "bed": BED_NUMBER})
+        with open(fname, 'w') as f: json.dump(data, f, indent=2)
+        log.info(f"💾 Offline save: {fname}")
     except Exception as e:
-        log.error(f"Could not save locally: {e}")
+        log.error(f"Offline save failed: {e}")
 
-
-def sync_offline_readings():
-    """Try to send any offline readings when connection restored."""
+def sync_offline():
     import glob
-    files = glob.glob("offline_readings_*.json")
-    for fname in files:
+    for fname in glob.glob("offline_*.json"):
         try:
-            with open(fname) as f:
-                readings = json.load(f)
+            with open(fname) as f: readings = json.load(f)
             sent = 0
             for r in readings:
                 try:
-                    response = requests.post(
-                        f"{VITALWATCH_URL}/api/vitals",
-                        json={**r, "api_key": VITALWATCH_API_KEY},
-                        timeout=5
-                    )
-                    if response.status_code == 200:
-                        sent += 1
-                except:
-                    pass
+                    resp = requests.post(f"{VITALWATCH_URL}/api/vitals", json={**r,"api_key":VITALWATCH_API_KEY}, timeout=5)
+                    if resp.status_code == 200: sent += 1
+                except: pass
             if sent == len(readings):
                 os.remove(fname)
-                log.info(f"✅ Synced {sent} offline readings from {fname}")
-            else:
-                log.info(f"⚠️  Synced {sent}/{len(readings)} offline readings")
-        except Exception as e:
-            log.error(f"Sync error: {e}")
+                log.info(f"✅ Synced {sent} offline readings")
+        except: pass
 
+# ══════════════════════════════════════════════
+#  SCAN FOR OMRON DEVICE
+# ══════════════════════════════════════════════
+async def find_omron():
+    """Scan Bluetooth and return first Omron device found."""
+    log.info("🔍 Scanning Bluetooth (15 seconds)...")
+    log.info("   → Press START on the Omron monitor now")
 
-# ══════════════════════════════════════════
-#  BLUETOOTH SCANNER
-# ══════════════════════════════════════════
-async def find_omron_device():
-    """Scan for Omron device in Bluetooth range."""
-    log.info("🔍 Scanning for Omron device...")
-    log.info("   → Press the START button on your Omron BP monitor now")
+    found = None
+    # bleak 3.x uses async context manager for scanner
+    async with BleakScanner() as scanner:
+        await asyncio.sleep(15)
+        devices = scanner.discovered_devices
 
-    devices = await BleakScanner.discover(timeout=15.0)
+    for d in devices:
+        name = d.name or ""
+        log.info(f"   {name:30s}  {d.address}")
+        if any(x in name.lower() for x in ["blesmart", "omron", "a&d", "hem"]) or d.address.upper() == OMRON_MAC.upper():
+            log.info(f"✅ Found: {name}  {d.address}")
+            found = d
+            break
 
-    for device in devices:
-        name = device.name or ""
-        log.info(f"   Found: {name} ({device.address})")
-        if OMRON_DEVICE_NAME.lower() in name.lower() or "omron" in name.lower():
-            log.info(f"✅ Found Omron device: {name} at {device.address}")
-            return device
+    if not found:
+        log.warning("⚠️  No Omron device found. Tips:")
+        log.warning("   • Ensure Bluetooth is ON on this laptop")
+        log.warning("   • Hold the MEMORY button on Omron for 3 seconds")
+        log.warning("   • Move Omron within 1 metre of laptop")
+    return found
 
-    log.warning("⚠️  No Omron device found. Make sure:")
-    log.warning("   1. Bluetooth is ON on this laptop")
-    log.warning("   2. Omron is in pairing/transfer mode (press START)")
-    log.warning("   3. Omron is within 1 metre of this laptop")
-    return None
+# ══════════════════════════════════════════════
+#  TAKE ONE READING
+# ══════════════════════════════════════════════
+async def take_reading(address: str = None) -> dict:
+    """Connect to Omron, get one BP reading, disconnect."""
 
+    # Use hardcoded MAC if no address given — faster, no scan needed
+    if not address:
+        address = OMRON_MAC
+        log.info(f"📍 Using saved device: {OMRON_NAME}")
+        log.info(f"   Address: {address}")
 
-# ══════════════════════════════════════════
-#  TAKE A READING
-# ══════════════════════════════════════════
-async def take_reading(device_address: str = None) -> dict:
-    """Connect to Omron, retrieve BP reading, disconnect."""
-    received_reading = None
+    received = None
+    event    = asyncio.Event()
 
-    if not device_address:
-        device = await find_omron_device()
-        if not device:
-            return None
-        device_address = device.address
-
-    def on_bp_notification(sender, data):
-        nonlocal received_reading
-        log.info(f"📡 Received BP data ({len(data)} bytes)")
-        reading = parse_bp_measurement(bytearray(data))
-        if reading:
-            received_reading = reading
-            log.info(f"   Systolic:  {reading.get('systolic')} mmHg")
-            log.info(f"   Diastolic: {reading.get('diastolic')} mmHg")
-            log.info(f"   Pulse:     {reading.get('pulse_rate', 'N/A')} bpm")
+    def on_notify(sender, data):
+        nonlocal received
+        log.info(f"📡 BP data received ({len(data)} bytes)")
+        r = parse_bp(bytearray(data))
+        if r:
+            received = r
+            log.info(f"   Systolic:  {r.get('systolic')} mmHg")
+            log.info(f"   Diastolic: {r.get('diastolic')} mmHg")
+            log.info(f"   Pulse:     {r.get('pulse_rate','--')} bpm")
+            event.set()
 
     try:
-        log.info(f"📶 Connecting to {device_address}...")
-        async with BleakClient(device_address, timeout=20.0) as client:
-            log.info("✅ Connected to Omron")
+        log.info(f"📶 Connecting to {address}...")
+        async with BleakClient(address) as client:
+            log.info("✅ Connected")
 
-            # Sync time so Omron timestamps readings correctly
+            # Sync time to Omron (optional but helps timestamps)
             try:
                 now = datetime.now()
-                time_data = bytearray([
+                tb  = bytearray([
                     now.year & 0xFF, (now.year >> 8) & 0xFF,
                     now.month, now.day, now.hour, now.minute, now.second,
                     now.weekday() + 1, 0, 0
                 ])
-                await client.write_gatt_char(CURRENT_TIME_UUID, time_data)
-                log.info("⏰ Time synced with Omron")
-            except Exception:
-                pass  # Time sync is optional
+                await client.write_gatt_char(CURRENT_TIME_UUID, tb)
+                log.info("⏰ Time synced")
+            except:
+                pass
 
-            # Subscribe to BP measurement notifications
-            await client.start_notify(BP_MEASUREMENT_UUID, on_bp_notification)
-            log.info("👂 Listening for BP measurement...")
-            log.info("   → Press START on the Omron monitor to take a reading")
+            # Subscribe to BP notifications
+            await client.start_notify(BP_MEASUREMENT_UUID, on_notify)
+            log.info("👂 Waiting for reading — press START on Omron monitor")
 
-            # Wait up to 90 seconds for a reading
-            for _ in range(90):
-                if received_reading:
-                    break
-                await asyncio.sleep(1)
+            try:
+                await asyncio.wait_for(event.wait(), timeout=90)
+            except asyncio.TimeoutError:
+                log.warning("⏱️  Timed out — no reading in 90 seconds")
 
             await client.stop_notify(BP_MEASUREMENT_UUID)
 
@@ -308,87 +272,106 @@ async def take_reading(device_address: str = None) -> dict:
         log.error(f"❌ Bluetooth error: {e}")
         return None
 
-    if received_reading:
-        send_to_vitalwatch(received_reading)
-    else:
-        log.warning("⚠️  No reading received within timeout")
+    if received:
+        push_reading(received)
+        sync_offline()
 
-    return received_reading
+    return received
 
+# ══════════════════════════════════════════════
+#  SCAN ONLY MODE
+# ══════════════════════════════════════════════
+async def scan_only():
+    print("\n🔍 Scanning for all Bluetooth devices (10 seconds)...\n")
+    async with BleakScanner() as scanner:
+        await asyncio.sleep(10)
+        devices = scanner.discovered_devices
 
-# ══════════════════════════════════════════
-#  AUTO-READING LOOP
-# ══════════════════════════════════════════
-async def auto_reading_loop():
-    """Take automatic readings at regular intervals."""
-    log.info(f"⏱️  Auto-reading every {AUTO_INTERVAL_MINUTES} minutes")
-    log.info("   Press Ctrl+C to stop")
+    print(f"Found {len(devices)} device(s):\n")
+    print(f"  {'Name':35s}  {'Address':20s}")
+    print(f"  {'-'*35}  {'-'*20}")
+    for d in devices:
+        name = d.name or "(no name)"
+        print(f"  {name:35s}  {d.address}")
+
+    print("\nOmron devices usually named: BLEsmart_XXXXXXXX or start with A&D")
+
+# ══════════════════════════════════════════════
+#  AUTO LOOP
+# ══════════════════════════════════════════════
+async def auto_loop():
+    log.info(f"⏱️  Auto mode — reading every {AUTO_INTERVAL_MINUTES} minutes")
+    log.info("   Press Ctrl+C to stop\n")
 
     while True:
-        log.info(f"\n{'='*50}")
-        log.info(f"🩺 Auto reading — {datetime.now().strftime('%d %b %Y %H:%M')}")
-        log.info(f"   Patient: {PATIENT_NAME} · {BED_NUMBER}")
-        log.info(f"{'='*50}")
-
+        print(f"\n{'='*52}")
+        print(f"  🩺  {PATIENT_NAME} · {BED_NUMBER}")
+        print(f"  🕐  {datetime.now().strftime('%d %b %Y  %H:%M:%S')}")
+        print(f"{'='*52}")
         await take_reading()
-        sync_offline_readings()
-
-        log.info(f"\n⏳ Next reading in {AUTO_INTERVAL_MINUTES} minutes...")
+        log.info(f"⏳ Next reading in {AUTO_INTERVAL_MINUTES} minutes...")
         await asyncio.sleep(AUTO_INTERVAL_MINUTES * 60)
 
+# ══════════════════════════════════════════════
+#  MANUAL MENU
+# ══════════════════════════════════════════════
+async def manual_menu():
+    print("""
+╔══════════════════════════════════════════╗
+║   MANUAL READING — Samarthaa ICU         ║
+╚══════════════════════════════════════════╝
+""")
+    while True:
+        print(f"Patient: {PATIENT_NAME} ({BED_NUMBER})")
+        print("\n  1. Take reading now")
+        print("  2. Scan for Bluetooth devices")
+        print("  0. Exit\n")
 
-# ══════════════════════════════════════════
-#  MANUAL READING (single shot)
-# ══════════════════════════════════════════
-async def manual_reading():
-    """Take a single manual reading."""
-    print(f"\n{'='*50}")
-    print(f"🩺 MANUAL READING")
-    print(f"   Patient: {PATIENT_NAME} · {BED_NUMBER}")
-    print(f"   Time:    {datetime.now().strftime('%d %b %Y %H:%M:%S')}")
-    print(f"{'='*50}\n")
-    print("Press START on the Omron monitor when ready...\n")
-    result = await take_reading()
-    if result:
-        print(f"\n✅ Reading complete:")
-        print(f"   BP:    {result.get('systolic')}/{result.get('diastolic')} mmHg")
-        print(f"   Pulse: {result.get('pulse_rate', 'N/A')} bpm")
-    else:
-        print("\n❌ Reading failed — try again")
-    return result
+        choice = input("Enter number: ").strip()
 
+        if choice == "0":
+            break
+        elif choice == "2":
+            await scan_only()
+        elif choice == "1":
+            print(f"\n→ Place cuff on patient and press START on Omron...\n")
+            result = await take_reading()
+            if result:
+                print(f"\n  ✅ Reading complete:")
+                print(f"     BP:    {result.get('systolic')}/{result.get('diastolic')} mmHg")
+                print(f"     Pulse: {result.get('pulse_rate','--')} bpm")
+                print(f"     Sent to VitalWatch dashboard ✓")
+            else:
+                print("\n  ❌ No reading received. Try again.\n")
 
-# ══════════════════════════════════════════
+# ══════════════════════════════════════════════
 #  MAIN
-# ══════════════════════════════════════════
+# ══════════════════════════════════════════════
 async def main():
     print("""
 ╔══════════════════════════════════════════════════════╗
-║          OMRON Bridge — Samarthaa Hospital           ║
-║          ICU Ward 6A · VitalWatch v2.4               ║
+║       Omron Bridge — Samarthaa Hospital              ║
+║       ICU Ward 6A · VitalWatch v2.4                  ║
 ╚══════════════════════════════════════════════════════╝
 """)
     print(f"  Patient:  {PATIENT_NAME} ({BED_NUMBER})")
     print(f"  Server:   {VITALWATCH_URL}")
-    print(f"  Auto:     Every {AUTO_INTERVAL_MINUTES} minutes")
-    print()
+    print(f"  Interval: Every {AUTO_INTERVAL_MINUTES} minutes\n")
 
-    if len(sys.argv) > 1 and sys.argv[1] == "--manual":
-        # Manual mode: single reading
-        await manual_reading()
-    elif len(sys.argv) > 1 and sys.argv[1] == "--scan":
-        # Just scan for devices
-        devices = await BleakScanner.discover(timeout=10.0)
-        print("\nNearby Bluetooth devices:")
-        for d in devices:
-            print(f"  {d.name or 'Unknown':30s}  {d.address}")
+    args = sys.argv[1:]
+
+    if "--scan" in args:
+        await scan_only()
+    elif "--manual" in args:
+        await manual_menu()
+    elif "--once" in args:
+        await take_reading()
     else:
-        # Default: auto loop
-        await auto_reading_loop()
+        await auto_loop()
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\n\n👋 Bridge stopped. Goodbye.")
+        print("\n\n👋 Bridge stopped.")
