@@ -666,7 +666,6 @@ function showChat() {
   document.getElementById('screen-welcome').classList.remove('active');
   document.getElementById('screen-setup').classList.remove('active');
   document.getElementById('screen-chat').classList.add('active');
-  showSafariNoticeIfNeeded();
 }
 
 // ══════════════════════════════════════════════════════
@@ -728,6 +727,9 @@ function startCompanion() {
 
   // Show chat
   showChat();
+
+  // Show Safari notice if needed (function is defined by this point)
+  if (typeof showSafariNoticeIfNeeded === 'function') showSafariNoticeIfNeeded();
 
   // Build system prompt & start
   chatHistory = [{ role:'system', content: buildSystemPrompt() }];
