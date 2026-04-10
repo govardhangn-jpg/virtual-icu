@@ -49,9 +49,9 @@ const STAKEHOLDERS = [
     specialty: 'General Medicine',
     status: 'available',
     alertPriority: 3,
-    phone: '+919632288745',
-    phoneDisplay: '+91-9632288745',
-    whatsapp: '+919632288745',
+    phone: '+919741605315',
+    phoneDisplay: '+91-9741605315',
+    whatsapp: '+919741605315',
     email: 'dr.rekha@samarthaa.in',
     color: 'rgba(167,139,250,0.15)',
     textColor: '#a78bfa'
