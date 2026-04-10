@@ -81,6 +81,23 @@ app.post('/api/sms', async (req, res) => {
   }
 });
 
+// ── Test call to Dr. Mahesh directly ──
+app.get('/api/test-call', async (req, res) => {
+  if (!client) return res.json({ error: 'Twilio not connected' });
+  try {
+    const call = await client.calls.create({
+      to:   '+916366158568',
+      from: TWILIO_PHONE_NUMBER,
+      twiml: `<Response><Say voice="Polly.Raveena" language="en-IN">
+        This is a test call from VitalWatch ICU at Samarthaa Hospital. System is working correctly.
+      </Say></Response>`
+    });
+    res.json({ success: true, callSid: call.sid, to: '+916366158568' });
+  } catch (err) {
+    res.json({ success: false, error: err.message, code: err.code });
+  }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
