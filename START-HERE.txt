@@ -1,0 +1,123 @@
+# ✅ START HERE — VitalWatch ICU Setup Guide
+# Samarthaa Hospital · Ward 6A
+
+## What's already done for you:
+- ✅ All doctor & nurse names and numbers pre-filled
+- ✅ Hospital name set to "Samarthaa Hospital · Ward 6A"
+- ✅ Alert routing configured (who gets called/WhatsApp/SMS)
+- ✅ Login roles set (Dr. Mahesh, Nurse Asha, Admin Govardhanswamy)
+
+---
+
+## STEP 1 — Get a Twilio account (15 minutes, free trial)
+
+1. Go to https://www.twilio.com and click "Sign up for free"
+2. Verify your email and phone number
+3. After login, go to your Console: https://console.twilio.com
+4. Copy your:
+   - **Account SID** (starts with AC...)
+   - **Auth Token** (click to reveal)
+5. Click "Get a phone number" → choose an Indian number or international
+
+---
+
+## STEP 2 — Add your Twilio credentials to server.js
+
+Open `server.js` and replace these 3 lines:
+
+```
+const TWILIO_ACCOUNT_SID  = 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+const TWILIO_AUTH_TOKEN   = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+const TWILIO_PHONE_NUMBER = '+1xxxxxxxxxx';
+```
+
+With your real values from the Twilio Console.
+
+---
+
+## STEP 3 — Enable WhatsApp (5 minutes)
+
+1. In Twilio Console → Messaging → Try it out → Send a WhatsApp message
+2. Follow the instructions to join the sandbox:
+   - Each doctor/nurse sends "join <sandbox-word>" to +14155238886 on WhatsApp
+   - They only need to do this once
+3. For production: apply for WhatsApp Business API (takes ~1 week)
+
+---
+
+## STEP 4 — Run the server
+
+You need Node.js installed. Download from https://nodejs.org (LTS version).
+
+Open a terminal/command prompt in the icu-monitor folder:
+
+```bash
+# Install dependencies (one time only)
+npm install
+
+# Start the server
+npm start
+```
+
+You'll see:
+```
+🚀 Server running at http://localhost:3000
+📱 Open the app at: http://localhost:3000/index.html
+```
+
+---
+
+## STEP 5 — Open the app
+
+On the computer running the server:
+→ Open Chrome and go to: http://localhost:3000
+
+On any phone on the same Wi-Fi network:
+→ Open Chrome and go to: http://YOUR-COMPUTER-IP:3000
+→ (Find your IP: open Command Prompt → type `ipconfig` → look for IPv4 address)
+
+---
+
+## How alerts work
+
+| Alert Level | Who gets called | Who gets WhatsApp | Who gets SMS |
+|-------------|----------------|-------------------|--------------|
+| 🔴 CRITICAL | Dr. Mahesh + Nurse Asha | + Dr. Nagendra | All doctors + nurse |
+| 🟡 WARNING  | Nobody called | Dr. Mahesh + Nurse Asha | Dr. Mahesh + Nurse Asha |
+| 📊 Reports  | — | All 5 staff | — |
+
+---
+
+## Care Team at a Glance
+
+| Name | Phone | Role | Alert Priority |
+|------|-------|------|---------------|
+| Dr. Mahesh KM | +91-6366158568 | Intensivist | 1st called |
+| Dr. Nagendra Prasad | +91-9886428892 | Cardiologist | 2nd called |
+| Dr. Rekha Jayaram | +91-9632288745 | Physician | 3rd called |
+| Nurse Asha | +91-9632288745 | Shift Nurse | Called with doctor |
+| Govardhanswamy GN | +91-9632288745 | Admin | Reports only |
+
+---
+
+## Deploying to the internet (so staff can use from anywhere)
+
+### Free option — Railway.app
+1. Go to https://railway.app and sign up with GitHub
+2. Click "New Project" → "Deploy from GitHub repo"
+3. Upload the icu-monitor folder as a GitHub repo
+4. Railway auto-detects Node.js and runs `npm start`
+5. You get a URL like `https://vitalwatch-samarthaa.railway.app`
+
+### Alternative — Render.com
+1. Go to https://render.com
+2. New → Web Service → Connect your repo
+3. Build command: `npm install`
+4. Start command: `node server.js`
+
+---
+
+## Need help?
+Contact the VitalWatch setup team or refer to:
+- Twilio docs: https://www.twilio.com/docs
+- Node.js download: https://nodejs.org

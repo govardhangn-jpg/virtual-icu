@@ -1,0 +1,36 @@
+{
+  "name": "VitalWatch ICU",
+  "short_name": "VitalWatch",
+  "description": "Real-time ICU patient monitoring system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06080f",
+  "theme_color": "#0a0e1a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230a0e1a'/%3E%3Ccircle cx='96' cy='96' r='42' stroke='%2300d4aa' stroke-width='8' fill='none'/%3E%3Cpath d='M24 96 L54 66 L78 90 L96 48 L120 108 L138 84 L168 96' stroke='%2300d4aa' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0e1a'/%3E%3Ccircle cx='256' cy='256' r='112' stroke='%2300d4aa' stroke-width='20' fill='none'/%3E%3Cpath d='M64 256 L144 176 L208 240 L256 128 L320 288 L368 224 L448 256' stroke='%2300d4aa' stroke-width='24' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["medical", "health"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Alert Center",
+      "url": "/?page=alerts",
+      "description": "View active alerts"
+    },
+    {
+      "name": "All Patients",
+      "url": "/?page=dashboard",
+      "description": "Patient overview"
+    }
+  ]
+}

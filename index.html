@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0e1a">
+<title>VitalWatch ICU — Samarthaa Hospital</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login-screen" class="screen active">
+  <div class="login-bg">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+  </div>
+  <div class="login-container">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2 L16 8 M16 24 L16 30 M2 16 L8 16 M24 16 L30 16" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="7" stroke="#00d4aa" stroke-width="2"/>
+          <path d="M4 16 L9 11 L13 15 L16 8 L20 18 L23 14 L28 16" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-name">VitalWatch</h1>
+        <p class="brand-sub">ICU Monitoring System</p>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <h2 class="login-title">Staff Sign In</h2>
+      <p class="login-desc">Authorized medical personnel only</p>
+
+      <div class="form-group">
+        <label>Staff ID</label>
+        <input type="text" id="staff-id" placeholder="e.g. DR-2024-001" value="DR-2024-001">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" value="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Ward / Unit</label>
+        <select id="ward-select">
+          <option value="icu-4b">ICU — Ward 6A</option>
+          <option value="icu-3a">ICU — Ward 3A · Samarthaa Hospital</option>
+          <option value="ccu">Cardiac Care Unit · Samarthaa Hospital</option>
+          <option value="nicu">Neuro ICU</option>
+        </select>
+      </div>
+
+      <button class="btn-login" onclick="doLogin()">
+        <span>Sign In to Dashboard</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="login-roles">
+        <span>Quick login:</span>
+        <button onclick="quickLogin('doctor')">Doctor</button>
+        <button onclick="quickLogin('nurse')">Nurse</button>
+        <button onclick="quickLogin('admin')">Admin</button>
+      </div>
+    </div>
+
+    <p class="login-footer">Samarthaa Hospital · VitalWatch v2.4.1 · DISHA Compliant</p>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app-screen" class="screen">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="7" stroke="#00d4aa" stroke-width="2"/>
+          <path d="M4 16 L9 11 L13 15 L16 8 L20 18 L23 14 L28 16" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>VitalWatch</span>
+      </div>
+      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+    </div>
+
+    <div class="ward-badge">
+      <div class="ward-dot"></div>
+      <span id="sidebar-ward">ICU — Ward 6A</span>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">Monitoring</p>
+      <a class="nav-item active" onclick="showPage('dashboard')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+        All Patients
+      </a>
+      <a class="nav-item" onclick="showPage('alerts')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 015 5v3l1.5 2.5H1.5L3 9V6a5 5 0 015-5z" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3"/></svg>
+        Alert Center
+        <span class="nav-badge" id="alert-nav-count">3</span>
+      </a>
+      <a class="nav-item" onclick="showPage('trends')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 12 L4 8 L7 10 L10 4 L13 7 L15 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Trends & History
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">Communication</p>
+      <a class="nav-item" onclick="showPage('reports')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Reports
+      </a>
+      <a class="nav-item" onclick="showPage('stakeholders')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M12 10c1.66 0 3 1.34 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Care Team
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">System</p>
+      <a class="nav-item" onclick="showPage('settings')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.22 3.22l1.41 1.41M11.37 11.37l1.41 1.41M3.22 12.78l1.41-1.41M11.37 4.63l1.41-1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Settings
+      </a>
+      <a class="nav-item" onclick="doLogout()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign Out
+      </a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">DK</div>
+      <div>
+        <p class="user-name" id="sidebar-name">Dr. Kavya R.</p>
+        <p class="user-role" id="sidebar-role">Intensivist · On Call</p>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main Area -->
+  <div class="main-area">
+
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="header-breadcrumb" id="breadcrumb">All Patients</div>
+      </div>
+      <div class="header-center">
+        <div class="live-indicator">
+          <span class="live-pulse"></span>
+          <span>LIVE</span>
+        </div>
+        <div class="header-clock" id="header-clock">--:--:--</div>
+      </div>
+      <div class="header-right">
+        <button class="header-btn" onclick="showPage('alerts')" title="Alerts">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 015 5v3l1.5 2.5H1.5L3 9V6a5 5 0 015-5z" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3"/></svg>
+          <span class="header-badge" id="header-alert-badge">3</span>
+        </button>
+        <button class="header-btn" onclick="sendReport()" title="Quick Report">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Critical Alert Banner -->
+    <div class="critical-banner" id="critical-banner" style="display:none">
+      <div class="banner-pulse"></div>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L15 14H1L8 1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span id="banner-text">Critical alert active</span>
+      <button onclick="acknowledgeAlert()" class="banner-ack">Acknowledge</button>
+      <button onclick="document.getElementById('critical-banner').style.display='none'" class="banner-close">✕</button>
+    </div>
+
+    <!-- PAGE: Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Patient Overview</h2>
+          <p class="page-sub" id="ward-label">ICU — Ward 6A · 4 patients monitored</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline" onclick="showPage('reports')">Send Report</button>
+          <button class="btn-primary" onclick="showAddPatient()">+ Add Patient</button>
+        </div>
+      </div>
+
+      <div class="patients-grid" id="patients-grid">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+
+    <!-- PAGE: Patient Detail -->
+    <div class="page" id="page-patient">
+      <div class="page-header">
+        <div>
+          <button class="back-btn" onclick="showPage('dashboard')">← Back</button>
+          <h2 class="page-title" id="detail-patient-name">Patient Name</h2>
+          <p class="page-sub" id="detail-patient-meta">Bed · Age · Diagnosis</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline" onclick="callCareTeam()">Call Care Team</button>
+          <button class="btn-primary" onclick="sendPatientReport()">Send Report</button>
+        </div>
+      </div>
+
+      <div class="detail-layout">
+        <!-- ECG -->
+        <div class="ecg-card">
+          <div class="ecg-header">
+            <span class="ecg-label">ECG · Lead II</span>
+            <span class="ecg-hr" id="detail-hr-wave">-- bpm</span>
+          </div>
+          <canvas id="detail-ecg" height="70"></canvas>
+        </div>
+
+        <!-- Vital Cards -->
+        <div class="detail-vitals-grid" id="detail-vitals-grid">
+          <!-- Dynamically rendered -->
+        </div>
+
+        <!-- Side info -->
+        <div class="detail-side">
+          <div class="detail-side-card">
+            <h3 class="side-card-title">Patient Info</h3>
+            <div class="info-row"><span>Bed</span><strong id="d-bed">—</strong></div>
+            <div class="info-row"><span>Age / Sex</span><strong id="d-age">—</strong></div>
+            <div class="info-row"><span>Diagnosis</span><strong id="d-dx">—</strong></div>
+            <div class="info-row"><span>Admitted</span><strong id="d-admit">—</strong></div>
+            <div class="info-row"><span>Attending</span><strong id="d-doc">—</strong></div>
+          </div>
+
+          <div class="detail-side-card">
+            <h3 class="side-card-title">Alert History</h3>
+            <div id="patient-alert-log" class="mini-alert-log">
+              <p class="no-alerts">No alerts in past 24h</p>
+            </div>
+          </div>
+
+          <div class="detail-side-card">
+            <h3 class="side-card-title">Threshold Settings</h3>
+            <div class="threshold-row">
+              <span>HR low / high</span>
+              <input type="number" class="thresh-input" value="50" id="thresh-hr-lo"> /
+              <input type="number" class="thresh-input" value="120" id="thresh-hr-hi">
+            </div>
+            <div class="threshold-row">
+              <span>SpO₂ min</span>
+              <input type="number" class="thresh-input" value="94" id="thresh-spo2">
+            </div>
+            <div class="threshold-row">
+              <span>SBP low / high</span>
+              <input type="number" class="thresh-input" value="90" id="thresh-sbp-lo"> /
+              <input type="number" class="thresh-input" value="160" id="thresh-sbp-hi">
+            </div>
+            <button class="btn-primary" style="width:100%;margin-top:10px;font-size:12px;padding:8px" onclick="saveThresholds()">Save Thresholds</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: Alert Center -->
+    <div class="page" id="page-alerts">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Alert Center</h2>
+          <p class="page-sub">Real-time alerts across all patients</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline" onclick="clearAllAlerts()">Clear All</button>
+        </div>
+      </div>
+      <div class="alerts-list" id="alerts-list">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+
+    <!-- PAGE: Trends -->
+    <div class="page" id="page-trends">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Trends & History</h2>
+          <p class="page-sub">Vital sign trends over time</p>
+        </div>
+        <div class="page-actions">
+          <select class="btn-outline" id="trend-patient-select" onchange="renderTrends()">
+            <!-- Dynamically populated -->
+          </select>
+          <select class="btn-outline" id="trend-range">
+            <option value="1">Last 1 hour</option>
+            <option value="6">Last 6 hours</option>
+            <option value="24" selected>Last 24 hours</option>
+          </select>
+        </div>
+      </div>
+      <div class="trends-grid">
+        <div class="trend-card"><div class="trend-title">Heart Rate (bpm)</div><canvas id="trend-hr" height="120"></canvas></div>
+        <div class="trend-card"><div class="trend-title">Blood Pressure (mmHg)</div><canvas id="trend-bp" height="120"></canvas></div>
+        <div class="trend-card"><div class="trend-title">SpO₂ (%)</div><canvas id="trend-spo2" height="120"></canvas></div>
+        <div class="trend-card"><div class="trend-title">Temperature (°C)</div><canvas id="trend-temp" height="120"></canvas></div>
+      </div>
+    </div>
+
+    <!-- PAGE: Reports -->
+    <div class="page" id="page-reports">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Reports</h2>
+          <p class="page-sub">Periodic reporting & communication</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-primary" onclick="generateReport()">Generate Now</button>
+        </div>
+      </div>
+
+      <div class="reports-layout">
+        <div class="report-config-card">
+          <h3>Schedule Reports</h3>
+          <div class="form-group">
+            <label>Frequency</label>
+            <select id="report-freq">
+              <option>Every 4 hours</option>
+              <option>Every 6 hours</option>
+              <option>Every 8 hours (shift change)</option>
+              <option>Every 12 hours</option>
+              <option>Daily at 6:00 AM</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Recipients</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" checked> Attending Doctors</label>
+              <label class="checkbox-item"><input type="checkbox" checked> Nursing Staff</label>
+              <label class="checkbox-item"><input type="checkbox"> Hospital Admin</label>
+              <label class="checkbox-item"><input type="checkbox"> On-call Specialists</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Delivery Method</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" checked> Email</label>
+              <label class="checkbox-item"><input type="checkbox" checked> WhatsApp</label>
+              <label class="checkbox-item"><input type="checkbox"> SMS</label>
+              <label class="checkbox-item"><input type="checkbox"> In-app only</label>
+            </div>
+          </div>
+          <button class="btn-primary" style="width:100%" onclick="saveReportConfig()">Save Schedule</button>
+        </div>
+
+        <div class="report-preview-card">
+          <h3>Latest Report Preview</h3>
+          <div class="report-preview" id="report-preview">
+            <div class="report-header-block">
+              <div class="report-logo">VitalWatch ICU</div>
+              <div class="report-meta">Ward 4B · <span id="report-date"></span></div>
+            </div>
+            <div id="report-body"></div>
+          </div>
+          <div class="report-actions">
+            <button class="btn-outline" onclick="printReport()">Print / PDF</button>
+            <button class="btn-primary" onclick="sendReportNow()">Send to Team</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: Care Team -->
+    <div class="page" id="page-stakeholders">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Care Team</h2>
+          <p class="page-sub">Manage stakeholders & alert contacts</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn-primary" onclick="showAddStakeholder()">+ Add Member</button>
+        </div>
+      </div>
+      <div class="stakeholders-grid" id="stakeholders-grid">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+
+    <!-- PAGE: Settings -->
+    <div class="page" id="page-settings">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Settings</h2>
+          <p class="page-sub">System configuration & preferences</p>
+        </div>
+      </div>
+      <div class="settings-layout">
+        <div class="settings-section">
+          <h3>Alert Configuration</h3>
+          <div class="setting-row">
+            <div><p class="setting-name">Auto-call on Critical Alert</p><p class="setting-desc">Automatically call on-duty doctor when vitals hit critical range</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div><p class="setting-name">SMS Fallback</p><p class="setting-desc">Send SMS if call goes unanswered for 60 seconds</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div><p class="setting-name">WhatsApp Alerts</p><p class="setting-desc">Send WhatsApp messages for warning-level alerts</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div><p class="setting-name">Escalation Timeout</p><p class="setting-desc">Escalate to next contact after</p></div>
+            <select class="btn-outline" style="width:auto">
+              <option>2 minutes</option>
+              <option selected>5 minutes</option>
+              <option>10 minutes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Device Integration</h3>
+          <div class="device-status-list">
+            <div class="device-row"><span class="device-name">BP Monitor (Philips IntelliVue)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">Pulse Oximeter (Nellcor)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">Thermometer (BIOT-200)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">Ventilator (Hamilton C6)</span><span class="device-badge connected">Connected</span></div>
+            <div class="device-row"><span class="device-name">ECG (GE CASE)</span><span class="device-badge warning">Intermittent</span></div>
+            <div class="device-row"><span class="device-name">HL7 Gateway</span><span class="device-badge connected">Active</span></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Report Integration</h3>
+          <div class="form-group"><label>SMTP Email Server</label><input type="text" value="smtp.hospital.gov.in:587" class="full-input"></div>
+          <div class="form-group"><label>Twilio Account SID</label><input type="text" value="AC••••••••••••••••••••••••" class="full-input"></div>
+          <div class="form-group"><label>WhatsApp Business API</label><input type="text" value="https://api.whatsapp.business/v1/" class="full-input"></div>
+          <button class="btn-primary" onclick="testConnections()">Test All Connections</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /app-screen -->
+
+<!-- Modal: Add Patient -->
+<div class="modal-overlay" id="modal-add-patient" style="display:none">
+  <div class="modal">
+    <div class="modal-header"><h3>Add Patient</h3><button onclick="closeModal('modal-add-patient')">✕</button></div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="new-pt-name" placeholder="Patient full name"></div>
+    <div class="form-group"><label>Age</label><input type="number" id="new-pt-age" placeholder="Age in years"></div>
+    <div class="form-group"><label>Sex</label><select id="new-pt-sex"><option>Male</option><option>Female</option><option>Other</option></select></div>
+    <div class="form-group"><label>Bed Number</label><input type="text" id="new-pt-bed" placeholder="e.g. Bed 05"></div>
+    <div class="form-group"><label>Diagnosis</label><input type="text" id="new-pt-dx" placeholder="Primary diagnosis"></div>
+    <div class="form-group"><label>Attending Doctor</label><input type="text" id="new-pt-doc" placeholder="Doctor name"></div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal('modal-add-patient')">Cancel</button>
+      <button class="btn-primary" onclick="addPatient()">Add Patient</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/vitals.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
