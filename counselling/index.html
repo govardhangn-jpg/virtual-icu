@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -928,15 +930,27 @@ async function speak(text) {
 
 function playChunk(text, vol, rate) {
   return new Promise(resolve => {
+    window._ttsResolve = resolve; // allow stopSpeaking to cancel
     const tl = profile.lang?.tl || 'en';
-    // Use server-side proxy to avoid CORS block
     const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}`;
     const audio = new Audio(url);
     audio.volume = vol; audio.playbackRate = rate;
     currentAudio = audio;
     let settled = false;
-    const done = () => { if (!settled) { settled = true; resolve(); } };
-    const fallback = () => { if (!settled) { settled = true; browserTTS(text, vol, rate).then(resolve); } };
+    const done = () => {
+      if (!settled) {
+        settled = true;
+        window._ttsResolve = null;
+        resolve();
+      }
+    };
+    const fallback = () => {
+      if (!settled) {
+        settled = true;
+        window._ttsResolve = null;
+        browserTTS(text, vol, rate).then(resolve);
+      }
+    };
     audio.onended = done;
     audio.onerror = fallback;
     audio.play().catch(fallback);
@@ -959,8 +973,14 @@ function browserTTS(text, vol, rate) {
 
 function stopSpeaking() {
   isSpeaking = false;
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.src = '';  // force release
+    currentAudio = null;
+  }
   if (window.speechSynthesis) window.speechSynthesis.cancel();
+  // Resolve any pending chunk promise immediately
+  if (window._ttsResolve) { window._ttsResolve(); window._ttsResolve = null; }
   document.getElementById('speaking-badge').classList.remove('active');
 }
 
