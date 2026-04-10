@@ -1,0 +1,150 @@
+═══════════════════════════════════════════════════════
+  OMRON HEM-7143T1-A INTEGRATION GUIDE
+  Samarthaa Hospital · ICU Ward 6A
+═══════════════════════════════════════════════════════
+
+WHAT THIS DOES
+──────────────
+Your Omron BP monitor connects via Bluetooth to the
+bedside laptop. It reads BP + Heart Rate automatically
+every 15 minutes and after every manual reading.
+Data appears live on the VitalWatch dashboard.
+Critical readings auto-call Dr. Mahesh.
+
+
+STEP 1 — Install Python (one time, 5 minutes)
+──────────────────────────────────────────────
+1. Go to: https://www.python.org/downloads/
+2. Download Python 3.11 or newer
+3. Install with default settings
+   ✅ IMPORTANT: Tick "Add Python to PATH" during install
+4. Open Command Prompt and verify:
+   > python --version
+   Should show: Python 3.11.x
+
+
+STEP 2 — Install the bridge (one time, 2 minutes)
+──────────────────────────────────────────────────
+Open Command Prompt in the omron-bridge folder:
+
+  cd "C:\GN Docs\ICU Monitor\icu-monitor\omron-bridge"
+  pip install -r requirements.txt
+
+This installs bleak (Bluetooth library) and requests.
+
+
+STEP 3 — Pair Omron with laptop (one time)
+──────────────────────────────────────────
+1. On your Windows laptop:
+   → Settings → Bluetooth & devices → Add device
+2. On the Omron monitor:
+   → Hold the MEMORY button for 3 seconds
+   → "Pair" appears on the display
+3. Back on laptop — select "BLEsmart_XXXXXX" from list
+4. Click Pair — done!
+
+NOTE: You only pair once. After that, the bridge
+connects automatically every time.
+
+
+STEP 4 — Configure patient assignment
+──────────────────────────────────────
+Open omron_bridge.py in Notepad and change these lines
+at the top to match the patient in that bed:
+
+  PATIENT_ID     = "P001"        ← must match data.js
+  PATIENT_NAME   = "Ramesh Kumar"
+  BED_NUMBER     = "Bed 01"
+  AUTO_INTERVAL_MINUTES = 15     ← how often to read
+
+
+STEP 5 — Run the bridge
+────────────────────────
+Open Command Prompt:
+
+  cd "C:\GN Docs\ICU Monitor\icu-monitor\omron-bridge"
+
+For AUTOMATIC readings every 15 minutes:
+  python omron_bridge.py
+
+For MANUAL reading (nurse triggers each one):
+  python omron_bridge.py --manual
+
+For MULTIPLE BEDS (one laptop per ward):
+  python coordinator.py
+
+To SCAN for nearby Bluetooth devices:
+  python omron_bridge.py --scan
+
+
+STEP 6 — Using the monitor
+───────────────────────────
+AUTOMATIC MODE:
+  1. Run: python omron_bridge.py
+  2. Every 15 min it will ask nurse to press START
+  3. Nurse puts cuff on patient, presses START
+  4. Reading appears on VitalWatch in ~30 seconds
+
+MANUAL MODE:
+  1. Run: python omron_bridge.py --manual
+  2. Select patient from menu
+  3. Put cuff on patient, press START
+  4. Reading sent to dashboard immediately
+
+
+WHAT YOU'LL SEE ON THE DASHBOARD
+──────────────────────────────────
+When a real reading arrives:
+  → A toast appears: "📡 Live device data connected"
+  → BP and Heart Rate update with real values
+  → Simulated values continue for other vitals
+    (SpO2, Temp, RR) until those devices are added
+
+If BP is critical (e.g. systolic > 180 or < 70):
+  → Dr. Mahesh gets an automatic phone call
+  → Alert appears in Alert Center
+  → Dashboard card turns red
+
+
+TROUBLESHOOTING
+───────────────
+"No Omron device found"
+  → Check Bluetooth is ON on laptop
+  → Hold MEMORY button on Omron for 3 seconds
+  → Move Omron within 1 metre of laptop
+  → Run: python omron_bridge.py --scan
+
+"Cannot reach VitalWatch server"
+  → Check internet connection on laptop
+  → Readings saved to offline_readings_DATE.json
+  → Will auto-sync when connection restores
+
+"Permission error on Windows"
+  → Run Command Prompt as Administrator
+
+"bleak not found"
+  → Run: pip install bleak requests
+
+
+ADDING MORE DEVICES LATER
+──────────────────────────
+When you buy additional devices, we can add:
+
+  Pulse Oximeter (SpO2) — any BLE oximeter
+    e.g. Nonin 9590 or Masimo Rad-97
+
+  Thermometer — any BLE thermometer
+    e.g. Welch Allyn SureTemp
+
+  Full multiparameter monitor
+    e.g. Mindray VS-9 (LAN/HL7, no laptop needed)
+
+Each adds one line in coordinator.py.
+
+
+NEED HELP?
+──────────
+Check the log file: omron_bridge.log
+It records every reading and any errors.
+
+═══════════════════════════════════════════════════════

@@ -127,6 +127,103 @@ app.post('/api/counsel', async (req, res) => {
   }
 });
 
+// ════════════════════════════════════════════════
+//  RECEIVE LIVE VITALS FROM OMRON BRIDGE
+//  POST /api/vitals
+//  Called by omron_bridge.py running on bedside laptop
+// ════════════════════════════════════════════════
+const liveVitalsStore = {};  // in-memory store: { patientId: { vitals, timestamp } }
+
+app.post('/api/vitals', (req, res) => {
+  const { patient_id, patient_name, bed, vitals, timestamp, source, api_key } = req.body;
+
+  // Simple API key check
+  const validKey = process.env.VITALWATCH_API_KEY || 'samarthaa-icu-2024';
+  if (api_key !== validKey) {
+    return res.status(401).json({ error: 'Invalid API key' });
+  }
+
+  if (!patient_id || !vitals) {
+    return res.status(400).json({ error: 'Missing patient_id or vitals' });
+  }
+
+  // Store the reading
+  liveVitalsStore[patient_id] = {
+    patient_id, patient_name, bed,
+    vitals,
+    source: source || 'manual',
+    timestamp: timestamp || new Date().toISOString(),
+    received_at: new Date().toISOString()
+  };
+
+  console.log(`📡 Vitals received — ${patient_name || patient_id} (${bed}): BP ${vitals.bps}/${vitals.bpd} mmHg, HR ${vitals.hr || 'N/A'} bpm`);
+
+  // Check thresholds and fire alert if needed
+  const alerts = checkVitalThresholds(patient_id, patient_name, bed, vitals);
+  if (alerts.length > 0 && client) {
+    alerts.forEach(alert => fireAlert(alert));
+  }
+
+  res.json({ success: true, alerts: alerts.length });
+});
+
+// GET current vitals for all patients
+app.get('/api/vitals', (req, res) => {
+  const validKey = process.env.VITALWATCH_API_KEY || 'samarthaa-icu-2024';
+  if (req.query.api_key !== validKey) {
+    return res.status(401).json({ error: 'Invalid API key' });
+  }
+  res.json({ vitals: liveVitalsStore, count: Object.keys(liveVitalsStore).length });
+});
+
+// GET vitals for single patient
+app.get('/api/vitals/:patientId', (req, res) => {
+  const data = liveVitalsStore[req.params.patientId];
+  if (!data) return res.status(404).json({ error: 'No data for this patient' });
+  res.json(data);
+});
+
+// ── Threshold checking ──
+const THRESHOLDS = {
+  bps:  { warnHi: 145, critHi: 180, warnLo: 90,  critLo: 70  },
+  bpd:  { warnHi: 95,  critHi: 110, warnLo: 55,  critLo: 40  },
+  hr:   { warnHi: 105, critHi: 130, warnLo: 55,  critLo: 40  },
+  spo2: { warnLo: 94,  critLo: 90 },
+  temp: { warnHi: 38.3, critHi: 39.5, warnLo: 36.0, critLo: 35.0 },
+};
+
+function checkVitalThresholds(patientId, patientName, bed, vitals) {
+  const alerts = [];
+  for (const [key, val] of Object.entries(vitals)) {
+    if (val == null || !THRESHOLDS[key]) continue;
+    const t = THRESHOLDS[key];
+    let level = null;
+    let msg   = null;
+    if (t.critLo && val <= t.critLo) { level = 'critical'; msg = `${key.toUpperCase()} critically low: ${val}`; }
+    else if (t.critHi && val >= t.critHi) { level = 'critical'; msg = `${key.toUpperCase()} critically high: ${val}`; }
+    else if (t.warnLo && val <= t.warnLo) { level = 'warning';  msg = `${key.toUpperCase()} low: ${val}`; }
+    else if (t.warnHi && val >= t.warnHi) { level = 'warning';  msg = `${key.toUpperCase()} high: ${val}`; }
+    if (level) alerts.push({ level, msg, patient: patientName, bed, vital: key, value: val });
+  }
+  return alerts;
+}
+
+// ── Auto-fire Twilio alerts for critical readings ──
+async function fireAlert(alert) {
+  if (!client || alert.level !== 'critical') return;
+  const callTo   = process.env.TWILIO_PHONE_NUMBER_MAHESH || '+916366158568';
+  const message  = `Critical alert at Samarthaa Hospital ICU Ward 6A. Patient ${alert.patient} in ${alert.bed}. ${alert.msg}. Please respond immediately.`;
+  try {
+    const call = await client.calls.create({
+      to: callTo, from: TWILIO_PHONE_NUMBER,
+      twiml: `<Response><Say voice="Polly.Raveena" language="en-IN">${message}</Say><Pause length="1"/><Say voice="Polly.Raveena" language="en-IN">${message}</Say></Response>`
+    });
+    console.log(`🚨 Auto-alert called Dr. Mahesh: ${call.sid}`);
+  } catch(e) {
+    console.error('Auto-alert failed:', e.message);
+  }
+}
+
 // ════════════════════════════════
 //  TTS PROXY — Google Translate TTS
 //  Routes audio through server to avoid CORS

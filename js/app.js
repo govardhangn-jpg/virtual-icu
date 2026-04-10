@@ -80,6 +80,59 @@ function stopSimulation() {
   if (simInterval) { clearInterval(simInterval); simInterval = null; }
 }
 
+// ════════════════════════════════════════════════
+//  REAL VITALS POLLING
+//  Fetches live readings from Omron bridge
+//  Falls back to simulation if no device connected
+// ════════════════════════════════════════════════
+let realVitalsAvailable = false;
+let lastRealVitalsTime  = {};
+
+async function fetchRealVitals() {
+  try {
+    const response = await fetch('/api/vitals?api_key=samarthaa-icu-2024');
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!data.vitals || Object.keys(data.vitals).length === 0) return;
+
+    let anyReal = false;
+    for (const [pid, record] of Object.entries(data.vitals)) {
+      // Only use if reading is less than 30 minutes old
+      const age = Date.now() - new Date(record.received_at).getTime();
+      if (age > 30 * 60 * 1000) continue;
+
+      const v = record.vitals;
+      if (liveVitals[pid]) {
+        // Merge real values in — keep simulation for vitals not covered by device
+        if (v.bps != null) liveVitals[pid].bps = v.bps;
+        if (v.bpd != null) liveVitals[pid].bpd = v.bpd;
+        if (v.hr  != null) liveVitals[pid].hr  = v.hr;
+        if (v.spo2!= null) liveVitals[pid].spo2= v.spo2;
+        if (v.temp!= null) liveVitals[pid].temp= v.temp;
+
+        // Show real data indicator
+        lastRealVitalsTime[pid] = record.received_at;
+        anyReal = true;
+      }
+    }
+
+    if (anyReal && !realVitalsAvailable) {
+      realVitalsAvailable = true;
+      showToast('📡 Live device data connected — Omron readings active');
+    }
+
+  } catch(e) {
+    // Server not reachable or no data — simulation continues silently
+  }
+}
+
+// Poll every 30 seconds for new device readings
+setInterval(fetchRealVitals, 30000);
+// Also fetch immediately on load
+setTimeout(fetchRealVitals, 3000);
+
+
+
 // ════════════════════════════════
 // NAVIGATION
 // ════════════════════════════════
