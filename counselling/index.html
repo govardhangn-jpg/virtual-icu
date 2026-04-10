@@ -3,406 +3,190 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Samarthaa Hospital — Patient Counselling</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Tiro+Kannada&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:       #f0f4f8;
-  --bg2:      #ffffff;
-  --bg3:      #e8f0fe;
-  --teal:     #0891b2;
-  --teal-lt:  #cffafe;
-  --teal-dk:  #0e7490;
-  --green:    #059669;
-  --green-lt: #d1fae5;
-  --red:      #dc2626;
-  --red-lt:   #fee2e2;
-  --amber:    #d97706;
-  --amber-lt: #fef3c7;
-  --text1:    #0f172a;
-  --text2:    #475569;
-  --text3:    #94a3b8;
-  --border:   #e2e8f0;
-  --shadow:   0 4px 24px rgba(0,0,0,0.08);
-  --r:        16px;
+  --bg:#f0f4f8; --bg2:#fff; --teal:#0891b2; --teal-lt:#cffafe; --teal-dk:#0e7490;
+  --green:#059669; --green-lt:#d1fae5; --red:#dc2626; --red-lt:#fee2e2;
+  --amber:#d97706; --amber-lt:#fef3c7; --text1:#0f172a; --text2:#475569;
+  --text3:#94a3b8; --border:#e2e8f0; --shadow:0 4px 24px rgba(0,0,0,0.08); --r:16px;
 }
+html,body { min-height:100vh; background:var(--bg); font-family:'Nunito',sans-serif; color:var(--text1); }
 
-html, body {
-  min-height: 100vh;
-  background: var(--bg);
-  font-family: 'Nunito', sans-serif;
-  color: var(--text1);
-}
+/* Header */
+.header { background:linear-gradient(135deg,#0891b2,#0e7490); padding:18px 20px; display:flex; align-items:center; gap:12px; box-shadow:0 2px 12px rgba(8,145,178,0.3); }
+.header-icon { width:46px; height:46px; background:rgba(255,255,255,0.2); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.header-title h1 { color:#fff; font-size:18px; font-weight:700; }
+.header-title p  { color:rgba(255,255,255,0.8); font-size:11px; margin-top:1px; }
+.tts-badge { margin-left:auto; background:rgba(255,255,255,0.2); border-radius:20px; padding:4px 10px; color:#fff; font-size:11px; font-weight:600; white-space:nowrap; }
 
-/* ── Header ── */
-.header {
-  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
-  padding: 20px 24px;
-  display: flex; align-items: center; gap: 14px;
-  box-shadow: 0 2px 12px rgba(8,145,178,0.3);
-}
-.header-icon {
-  width: 48px; height: 48px; background: rgba(255,255,255,0.2);
-  border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-}
-.header-title { color: #fff; }
-.header-title h1 { font-size: 20px; font-weight: 700; }
-.header-title p  { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-.header-lang {
-  margin-left: auto;
-  display: flex; align-items: center; gap: 8px;
-}
-.lang-label { color: rgba(255,255,255,0.8); font-size: 12px; }
+/* Layout */
+.main { max-width:860px; margin:0 auto; padding:20px 14px 40px; display:flex; flex-direction:column; gap:18px; }
+.card { background:var(--bg2); border-radius:var(--r); box-shadow:var(--shadow); padding:20px 22px; }
+.card-title { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; }
 
-/* ── Main Layout ── */
-.main {
-  max-width: 860px; margin: 0 auto;
-  padding: 24px 16px 40px;
-  display: flex; flex-direction: column; gap: 20px;
-}
+/* Role */
+.role-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.role-btn { padding:14px 10px; border-radius:12px; border:2px solid var(--border); background:var(--bg); cursor:pointer; text-align:center; transition:all 0.2s; font-family:'Nunito',sans-serif; }
+.role-btn:hover, .role-btn.active { border-color:var(--teal); background:var(--teal-lt); }
+.role-btn .ri { font-size:26px; margin-bottom:4px; }
+.role-btn .rn { font-size:13px; font-weight:700; color:var(--text1); }
+.role-btn .rd { font-size:11px; color:var(--text2); margin-top:1px; }
 
-/* ── Who are you card ── */
-.role-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); padding: 24px;
-}
-.card-title {
-  font-size: 15px; font-weight: 700; color: var(--text2);
-  text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;
-}
-.role-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-}
-.role-btn {
-  padding: 16px 12px; border-radius: 12px;
-  border: 2px solid var(--border); background: var(--bg);
-  cursor: pointer; text-align: center; transition: all 0.2s;
-  font-family: 'Nunito', sans-serif;
-}
-.role-btn:hover { border-color: var(--teal); background: var(--teal-lt); }
-.role-btn.active { border-color: var(--teal); background: var(--teal-lt); }
-.role-btn .role-icon { font-size: 28px; margin-bottom: 6px; }
-.role-btn .role-name { font-size: 14px; font-weight: 700; color: var(--text1); }
-.role-btn .role-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
+/* Language */
+.lang-grid { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+.lang-chip { padding:7px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--bg); cursor:pointer; font-size:13px; font-weight:600; font-family:'Nunito',sans-serif; transition:all 0.15s; }
+.lang-chip:hover { border-color:var(--teal); color:var(--teal); }
+.lang-chip.active { background:var(--teal); border-color:var(--teal); color:#fff; }
 
-/* ── Language picker ── */
-.lang-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); padding: 20px 24px;
-}
-.lang-grid {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
-}
-.lang-chip {
-  padding: 8px 16px; border-radius: 20px;
-  border: 1.5px solid var(--border); background: var(--bg);
-  cursor: pointer; font-size: 13px; font-weight: 600;
-  font-family: 'Nunito', sans-serif; transition: all 0.15s;
-}
-.lang-chip:hover { border-color: var(--teal); color: var(--teal); }
-.lang-chip.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+/* TTS engine selector */
+.tts-row { display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.tts-label { font-size:12px; color:var(--text2); font-weight:600; }
+.tts-opt { padding:5px 12px; border-radius:20px; border:1.5px solid var(--border); background:var(--bg); cursor:pointer; font-size:12px; font-weight:600; font-family:'Nunito',sans-serif; transition:all 0.15s; }
+.tts-opt:hover { border-color:var(--teal); }
+.tts-opt.active { background:var(--green); border-color:var(--green); color:#fff; }
+.tts-note { font-size:11px; color:var(--text3); margin-top:6px; }
 
-/* ── Topic picker ── */
-.topics-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); padding: 20px 24px;
-}
-.topics-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px; margin-top: 12px;
-}
-.topic-btn {
-  padding: 14px; border-radius: 12px;
-  border: 1.5px solid var(--border); background: var(--bg);
-  cursor: pointer; text-align: left; transition: all 0.15s;
-  font-family: 'Nunito', sans-serif;
-}
-.topic-btn:hover { border-color: var(--teal); background: var(--teal-lt); }
-.topic-icon { font-size: 22px; margin-bottom: 6px; }
-.topic-name { font-size: 13px; font-weight: 700; color: var(--text1); }
-.topic-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
+/* Topics */
+.topics-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px; margin-top:12px; }
+.topic-btn { padding:14px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg); cursor:pointer; text-align:left; transition:all 0.15s; font-family:'Nunito',sans-serif; }
+.topic-btn:hover { border-color:var(--teal); background:var(--teal-lt); }
+.topic-icon { font-size:22px; margin-bottom:5px; }
+.topic-name { font-size:13px; font-weight:700; color:var(--text1); }
+.topic-desc { font-size:11px; color:var(--text2); margin-top:1px; }
 
-/* ── Chat / Conversation ── */
-.chat-card {
-  background: var(--bg2); border-radius: var(--r);
-  box-shadow: var(--shadow); overflow: hidden;
-}
-.chat-header {
-  background: linear-gradient(135deg, #0891b2, #0e7490);
-  padding: 16px 20px; display: flex; align-items: center; gap: 12px;
-}
-.chat-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  display: flex; align-items: center; justify-content: center; font-size: 20px;
-}
-.chat-header-info h3 { color: #fff; font-size: 15px; font-weight: 700; }
-.chat-header-info p  { color: rgba(255,255,255,0.75); font-size: 12px; }
+/* Chat */
+.chat-card { background:var(--bg2); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; }
+.chat-header { background:linear-gradient(135deg,#0891b2,#0e7490); padding:14px 18px; display:flex; align-items:center; gap:10px; }
+.chat-avatar { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-size:18px; }
+.chat-header-info h3 { color:#fff; font-size:14px; font-weight:700; }
+.chat-header-info p  { color:rgba(255,255,255,0.7); font-size:11px; }
 
-.speaking-badge {
-  margin-left: auto; display: flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.2); border-radius: 20px;
-  padding: 5px 12px; color: #fff; font-size: 12px; font-weight: 600;
-  display: none;
-}
-.speaking-badge.active { display: flex; }
-.speaking-wave { display: flex; align-items: center; gap: 2px; }
-.speaking-wave span {
-  display: block; width: 3px; background: #fff; border-radius: 2px;
-  animation: wave-bar 0.8s ease-in-out infinite;
-}
-.speaking-wave span:nth-child(1){ height:8px;  animation-delay:0s; }
-.speaking-wave span:nth-child(2){ height:14px; animation-delay:0.1s; }
-.speaking-wave span:nth-child(3){ height:10px; animation-delay:0.2s; }
-.speaking-wave span:nth-child(4){ height:16px; animation-delay:0.3s; }
-.speaking-wave span:nth-child(5){ height:8px;  animation-delay:0.4s; }
-@keyframes wave-bar {
-  0%,100%{ transform:scaleY(0.5); opacity:0.6; }
-  50%    { transform:scaleY(1.2); opacity:1;   }
-}
+.speaking-badge { margin-left:auto; display:none; align-items:center; gap:6px; background:rgba(255,255,255,0.2); border-radius:20px; padding:4px 10px; color:#fff; font-size:11px; font-weight:600; }
+.speaking-badge.active { display:flex; }
+.sw { display:flex; align-items:center; gap:2px; }
+.sw span { display:block; width:3px; background:#fff; border-radius:2px; animation:wb 0.8s ease-in-out infinite; }
+.sw span:nth-child(1){height:7px;} .sw span:nth-child(2){height:13px;animation-delay:.1s;} .sw span:nth-child(3){height:9px;animation-delay:.2s;} .sw span:nth-child(4){height:15px;animation-delay:.3s;} .sw span:nth-child(5){height:7px;animation-delay:.4s;}
+@keyframes wb{0%,100%{transform:scaleY(0.5);opacity:0.6}50%{transform:scaleY(1.2);opacity:1}}
 
-.chat-messages {
-  height: 340px; overflow-y: auto; padding: 20px;
-  display: flex; flex-direction: column; gap: 14px;
-  background: #f8fafc;
-}
+.status-bar { display:none; align-items:center; gap:8px; padding:9px 18px; background:var(--amber-lt); border-top:1px solid #fde68a; font-size:12px; color:var(--amber); font-weight:600; }
+.status-bar.active { display:flex; }
 
-.msg { display: flex; gap: 10px; max-width: 85%; }
-.msg.assistant { align-self: flex-start; }
-.msg.user      { align-self: flex-end; flex-direction: row-reverse; }
+.chat-messages { height:320px; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:12px; background:#f8fafc; }
+.msg { display:flex; gap:9px; max-width:85%; }
+.msg.assistant { align-self:flex-start; }
+.msg.user      { align-self:flex-end; flex-direction:row-reverse; }
+.msg-av { width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:15px; }
+.msg.assistant .msg-av { background:var(--teal-lt); }
+.msg.user      .msg-av { background:var(--green-lt); }
+.msg-bubble { padding:11px 15px; border-radius:16px; font-size:14px; line-height:1.65; }
+.msg.assistant .msg-bubble { background:#fff; border:1px solid var(--border); border-top-left-radius:4px; color:var(--text1); }
+.msg.user      .msg-bubble  { background:var(--teal); color:#fff; border-top-right-radius:4px; }
+.msg-time { font-size:10px; color:var(--text3); margin-top:3px; }
 
-.msg-avatar {
-  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 16px;
-}
-.msg.assistant .msg-avatar { background: var(--teal-lt); }
-.msg.user      .msg-avatar { background: var(--green-lt); }
+.typing-ind { display:flex; align-items:center; gap:5px; padding:11px 15px; background:#fff; border:1px solid var(--border); border-radius:16px; border-top-left-radius:4px; width:fit-content; }
+.td { width:7px; height:7px; border-radius:50%; background:var(--text3); animation:ty 1.2s ease-in-out infinite; }
+.td:nth-child(2){animation-delay:.2s;} .td:nth-child(3){animation-delay:.4s;}
+@keyframes ty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
-.msg-bubble {
-  padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.6;
-}
-.msg.assistant .msg-bubble {
-  background: #fff; border: 1px solid var(--border);
-  border-top-left-radius: 4px; color: var(--text1);
-}
-.msg.user .msg-bubble {
-  background: var(--teal); color: #fff;
-  border-top-right-radius: 4px;
-}
+/* Voice controls */
+.voice-controls { display:flex; align-items:center; gap:14px; padding:11px 18px; border-top:1px solid var(--border); background:#f8fafc; flex-wrap:wrap; }
+.vc-label { font-size:11px; color:var(--text2); font-weight:600; white-space:nowrap; }
+.vc-slider { width:72px; accent-color:var(--teal); cursor:pointer; }
+.stop-btn { margin-left:auto; padding:5px 12px; border-radius:8px; border:1.5px solid var(--red); background:var(--red-lt); color:var(--red); font-size:12px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; transition:all 0.15s; }
+.stop-btn:hover { background:var(--red); color:#fff; }
 
-.msg-time { font-size: 10px; color: var(--text3); margin-top: 4px; }
+/* Quick Qs */
+.quick-qs { display:flex; flex-wrap:wrap; gap:6px; padding:10px 18px 0; }
+.quick-q { padding:5px 11px; border-radius:20px; border:1.5px solid var(--teal); background:var(--teal-lt); color:var(--teal-dk); font-size:12px; font-weight:600; cursor:pointer; font-family:'Nunito',sans-serif; transition:all 0.15s; }
+.quick-q:hover { background:var(--teal); color:#fff; }
 
-.typing-indicator {
-  display: flex; align-items: center; gap: 6px;
-  padding: 12px 16px; background: #fff; border: 1px solid var(--border);
-  border-radius: 16px; border-top-left-radius: 4px; width: fit-content;
-}
-.typing-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--text3);
-  animation: typing 1.2s ease-in-out infinite;
-}
-.typing-dot:nth-child(2){ animation-delay:0.2s; }
-.typing-dot:nth-child(3){ animation-delay:0.4s; }
-@keyframes typing { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+/* Input */
+.chat-input-area { padding:14px 18px; border-top:1px solid var(--border); background:#fff; }
+.input-row { display:flex; gap:8px; align-items:flex-end; }
+.text-input { flex:1; border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; font-family:'Nunito',sans-serif; font-size:14px; color:var(--text1); resize:none; min-height:46px; max-height:120px; transition:border-color 0.2s; background:var(--bg); }
+.text-input:focus { outline:none; border-color:var(--teal); background:#fff; }
+.mic-btn { width:46px; height:46px; border-radius:50%; border:none; background:var(--teal); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:19px; transition:all 0.2s; flex-shrink:0; box-shadow:0 2px 8px rgba(8,145,178,0.4); }
+.mic-btn:hover { background:var(--teal-dk); transform:scale(1.05); }
+.mic-btn.listening { background:var(--red); animation:mp 1s ease-in-out infinite; }
+@keyframes mp{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.send-btn { width:46px; height:46px; border-radius:50%; border:none; background:var(--green); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:19px; transition:all 0.2s; flex-shrink:0; box-shadow:0 2px 8px rgba(5,150,105,0.4); }
+.send-btn:hover { background:#047857; transform:scale(1.05); }
+.input-hint { font-size:11px; color:var(--text3); margin-top:7px; text-align:center; }
 
-/* ── Input area ── */
-.chat-input-area {
-  padding: 16px 20px; border-top: 1px solid var(--border);
-  background: #fff;
-}
+/* Welcome */
+.welcome { text-align:center; padding:36px 16px; }
+.welcome-icon { font-size:52px; margin-bottom:14px; }
+.welcome h2 { font-size:20px; font-weight:700; }
+.welcome p  { font-size:13px; color:var(--text2); margin-top:7px; max-width:400px; margin-left:auto; margin-right:auto; }
 
-.input-row {
-  display: flex; gap: 10px; align-items: flex-end;
-}
-.text-input {
-  flex: 1; border: 1.5px solid var(--border); border-radius: 12px;
-  padding: 12px 16px; font-family: 'Nunito', sans-serif; font-size: 14px;
-  color: var(--text1); resize: none; min-height: 48px; max-height: 120px;
-  transition: border-color 0.2s; background: var(--bg);
-}
-.text-input:focus { outline: none; border-color: var(--teal); background: #fff; }
-
-.mic-btn {
-  width: 48px; height: 48px; border-radius: 50%; border: none;
-  background: var(--teal); color: #fff; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; transition: all 0.2s; flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(8,145,178,0.4);
-}
-.mic-btn:hover { background: var(--teal-dk); transform: scale(1.05); }
-.mic-btn.listening {
-  background: var(--red); animation: mic-pulse 1s ease-in-out infinite;
-  box-shadow: 0 2px 8px rgba(220,38,38,0.4);
-}
-@keyframes mic-pulse {
-  0%,100%{ transform:scale(1);   box-shadow:0 2px 8px rgba(220,38,38,0.4); }
-  50%    { transform:scale(1.1); box-shadow:0 4px 20px rgba(220,38,38,0.6); }
-}
-
-.send-btn {
-  width: 48px; height: 48px; border-radius: 50%; border: none;
-  background: var(--green); color: #fff; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; transition: all 0.2s; flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(5,150,105,0.4);
-}
-.send-btn:hover { background: #047857; transform: scale(1.05); }
-
-.input-hint {
-  font-size: 11px; color: var(--text3); margin-top: 8px; text-align: center;
-}
-
-/* ── Quick questions ── */
-.quick-qs {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
-}
-.quick-q {
-  padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--teal);
-  background: var(--teal-lt); color: var(--teal-dk); font-size: 12px;
-  font-weight: 600; cursor: pointer; font-family: 'Nunito', sans-serif;
-  transition: all 0.15s;
-}
-.quick-q:hover { background: var(--teal); color: #fff; }
-
-/* ── Volume / Speed controls ── */
-.voice-controls {
-  display: flex; align-items: center; gap: 16px; padding: 12px 20px;
-  border-top: 1px solid var(--border); background: #f8fafc;
-  flex-wrap: wrap;
-}
-.vc-label { font-size: 11px; color: var(--text2); font-weight: 600; white-space: nowrap; }
-.vc-slider { width: 80px; accent-color: var(--teal); cursor: pointer; }
-.stop-btn {
-  margin-left: auto; padding: 6px 14px; border-radius: 8px;
-  border: 1.5px solid var(--red); background: var(--red-lt);
-  color: var(--red); font-size: 12px; font-weight: 700;
-  cursor: pointer; font-family: 'Nunito', sans-serif; transition: all 0.15s;
-}
-.stop-btn:hover { background: var(--red); color: #fff; }
-
-/* ── Status bar ── */
-.status-bar {
-  display: flex; align-items: center; gap: 8px; padding: 10px 20px;
-  background: var(--amber-lt); border-top: 1px solid #fde68a;
-  font-size: 12px; color: var(--amber); font-weight: 600;
-  display: none;
-}
-.status-bar.active { display: flex; }
-
-/* ── Welcome screen ── */
-.welcome {
-  text-align: center; padding: 40px 20px;
-}
-.welcome-icon { font-size: 56px; margin-bottom: 16px; }
-.welcome h2 { font-size: 22px; font-weight: 700; color: var(--text1); }
-.welcome p  { font-size: 14px; color: var(--text2); margin-top: 8px; max-width: 420px; margin-left: auto; margin-right: auto; }
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-/* ── Mobile ── */
-@media (max-width: 600px) {
-  .role-grid { grid-template-columns: 1fr 1fr; }
-  .topics-grid { grid-template-columns: 1fr 1fr; }
-  .chat-messages { height: 280px; }
-  .header-title h1 { font-size: 16px; }
-}
+::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+@media(max-width:600px){ .role-grid{grid-template-columns:1fr 1fr;} .topics-grid{grid-template-columns:1fr 1fr;} .chat-messages{height:260px;} }
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="header-icon">🏥</div>
   <div class="header-title">
     <h1>Samarthaa Hospital</h1>
     <p>ICU Patient & Attender Counselling · Ward 6A</p>
   </div>
+  <div class="tts-badge" id="tts-badge">🔊 Voice Ready</div>
 </div>
 
-<!-- Main -->
 <div class="main">
 
-  <!-- Step 1: Who are you? -->
-  <div class="role-card">
+  <!-- Step 1: Role -->
+  <div class="card">
     <div class="card-title">Step 1 — Who are you?</div>
     <div class="role-grid">
       <button class="role-btn" onclick="selectRole('patient')" id="role-patient">
-        <div class="role-icon">🛏️</div>
-        <div class="role-name">Patient</div>
-        <div class="role-desc">I am the patient</div>
+        <div class="ri">🛏️</div><div class="rn">Patient</div><div class="rd">I am the patient</div>
       </button>
       <button class="role-btn" onclick="selectRole('attender')" id="role-attender">
-        <div class="role-icon">👨‍👩‍👧</div>
-        <div class="role-name">Attender / Family</div>
-        <div class="role-desc">I am with the patient</div>
+        <div class="ri">👨‍👩‍👧</div><div class="rn">Attender / Family</div><div class="rd">I am with the patient</div>
       </button>
     </div>
   </div>
 
   <!-- Step 2: Language -->
-  <div class="lang-card">
+  <div class="card">
     <div class="card-title">Step 2 — Choose your language</div>
-    <div class="lang-grid" id="lang-grid">
-      <!-- Populated by JS -->
+    <div class="lang-grid" id="lang-grid"></div>
+
+    <!-- TTS Engine selector -->
+    <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border)">
+      <div class="tts-label" style="margin-bottom:8px">🔊 Voice Engine</div>
+      <div class="tts-row">
+        <button class="tts-opt active" id="tts-google" onclick="setTTSEngine('google')">Google TTS <span style="font-size:10px;opacity:0.8">(Best for Indian languages)</span></button>
+        <button class="tts-opt" id="tts-browser" onclick="setTTSEngine('browser')">Browser TTS <span style="font-size:10px;opacity:0.8">(English only)</span></button>
+      </div>
+      <div class="tts-note" id="tts-note">✅ Google TTS supports Kannada, Hindi, Telugu, Tamil, Malayalam and all Indian languages perfectly.</div>
     </div>
   </div>
 
-  <!-- Step 3: Topic -->
-  <div class="topics-card">
+  <!-- Step 3: Topics -->
+  <div class="card">
     <div class="card-title">Step 3 — What do you want to know?</div>
     <div class="topics-grid">
-      <button class="topic-btn" onclick="startTopic('icu')">
-        <div class="topic-icon">🏨</div>
-        <div class="topic-name">About the ICU</div>
-        <div class="topic-desc">What is ICU, what to expect, procedures</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('medicines')">
-        <div class="topic-icon">💊</div>
-        <div class="topic-name">Medicines & Treatment</div>
-        <div class="topic-desc">What medicines are given and why</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('attender')">
-        <div class="topic-icon">📋</div>
-        <div class="topic-name">Dos & Don'ts</div>
-        <div class="topic-desc">Rules for attenders in ICU</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('equipment')">
-        <div class="topic-icon">🔬</div>
-        <div class="topic-name">Equipment & Monitors</div>
-        <div class="topic-desc">What the machines and wires do</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('diet')">
-        <div class="topic-icon">🥗</div>
-        <div class="topic-name">Diet & Nutrition</div>
-        <div class="topic-desc">Feeding, fluids, and nutrition in ICU</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('discharge')">
-        <div class="topic-icon">🏠</div>
-        <div class="topic-name">Going Home</div>
-        <div class="topic-desc">Discharge process, home care, follow-up</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('emotional')">
-        <div class="topic-icon">💙</div>
-        <div class="topic-name">Emotional Support</div>
-        <div class="topic-desc">Fear, anxiety, coping with ICU stay</div>
-      </button>
-      <button class="topic-btn" onclick="startTopic('freeask')">
-        <div class="topic-icon">💬</div>
-        <div class="topic-name">Ask Anything</div>
-        <div class="topic-desc">Ask any question in your language</div>
-      </button>
+      <button class="topic-btn" onclick="startTopic('icu')"><div class="topic-icon">🏨</div><div class="topic-name">About the ICU</div><div class="topic-desc">What is ICU, what to expect</div></button>
+      <button class="topic-btn" onclick="startTopic('medicines')"><div class="topic-icon">💊</div><div class="topic-name">Medicines & Treatment</div><div class="topic-desc">What medicines are given and why</div></button>
+      <button class="topic-btn" onclick="startTopic('attender')"><div class="topic-icon">📋</div><div class="topic-name">Dos & Don'ts</div><div class="topic-desc">Rules for attenders in ICU</div></button>
+      <button class="topic-btn" onclick="startTopic('equipment')"><div class="topic-icon">🔬</div><div class="topic-name">Equipment & Monitors</div><div class="topic-desc">What the machines and wires do</div></button>
+      <button class="topic-btn" onclick="startTopic('diet')"><div class="topic-icon">🥗</div><div class="topic-name">Diet & Nutrition</div><div class="topic-desc">Feeding and fluids in ICU</div></button>
+      <button class="topic-btn" onclick="startTopic('discharge')"><div class="topic-icon">🏠</div><div class="topic-name">Going Home</div><div class="topic-desc">Discharge, home care, follow-up</div></button>
+      <button class="topic-btn" onclick="startTopic('emotional')"><div class="topic-icon">💙</div><div class="topic-name">Emotional Support</div><div class="topic-desc">Fear, anxiety, coping with ICU</div></button>
+      <button class="topic-btn" onclick="startTopic('freeask')"><div class="topic-icon">💬</div><div class="topic-name">Ask Anything</div><div class="topic-desc">Ask any question in your language</div></button>
     </div>
   </div>
 
-  <!-- Chat Interface -->
+  <!-- Chat -->
   <div class="chat-card" id="chat-card" style="display:none">
     <div class="chat-header">
       <div class="chat-avatar">🤝</div>
@@ -411,29 +195,23 @@ html, body {
         <p id="chat-subtitle">Samarthaa Hospital · Ward 6A</p>
       </div>
       <div class="speaking-badge" id="speaking-badge">
-        <div class="speaking-wave">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
+        <div class="sw"><span></span><span></span><span></span><span></span><span></span></div>
         Speaking...
       </div>
     </div>
 
-    <!-- Status bar -->
     <div class="status-bar" id="status-bar">
-      <span>🎤</span>
-      <span id="status-text">Listening...</span>
+      <span>🎤</span><span id="status-text">Listening...</span>
     </div>
 
-    <!-- Messages -->
     <div class="chat-messages" id="chat-messages">
       <div class="welcome">
         <div class="welcome-icon">👋</div>
-        <h2>Hello! Namaste! ನಮಸ್ಕಾರ!</h2>
-        <p>Select a topic above to begin. I will speak to you and also show the text here. You can type or use the microphone to ask questions.</p>
+        <h2>Hello! Namaste! ನಮಸ್ಕಾರ! నమస్కారం!</h2>
+        <p>Select a topic above to begin. I will speak in your chosen language and show the text here too.</p>
       </div>
     </div>
 
-    <!-- Voice controls -->
     <div class="voice-controls">
       <span class="vc-label">🔊 Volume</span>
       <input type="range" class="vc-slider" id="vol-slider" min="0" max="1" step="0.1" value="1">
@@ -442,53 +220,46 @@ html, body {
       <button class="stop-btn" onclick="stopSpeaking()">⏹ Stop</button>
     </div>
 
-    <!-- Quick questions -->
-    <div style="padding:10px 20px 0">
-      <div class="quick-qs" id="quick-qs"></div>
-    </div>
+    <div class="quick-qs" id="quick-qs"></div>
 
-    <!-- Input -->
     <div class="chat-input-area">
       <div class="input-row">
         <textarea class="text-input" id="user-input"
           placeholder="Type your question here or use the microphone..."
-          rows="1"
-          onkeydown="handleKey(event)"
-          oninput="autoResize(this)"></textarea>
-        <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Speak your question">🎤</button>
+          rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Speak in your language">🎤</button>
         <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
       </div>
-      <div class="input-hint" id="input-hint">
-        🎤 Tap mic to speak in your language · ⌨️ Or type your question
-      </div>
+      <div class="input-hint">🎤 Tap mic to speak in your language · ⌨️ Or type your question</div>
     </div>
   </div>
 
-</div><!-- /main -->
+</div>
 
 <script>
-// ══════════════════════════════════════════════
-//  CONFIGURATION
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════
 const HOSPITAL = 'Samarthaa Hospital, ICU Ward 6A';
 
-// Languages with their Web Speech API codes
+// Google TTS language codes (tl = Google Translate codes)
 const LANGUAGES = [
-  { label: 'English',    code: 'en-IN', voice: 'en-IN', flag: '🇮🇳' },
-  { label: 'ಕನ್ನಡ',      code: 'kn-IN', voice: 'kn-IN', flag: '🌟' },
-  { label: 'हिंदी',      code: 'hi-IN', voice: 'hi-IN', flag: '🇮🇳' },
-  { label: 'తెలుగు',     code: 'te-IN', voice: 'te-IN', flag: '🌟' },
-  { label: 'தமிழ்',      code: 'ta-IN', voice: 'ta-IN', flag: '🌟' },
-  { label: 'മലയാളം',    code: 'ml-IN', voice: 'ml-IN', flag: '🌟' },
-  { label: 'मराठी',      code: 'mr-IN', voice: 'mr-IN', flag: '🌟' },
-  { label: 'বাংলা',      code: 'bn-IN', voice: 'bn-IN', flag: '🌟' },
-  { label: 'اردو',       code: 'ur-PK', voice: 'ur-PK', flag: '🌟' },
-  { label: 'Français',   code: 'fr-FR', voice: 'fr-FR', flag: '🇫🇷' },
-  { label: 'العربية',    code: 'ar-SA', voice: 'ar-SA', flag: '🌟' },
-  { label: 'Español',    code: 'es-ES', voice: 'es-ES', flag: '🇪🇸' },
+  { label:'English',   code:'en-IN', tl:'en',  stt:'en-IN',  flag:'🇮🇳' },
+  { label:'ಕನ್ನಡ',     code:'kn-IN', tl:'kn',  stt:'kn-IN',  flag:'🌟' },
+  { label:'हिंदी',     code:'hi-IN', tl:'hi',  stt:'hi-IN',  flag:'🇮🇳' },
+  { label:'తెలుగు',    code:'te-IN', tl:'te',  stt:'te-IN',  flag:'🌟' },
+  { label:'தமிழ்',     code:'ta-IN', tl:'ta',  stt:'ta-IN',  flag:'🌟' },
+  { label:'മലയാളം',   code:'ml-IN', tl:'ml',  stt:'ml-IN',  flag:'🌟' },
+  { label:'मराठी',     code:'mr-IN', tl:'mr',  stt:'mr-IN',  flag:'🌟' },
+  { label:'বাংলা',     code:'bn-IN', tl:'bn',  stt:'bn-IN',  flag:'🌟' },
+  { label:'ਪੰਜਾਬੀ',    code:'pa-IN', tl:'pa',  stt:'pa-IN',  flag:'🌟' },
+  { label:'ગુજરાતી',   code:'gu-IN', tl:'gu',  stt:'gu-IN',  flag:'🌟' },
+  { label:'اردو',      code:'ur-PK', tl:'ur',  stt:'ur-PK',  flag:'🌟' },
+  { label:'Français',  code:'fr-FR', tl:'fr',  stt:'fr-FR',  flag:'🇫🇷' },
+  { label:'العربية',   code:'ar-SA', tl:'ar',  stt:'ar-SA',  flag:'🌟' },
+  { label:'Español',   code:'es-ES', tl:'es',  stt:'es-ES',  flag:'🇪🇸' },
 ];
 
-// Topic quick questions per topic
 const QUICK_QUESTIONS = {
   icu:       ['What is ICU?', 'Why is my family member here?', 'How long will they stay?', 'Is it serious?'],
   medicines: ['What medicines are being given?', 'Are there side effects?', 'Why is there a drip?', 'What is the injection for?'],
@@ -502,21 +273,22 @@ const QUICK_QUESTIONS = {
 
 // ── State ──
 let selectedRole = 'attender';
-let selectedLang = { label:'English', code:'en-IN', voice:'en-IN', flag:'🇮🇳' };
+let selectedLang = LANGUAGES[0];
 let selectedTopic = null;
 let chatHistory = [];
+let ttsEngine = 'google';  // 'google' | 'browser'
 let isSpeaking = false;
 let isListening = false;
 let recognition = null;
-let currentUtterance = null;
+let currentAudio = null;
 
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  INIT
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
   buildLangGrid();
-  selectLang(LANGUAGES[0]);
   selectRole('attender');
+  checkBrowserVoices();
 });
 
 function buildLangGrid() {
@@ -524,9 +296,17 @@ function buildLangGrid() {
   grid.innerHTML = LANGUAGES.map((l,i) => `
     <button class="lang-chip ${i===0?'active':''}"
       onclick='selectLang(${JSON.stringify(l)})'
-      id="lang-${l.code.replace('-','_')}">
-      ${l.flag} ${l.label}
-    </button>`).join('');
+      id="lc-${l.tl}">${l.flag} ${l.label}</button>`).join('');
+}
+
+function checkBrowserVoices() {
+  // Check if browser has any Indian language voices
+  const voices = window.speechSynthesis?.getVoices() || [];
+  const hasIndian = voices.some(v => v.lang.startsWith('kn') || v.lang.startsWith('te') || v.lang.startsWith('ta'));
+  if (!hasIndian) {
+    document.getElementById('tts-note').textContent =
+      '✅ Google TTS selected — best choice as your browser does not have Indian language voices installed.';
+  }
 }
 
 function selectRole(role) {
@@ -538,211 +318,151 @@ function selectRole(role) {
 function selectLang(lang) {
   selectedLang = lang;
   document.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
-  const el = document.getElementById('lang-' + lang.code.replace('-','_'));
+  const el = document.getElementById('lc-' + lang.tl);
   if (el) el.classList.add('active');
-  // Update placeholder
   const placeholders = {
-    'kn-IN': 'ನಿಮ್ಮ ಪ್ರಶ್ನೆ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮೈಕ್ ಬಳಸಿ...',
-    'hi-IN': 'अपना सवाल यहाँ टाइप करें या माइक का उपयोग करें...',
-    'te-IN': 'మీ ప్రశ్న టైప్ చేయండి లేదా మైక్ ఉపయోగించండి...',
-    'ta-IN': 'உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள் அல்லது மைக் பயன்படுத்துங்கள்...',
-    'ml-IN': 'നിങ്ങളുടെ ചോദ്യം ടൈപ്പ് ചെയ്യുക അല്ലെങ്കിൽ മൈക്ക് ഉപയോഗിക്കുക...',
+    'kn':'ನಿಮ್ಮ ಪ್ರಶ್ನೆ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮೈಕ್ ಬಳಸಿ...',
+    'hi':'अपना सवाल यहाँ टाइप करें...',
+    'te':'మీ ప్రశ్న టైప్ చేయండి...',
+    'ta':'உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள்...',
+    'ml':'നിങ്ങളുടെ ചോദ്യം ടൈപ്പ് ചെയ്യുക...',
+    'mr':'तुमचा प्रश्न टाइप करा...',
+    'bn':'আপনার প্রশ্ন টাইপ করুন...',
+    'gu':'તમારો પ્રશ્ન ટાઇપ કરો...',
+    'pa':'ਆਪਣਾ ਸਵਾਲ ਟਾਈਪ ਕਰੋ...',
   };
-  const inp = document.getElementById('user-input');
-  inp.placeholder = placeholders[lang.code] || 'Type your question here or use the microphone...';
+  document.getElementById('user-input').placeholder =
+    placeholders[lang.tl] || 'Type your question here or use the microphone...';
 }
 
-// ══════════════════════════════════════════════
-//  TOPIC SELECTION & INITIAL MESSAGE
-// ══════════════════════════════════════════════
-function startTopic(topic) {
-  selectedTopic = topic;
-  document.getElementById('chat-card').style.display = 'block';
-  document.getElementById('chat-card').scrollIntoView({ behavior:'smooth', block:'start' });
-
-  const topicTitles = {
-    icu: 'About the ICU', medicines: 'Medicines & Treatment',
-    attender: 'Dos & Don\'ts', equipment: 'Equipment & Monitors',
-    diet: 'Diet & Nutrition', discharge: 'Going Home',
-    emotional: 'Emotional Support', freeask: 'Ask Anything'
+function setTTSEngine(engine) {
+  ttsEngine = engine;
+  document.getElementById('tts-google').classList.toggle('active', engine==='google');
+  document.getElementById('tts-browser').classList.toggle('active', engine==='browser');
+  const notes = {
+    google:  '✅ Google TTS — supports Kannada, Hindi, Telugu, Tamil, Malayalam and all Indian languages perfectly.',
+    browser: '⚠️ Browser TTS — only works well for English on Windows Chrome. Use Google TTS for Indian languages.'
   };
-
-  document.getElementById('chat-title').textContent = topicTitles[topic] || 'ICU Counsellor';
-
-  // Set quick questions
-  const qs = QUICK_QUESTIONS[topic] || [];
-  document.getElementById('quick-qs').innerHTML = qs.map(q =>
-    `<button class="quick-q" onclick="askQuick('${q.replace(/'/g,"\\'")}')">💬 ${q}</button>`
-  ).join('');
-
-  // Clear messages
-  document.getElementById('chat-messages').innerHTML = '';
-  chatHistory = [];
-
-  // Build system prompt
-  const systemPrompt = buildSystemPrompt(topic);
-  chatHistory.push({ role:'system', content: systemPrompt });
-
-  // Opening message
-  const opener = getOpener(topic);
-  sendToAI(opener, true);
+  document.getElementById('tts-note').textContent = notes[engine];
 }
 
-function buildSystemPrompt(topic) {
-  const roleCtx = selectedRole === 'patient'
-    ? 'You are speaking DIRECTLY to the patient who is admitted in the ICU.'
-    : 'You are speaking to the FAMILY MEMBER or ATTENDER of a patient admitted in the ICU.';
+// ══════════════════════════════════════════════════
+//  TTS — GOOGLE TRANSLATE (free, all Indian langs)
+// ══════════════════════════════════════════════════
 
-  return `You are a warm, compassionate ICU counsellor at ${HOSPITAL}.
-${roleCtx}
-You speak in ${selectedLang.label}. Always respond in ${selectedLang.label}.
-Keep responses simple, clear, and reassuring. Avoid medical jargon — use simple words.
-Be empathetic and calming. Never cause unnecessary worry.
-Keep each response to 3-5 sentences maximum — short and easy to understand when spoken aloud.
-If someone seems anxious, acknowledge their feelings first.
-Topic focus: ${topic}.
-Hospital: Samarthaa Hospital, ICU Ward 6A, Bengaluru.
-Doctors: Dr. Mahesh KM (Intensivist), Dr. Nagendra Prasad (Cardiologist), Dr. Rekha Jayaram (Physician).
-For urgent medical concerns always say: "Please speak to Nurse Asha or Dr. Mahesh immediately."
-Do not diagnose or give specific medical advice. Give general education only.`;
+// Split long text into chunks ≤200 chars at sentence boundaries
+function chunkText(text, maxLen = 180) {
+  const sentences = text.match(/[^।|.!?]+[।|.!?]*/g) || [text];
+  const chunks = [];
+  let current = '';
+  for (const s of sentences) {
+    if ((current + s).length > maxLen && current) {
+      chunks.push(current.trim());
+      current = s;
+    } else {
+      current += s;
+    }
+  }
+  if (current.trim()) chunks.push(current.trim());
+  return chunks.length ? chunks : [text.slice(0, maxLen)];
 }
 
-function getOpener(topic) {
-  const openers = {
-    icu:       `Please introduce yourself as the ICU counsellor and give a warm, reassuring welcome. Then briefly explain what the ICU at Samarthaa Hospital is and why it helps patients recover better. Keep it simple and calming. Respond in ${selectedLang.label}.`,
-    medicines: `Give a warm greeting and explain in simple terms why patients in ICU receive medicines through drips and injections instead of by mouth. Keep it reassuring. Respond in ${selectedLang.label}.`,
-    attender:  `Greet the family member warmly and explain the 3 most important rules for ICU attenders at Samarthaa Hospital — visiting hours, hygiene, and what to bring. Be kind and understanding. Respond in ${selectedLang.label}.`,
-    equipment: `Greet warmly and explain in very simple terms what the most common equipment in the ICU looks like — the monitor, the drip stand, and the oxygen. Reassure them that all these machines are helping the patient. Respond in ${selectedLang.label}.`,
-    diet:      `Greet warmly and explain why ICU patients often cannot eat normally at first and how they receive nutrition through other means. Be reassuring. Respond in ${selectedLang.label}.`,
-    discharge: `Give a warm, hopeful greeting and explain the general process for when a patient gets better and is ready to go home from the ICU — what happens, what to expect. Respond in ${selectedLang.label}.`,
-    emotional: `Give a very warm, compassionate greeting. Acknowledge that having a family member in the ICU is very stressful and scary. Offer words of comfort and let them know they are not alone and the team at Samarthaa Hospital is doing everything possible. Respond in ${selectedLang.label}.`,
-    freeask:   `Greet warmly and introduce yourself as the ICU counsellor. Let them know they can ask any question about the ICU, treatment, or what to expect, in any language, and you will do your best to help. Respond in ${selectedLang.label}.`
-  };
-  return openers[topic] || openers.freeask;
-}
+async function speakGoogleTTS(text) {
+  stopSpeaking();
+  isSpeaking = true;
+  document.getElementById('speaking-badge').classList.add('active');
 
-// ══════════════════════════════════════════════
-//  AI CALL (Claude API)
-// ══════════════════════════════════════════════
-async function sendToAI(userMsg, isSystem = false) {
-  showTyping(true);
+  const chunks = chunkText(text);
+  const volume = parseFloat(document.getElementById('vol-slider').value);
+  const rate   = parseFloat(document.getElementById('rate-slider').value);
 
-  if (!isSystem) {
-    chatHistory.push({ role:'user', content: userMsg });
-    addMessage('user', userMsg);
+  for (const chunk of chunks) {
+    if (!isSpeaking) break;
+    await playGoogleChunk(chunk, volume, rate);
   }
 
-  try {
-    const messages = chatHistory.filter(m => m.role !== 'system');
-    const systemMsg = chatHistory.find(m => m.role === 'system')?.content || '';
-
-    const response = await fetch('/api/counsel', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemMsg,
-        messages: isSystem
-          ? [{ role:'user', content: userMsg }]
-          : messages
-      })
-    });
-
-    const data = await response.json();
-    const reply = data.content?.[0]?.text || 'I am sorry, I could not get a response. Please try again.';
-
-    showTyping(false);
-    chatHistory.push({ role:'assistant', content: reply });
-    addMessage('assistant', reply);
-    speak(reply);
-
-  } catch (err) {
-    showTyping(false);
-    const errMsg = 'I am sorry, there was a connection issue. Please check your internet and try again.';
-    addMessage('assistant', errMsg);
-    speak(errMsg);
-  }
-}
-
-async function sendMessage() {
-  const input = document.getElementById('user-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  autoResize(input);
-  if (!selectedTopic) { startTopic('freeask'); return; }
-  stopSpeaking();
-  await sendToAI(text);
-}
-
-function askQuick(question) {
-  document.getElementById('user-input').value = question;
-  sendMessage();
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-
-// ══════════════════════════════════════════════
-//  TEXT TO SPEECH (Web Speech API — Free)
-// ══════════════════════════════════════════════
-function speak(text) {
-  if (!window.speechSynthesis) return;
-  stopSpeaking();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang   = selectedLang.code;
-  utterance.volume = parseFloat(document.getElementById('vol-slider').value);
-  utterance.rate   = parseFloat(document.getElementById('rate-slider').value);
-  utterance.pitch  = 1.05;
-
-  // Try to find a matching voice
-  const voices = window.speechSynthesis.getVoices();
-  const match = voices.find(v =>
-    v.lang.startsWith(selectedLang.code.split('-')[0]) ||
-    v.lang === selectedLang.code
-  );
-  if (match) utterance.voice = match;
-
-  utterance.onstart = () => {
-    isSpeaking = true;
-    document.getElementById('speaking-badge').classList.add('active');
-  };
-  utterance.onend = utterance.onerror = () => {
-    isSpeaking = false;
-    document.getElementById('speaking-badge').classList.remove('active');
-  };
-
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
-}
-
-function stopSpeaking() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
   isSpeaking = false;
   document.getElementById('speaking-badge').classList.remove('active');
 }
 
-// ══════════════════════════════════════════════
-//  SPEECH TO TEXT (Web Speech API — Free)
-// ══════════════════════════════════════════════
+function playGoogleChunk(text, volume, rate) {
+  return new Promise((resolve) => {
+    // Google Translate TTS endpoint (free, no key needed)
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${selectedLang.tl}&client=tw-ob`;
+    const audio = new Audio(url);
+    audio.volume = volume;
+    audio.playbackRate = rate;
+    audio.crossOrigin = 'anonymous';
+    currentAudio = audio;
+
+    audio.onended  = () => resolve();
+    audio.onerror  = () => {
+      // If Google TTS fails (CORS block), fall back to browser TTS for this chunk
+      console.warn('Google TTS failed for chunk, falling back to browser TTS');
+      speakBrowserFallback(text).then(resolve);
+    };
+
+    audio.play().catch(() => {
+      speakBrowserFallback(text).then(resolve);
+    });
+  });
+}
+
+// ── Browser TTS fallback ──
+function speakBrowserFallback(text) {
+  return new Promise((resolve) => {
+    if (!window.speechSynthesis) { resolve(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang   = selectedLang.code;
+    u.volume = parseFloat(document.getElementById('vol-slider').value);
+    u.rate   = parseFloat(document.getElementById('rate-slider').value);
+    // Try to find matching voice
+    const voices = window.speechSynthesis.getVoices();
+    const match = voices.find(v =>
+      v.lang === selectedLang.code ||
+      v.lang.startsWith(selectedLang.tl)
+    );
+    if (match) u.voice = match;
+    u.onend = u.onerror = () => resolve();
+    window.speechSynthesis.speak(u);
+  });
+}
+
+function speak(text) {
+  if (ttsEngine === 'google') {
+    speakGoogleTTS(text);
+  } else {
+    stopSpeaking();
+    isSpeaking = true;
+    document.getElementById('speaking-badge').classList.add('active');
+    speakBrowserFallback(text).then(() => {
+      isSpeaking = false;
+      document.getElementById('speaking-badge').classList.remove('active');
+    });
+  }
+}
+
+function stopSpeaking() {
+  isSpeaking = false;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  document.getElementById('speaking-badge').classList.remove('active');
+}
+
+// ══════════════════════════════════════════════════
+//  SPEECH TO TEXT
+// ══════════════════════════════════════════════════
 function toggleMic() {
   if (isListening) { stopListening(); return; }
   startListening();
 }
 
 function startListening() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    alert('Speech recognition is not supported in this browser. Please use Chrome.');
-    return;
-  }
-
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Please use Chrome browser for voice input.'); return; }
   stopSpeaking();
-  recognition = new SpeechRecognition();
-  recognition.lang = selectedLang.code;
+  recognition = new SR();
+  recognition.lang = selectedLang.stt;
   recognition.continuous = false;
   recognition.interimResults = true;
 
@@ -752,34 +472,28 @@ function startListening() {
     document.getElementById('mic-btn').textContent = '🔴';
     showStatus('Listening in ' + selectedLang.label + '... Speak now');
   };
-
   recognition.onresult = (e) => {
-    const transcript = Array.from(e.results)
-      .map(r => r[0].transcript).join('');
-    document.getElementById('user-input').value = transcript;
+    const t = Array.from(e.results).map(r => r[0].transcript).join('');
+    document.getElementById('user-input').value = t;
     autoResize(document.getElementById('user-input'));
   };
-
   recognition.onend = () => {
     isListening = false;
     document.getElementById('mic-btn').classList.remove('listening');
     document.getElementById('mic-btn').textContent = '🎤';
     hideStatus();
-    const text = document.getElementById('user-input').value.trim();
-    if (text) sendMessage();
+    const t = document.getElementById('user-input').value.trim();
+    if (t) sendMessage();
   };
-
   recognition.onerror = (e) => {
     isListening = false;
     document.getElementById('mic-btn').classList.remove('listening');
     document.getElementById('mic-btn').textContent = '🎤';
     hideStatus();
     if (e.error !== 'no-speech' && e.error !== 'aborted') {
-      showStatus('Could not understand. Please try again.');
-      setTimeout(hideStatus, 2000);
+      showStatus('Could not hear. Please try again.'); setTimeout(hideStatus, 2000);
     }
   };
-
   recognition.start();
 }
 
@@ -791,63 +505,137 @@ function stopListening() {
   hideStatus();
 }
 
-// ══════════════════════════════════════════════
-//  UI HELPERS
-// ══════════════════════════════════════════════
-function addMessage(role, text) {
-  const container = document.getElementById('chat-messages');
-  const time = new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
-  const avatar = role === 'assistant' ? '🤝' : (selectedRole === 'patient' ? '🛏️' : '👨‍👩‍👧');
+// ══════════════════════════════════════════════════
+//  TOPICS & AI
+// ══════════════════════════════════════════════════
+function startTopic(topic) {
+  selectedTopic = topic;
+  document.getElementById('chat-card').style.display = 'block';
+  document.getElementById('chat-card').scrollIntoView({ behavior:'smooth', block:'start' });
+  const titles = { icu:'About the ICU', medicines:'Medicines & Treatment', attender:"Dos & Don'ts",
+    equipment:'Equipment & Monitors', diet:'Diet & Nutrition', discharge:'Going Home',
+    emotional:'Emotional Support', freeask:'Ask Anything' };
+  document.getElementById('chat-title').textContent = titles[topic] || 'ICU Counsellor';
+  const qs = QUICK_QUESTIONS[topic] || [];
+  document.getElementById('quick-qs').innerHTML = qs.map(q =>
+    `<button class="quick-q" onclick="askQuick('${q.replace(/'/g,"\\'")}')">💬 ${q}</button>`).join('');
+  document.getElementById('chat-messages').innerHTML = '';
+  chatHistory = [];
+  chatHistory.push({ role:'system', content: buildSystemPrompt(topic) });
+  sendToAI(getOpener(topic), true);
+}
 
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  div.innerHTML = `
-    <div class="msg-avatar">${avatar}</div>
-    <div>
-      <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>
-      <div class="msg-time">${time}</div>
-    </div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+function buildSystemPrompt(topic) {
+  const roleCtx = selectedRole==='patient'
+    ? 'You are speaking DIRECTLY to the patient who is admitted in the ICU.'
+    : 'You are speaking to the FAMILY MEMBER or ATTENDER of a patient admitted in the ICU.';
+  return `You are a warm, compassionate ICU counsellor at ${HOSPITAL}.
+${roleCtx}
+IMPORTANT: You MUST respond ONLY in ${selectedLang.label}. Every single word of your response must be in ${selectedLang.label}. Do not mix languages.
+Keep responses simple, clear, and reassuring. Avoid medical jargon.
+Keep each response to 3-4 sentences maximum — short so it sounds natural when spoken aloud.
+Be empathetic and calming. Never cause unnecessary worry.
+Topic: ${topic}. Hospital: Samarthaa Hospital, ICU Ward 6A, Bengaluru.
+Doctors: Dr. Mahesh KM (Intensivist), Dr. Nagendra Prasad (Cardiologist), Dr. Rekha Jayaram (Physician).
+For urgent concerns always say to speak to Nurse Asha or Dr. Mahesh immediately.
+Do not diagnose or give specific medical advice.`;
+}
+
+function getOpener(topic) {
+  const lang = selectedLang.label;
+  const openers = {
+    icu:       `Introduce yourself as the ICU counsellor at Samarthaa Hospital. Give a warm, reassuring welcome. Briefly explain what the ICU is and why it helps patients recover. Keep it very simple. Respond ONLY in ${lang}.`,
+    medicines: `Greet warmly. Explain simply why ICU patients receive medicines through drips and injections. Be reassuring. Respond ONLY in ${lang}.`,
+    attender:  `Greet the family member warmly. Tell them the 3 most important rules for ICU attenders — visiting hours, hygiene, what to bring. Be kind. Respond ONLY in ${lang}.`,
+    equipment: `Greet warmly. Explain very simply what the monitor, drip stand and oxygen equipment are in the ICU. Reassure them these machines are helping the patient. Respond ONLY in ${lang}.`,
+    diet:      `Greet warmly. Explain why ICU patients often cannot eat normally at first and how they receive nutrition. Be reassuring. Respond ONLY in ${lang}.`,
+    discharge: `Give a warm hopeful greeting. Explain the general process when a patient gets better and is ready to go home from ICU. Respond ONLY in ${lang}.`,
+    emotional: `Give a very warm compassionate greeting. Acknowledge that having a family member in ICU is very stressful. Offer words of comfort. Say the team at Samarthaa Hospital is doing everything possible. Respond ONLY in ${lang}.`,
+    freeask:   `Greet warmly and introduce yourself as the ICU counsellor. Let them know they can ask any question about the ICU or treatment. Respond ONLY in ${lang}.`
+  };
+  return openers[topic] || openers.freeask;
+}
+
+async function sendToAI(userMsg, isOpener=false) {
+  showTyping(true);
+  if (!isOpener) {
+    chatHistory.push({ role:'user', content: userMsg });
+    addMessage('user', userMsg);
+  }
+  try {
+    const systemMsg = chatHistory.find(m => m.role==='system')?.content || '';
+    const msgs = isOpener
+      ? [{ role:'user', content: userMsg }]
+      : chatHistory.filter(m => m.role !== 'system');
+
+    const resp = await fetch('/api/counsel', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ system: systemMsg, messages: msgs })
+    });
+    const data = await resp.json();
+    const reply = data.content?.[0]?.text || 'Sorry, could not get a response. Please try again.';
+    showTyping(false);
+    chatHistory.push({ role:'assistant', content: reply });
+    addMessage('assistant', reply);
+    speak(reply);
+  } catch(err) {
+    showTyping(false);
+    const errMsg = 'Sorry, there was a connection issue. Please try again.';
+    addMessage('assistant', errMsg);
+    speak(errMsg);
+  }
+}
+
+async function sendMessage() {
+  const inp = document.getElementById('user-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = ''; autoResize(inp);
+  if (!selectedTopic) { startTopic('freeask'); return; }
+  stopSpeaking();
+  await sendToAI(text);
+}
+
+function askQuick(q) {
+  document.getElementById('user-input').value = q;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+// ══════════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════════
+function addMessage(role, text) {
+  const c = document.getElementById('chat-messages');
+  const time = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const av = role==='assistant' ? '🤝' : selectedRole==='patient' ? '🛏️' : '👨‍👩‍👧';
+  const d = document.createElement('div');
+  d.className = `msg ${role}`;
+  d.innerHTML = `<div class="msg-av">${av}</div><div><div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div><div class="msg-time">${time}</div></div>`;
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
 }
 
 function showTyping(show) {
-  const container = document.getElementById('chat-messages');
-  const existing = document.getElementById('typing-msg');
-  if (existing) existing.remove();
+  const c = document.getElementById('chat-messages');
+  const ex = document.getElementById('typing-msg');
+  if (ex) ex.remove();
   if (!show) return;
-
-  const div = document.createElement('div');
-  div.className = 'msg assistant'; div.id = 'typing-msg';
-  div.innerHTML = `
-    <div class="msg-avatar">🤝</div>
-    <div class="typing-indicator">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    </div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  const d = document.createElement('div');
+  d.className='msg assistant'; d.id='typing-msg';
+  d.innerHTML=`<div class="msg-av">🤝</div><div class="typing-ind"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
 }
 
-function showStatus(text) {
-  document.getElementById('status-text').textContent = text;
-  document.getElementById('status-bar').classList.add('active');
-}
+function showStatus(t) { document.getElementById('status-text').textContent=t; document.getElementById('status-bar').classList.add('active'); }
+function hideStatus()   { document.getElementById('status-bar').classList.remove('active'); }
+function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 
-function hideStatus() {
-  document.getElementById('status-bar').classList.remove('active');
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
-
-// Load voices on ready (some browsers need this)
-if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
+if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 </script>
 </body>
 </html>
