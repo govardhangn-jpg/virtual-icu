@@ -2,393 +2,204 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Aaroha — Your Companion · Samarthaa Hospital</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+<title>Aaroha — Samarthaa Hospital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600;700&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --warm:#fdf6ee;--warm2:#fef9f4;--warm3:#fdecd8;
+  --bg:#fdf6ee;--bg2:#fff;--bg3:#fef9f4;
   --teal:#0891b2;--teal-lt:#e0f7fa;--teal-dk:#0e7490;
-  --rose:#e11d48;--rose-lt:#fff1f4;--rose-dk:#9f1239;
+  --rose:#e11d48;--rose-lt:#fff1f4;
   --amber:#d97706;--amber-lt:#fffbeb;
   --green:#059669;--green-lt:#ecfdf5;
   --purple:#7c3aed;--purple-lt:#f5f3ff;
   --text1:#1c1917;--text2:#57534e;--text3:#a8a29e;
-  --border:#e7e5e4;--border2:#f5f0eb;
-  --shadow:0 4px 24px rgba(0,0,0,0.07);
-  --shadow2:0 2px 12px rgba(0,0,0,0.05);
-  --r:18px;--r2:14px;
+  --border:#e7e5e4;--shadow:0 4px 24px rgba(0,0,0,0.07);
+  --r:18px;
 }
-html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-serif;color:var(--text1)}
+html,body{min-height:100vh;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text1);overflow-x:hidden}
+button{cursor:pointer;font-family:'Nunito',sans-serif}
+textarea,input,select{font-family:'Nunito',sans-serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
 /* ── Screens ── */
 .screen{display:none;min-height:100vh}
 .screen.active{display:block}
-#screen-welcome.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
-#screen-chat.active{display:flex;flex-direction:column}
+#sw.active{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;background:linear-gradient(160deg,#fdf6ee 0%,#e0f7fa 100%)}
+#sc.active{display:flex;flex-direction:column;height:100vh}
 
-/* ══════════════ WELCOME SCREEN ══════════════ */
-#screen-welcome{
-  background:linear-gradient(160deg,#fdf6ee 0%,#e0f7fa 100%);
-  padding:40px 20px;text-align:center;
-}
-.welcome-glow{
-  width:120px;height:120px;border-radius:50%;
-  background:linear-gradient(135deg,#0891b2,#7c3aed);
-  display:flex;align-items:center;justify-content:center;
-  font-size:52px;margin-bottom:28px;
-  box-shadow:0 0 60px rgba(8,145,178,0.25);
-  animation:float 4s ease-in-out infinite;
-}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.welcome-name{font-family:'Lora',serif;font-size:36px;font-weight:600;color:var(--text1);letter-spacing:-0.01em}
-.welcome-tagline{font-size:15px;color:var(--text2);margin-top:8px;max-width:300px;line-height:1.6}
-.welcome-hospital{margin-top:12px;font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
-.welcome-btn{
-  margin-top:36px;padding:16px 48px;border-radius:50px;border:none;
-  background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff;
-  font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
-  cursor:pointer;transition:all 0.2s;
-  box-shadow:0 4px 20px rgba(8,145,178,0.35);
-}
-.welcome-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(8,145,178,0.4)}
-.welcome-note{margin-top:20px;font-size:11px;color:var(--text3);max-width:280px;line-height:1.6}
+/* ══ WELCOME ══ */
+.wglow{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#0891b2,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:50px;margin-bottom:24px;box-shadow:0 0 50px rgba(8,145,178,0.2);animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.wtitle{font-family:'Lora',serif;font-size:36px;font-weight:600;letter-spacing:-0.01em}
+.wsub{font-size:15px;color:var(--text2);margin-top:8px;max-width:300px;line-height:1.7}
+.whosp{margin-top:10px;font-size:12px;color:var(--text3)}
+.wbtn{margin-top:32px;padding:15px 44px;border-radius:50px;border:none;background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff;font-size:16px;font-weight:700;box-shadow:0 4px 20px rgba(8,145,178,0.3);transition:all 0.2s}
+.wbtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(8,145,178,0.4)}
+.wnote{margin-top:18px;font-size:11px;color:var(--text3);max-width:280px;line-height:1.7}
 
-/* ══════════════ SETUP SCREEN ══════════════ */
-#screen-setup{background:var(--warm)}
-.setup-header{
-  background:linear-gradient(135deg,#0891b2,#7c3aed);
-  padding:20px 22px;display:flex;align-items:center;gap:12px;
-}
-.setup-header-icon{font-size:24px}
-.setup-header h1{color:#fff;font-size:17px;font-weight:700;font-family:'Lora',serif}
-.setup-header p{color:rgba(255,255,255,0.75);font-size:11px;margin-top:2px}
+/* ══ SETUP ══ */
+.setup-hdr{background:linear-gradient(135deg,#0891b2,#7c3aed);padding:18px 20px;display:flex;align-items:center;gap:12px}
+.setup-hdr h1{color:#fff;font-size:17px;font-weight:700;font-family:'Lora',serif}
+.setup-hdr p{color:rgba(255,255,255,0.75);font-size:11px;margin-top:2px}
+.setup-body{max-width:600px;margin:0 auto;padding:20px 14px 60px;display:flex;flex-direction:column;gap:18px}
+.scard{background:#fff;border-radius:var(--r);box-shadow:0 2px 12px rgba(0,0,0,0.05);padding:20px 22px}
+.stitle{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.frow{margin-bottom:14px}
+.flabel{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;display:block}
+.finput,.fselect,.ftextarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--text1);background:var(--bg3);transition:border-color 0.2s}
+.finput:focus,.fselect:focus,.ftextarea:focus{outline:none;border-color:var(--teal);background:#fff}
+.fselect{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.ftextarea{resize:vertical;min-height:80px;line-height:1.6}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-.setup-body{max-width:600px;margin:0 auto;padding:24px 16px 60px;display:flex;flex-direction:column;gap:20px}
-
-.setup-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow2);padding:22px}
-.setup-section-title{font-size:13px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;display:flex;align-items:center;gap:7px}
-
-.form-row{margin-bottom:14px}
-.form-label{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;display:block}
-.form-input,.form-select,.form-textarea{
-  width:100%;border:1.5px solid var(--border);border-radius:10px;
-  padding:11px 14px;font-family:'Nunito',sans-serif;font-size:14px;
-  color:var(--text1);background:var(--warm2);transition:border-color 0.2s;
-}
-.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--teal);background:#fff}
-.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
-
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-
-/* Companion persona picker */
 .persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
-.persona-card{
-  border:2px solid var(--border);border-radius:14px;padding:14px 10px;
-  cursor:pointer;text-align:center;transition:all 0.2s;background:var(--warm2);
-}
-.persona-card:hover{border-color:var(--teal);background:var(--teal-lt)}
-.persona-card.active{border-color:var(--teal);background:var(--teal-lt)}
-.persona-avatar{font-size:30px;margin-bottom:6px}
-.persona-name{font-size:13px;font-weight:700;color:var(--text1)}
-.persona-desc{font-size:10px;color:var(--text2);margin-top:2px;line-height:1.4}
+.pcard{border:2px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;transition:all 0.2s;background:var(--bg3)}
+.pcard:hover,.pcard.active{border-color:var(--teal);background:var(--teal-lt)}
+.pav{font-size:28px;margin-bottom:5px}
+.pname{font-size:13px;font-weight:700;color:var(--text1)}
+.pdesc{font-size:10px;color:var(--text2);margin-top:2px;line-height:1.4}
 
-/* Mood chips */
-.mood-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-.mood-chip{
-  padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);
-  background:var(--warm2);cursor:pointer;font-size:13px;font-weight:600;
-  font-family:'Nunito',sans-serif;transition:all 0.15s;
-}
-.mood-chip:hover{border-color:var(--teal)}
-.mood-chip.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.chip-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{padding:7px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg3);font-size:13px;font-weight:600;transition:all 0.15s}
+.chip:hover{border-color:var(--teal)}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
 
-/* Language */
-.lang-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-.lang-chip{
-  padding:7px 13px;border-radius:20px;border:1.5px solid var(--border);
-  background:var(--warm2);cursor:pointer;font-size:13px;font-weight:600;
-  font-family:'Nunito',sans-serif;transition:all 0.15s;
-}
-.lang-chip:hover{border-color:var(--teal)}
-.lang-chip.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.start-btn{width:100%;padding:15px;border-radius:50px;border:none;background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff;font-size:16px;font-weight:700;box-shadow:0 4px 20px rgba(8,145,178,0.25);transition:all 0.2s}
+.start-btn:hover{transform:translateY(-1px)}
 
-.start-btn{
-  width:100%;padding:16px;border-radius:50px;border:none;
-  background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff;
-  font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
-  cursor:pointer;transition:all 0.2s;
-  box-shadow:0 4px 20px rgba(8,145,178,0.3);
-}
-.start-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(8,145,178,0.4)}
-
-/* ══════════════ COMPANION CHAT SCREEN ══════════════ */
-#screen-chat{
-  height:100vh;
-  background:var(--warm);
-}
-
-.chat-topbar{
-  background:linear-gradient(135deg,#0891b2,#7c3aed);
-  padding:14px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0;
-}
-.companion-bubble{
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(255,255,255,0.25);
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-  position:relative;flex-shrink:0;
-}
-.online-dot{
-  position:absolute;bottom:1px;right:1px;width:10px;height:10px;
-  border-radius:50%;background:#4ade80;border:2px solid #fff;
-}
-.companion-info{flex:1}
-.companion-info h3{color:#fff;font-size:15px;font-weight:700;font-family:'Lora',serif}
-.companion-info p{color:rgba(255,255,255,0.75);font-size:11px;margin-top:1px}
-
-.topbar-actions{display:flex;gap:8px}
-.topbar-btn{
-  width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);
-  border:none;color:#fff;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;font-size:16px;transition:all 0.15s;
-}
-.topbar-btn:hover{background:rgba(255,255,255,0.35)}
-
-.speaking-badge{
-  display:none;align-items:center;gap:5px;background:rgba(255,255,255,0.2);
-  border-radius:20px;padding:4px 10px;color:#fff;font-size:11px;font-weight:600;
-}
-.speaking-badge.active{display:flex}
+/* ══ CHAT ══ */
+.chat-top{background:linear-gradient(135deg,#0891b2,#7c3aed);padding:14px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.comp-bub{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;flex-shrink:0}
+.online-dot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;border-radius:50%;background:#4ade80;border:2px solid #fff}
+.comp-info h3{color:#fff;font-size:15px;font-weight:700;font-family:'Lora',serif}
+.comp-info p{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px}
+.top-actions{display:flex;gap:8px;margin-left:auto;align-items:center}
+.top-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.15s}
+.top-btn:hover{background:rgba(255,255,255,0.35)}
+.spk-badge{display:none;align-items:center;gap:5px;background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 10px;color:#fff;font-size:11px;font-weight:600}
+.spk-badge.on{display:flex}
 .sw{display:flex;align-items:center;gap:2px}
 .sw span{display:block;width:3px;background:#fff;border-radius:2px;animation:wb 0.8s ease-in-out infinite}
-.sw span:nth-child(1){height:6px} .sw span:nth-child(2){height:12px;animation-delay:.1s}
-.sw span:nth-child(3){height:8px;animation-delay:.2s} .sw span:nth-child(4){height:14px;animation-delay:.3s}
-.sw span:nth-child(5){height:6px;animation-delay:.4s}
+.sw span:nth-child(1){height:6px}.sw span:nth-child(2){height:12px;animation-delay:.1s}.sw span:nth-child(3){height:8px;animation-delay:.2s}.sw span:nth-child(4){height:14px;animation-delay:.3s}.sw span:nth-child(5){height:6px;animation-delay:.4s}
 @keyframes wb{0%,100%{transform:scaleY(0.5);opacity:0.6}50%{transform:scaleY(1.2);opacity:1}}
 
-/* Status bar */
-.status-bar{
-  display:none;align-items:center;gap:8px;padding:8px 18px;
-  background:#fff8ed;border-bottom:1px solid #fde68a;
-  font-size:12px;color:var(--amber);font-weight:600;flex-shrink:0;
-}
-.status-bar.active{display:flex}
+.status-bar{display:none;align-items:center;gap:8px;padding:8px 18px;background:#fff8ed;border-bottom:1px solid #fde68a;font-size:12px;color:var(--amber);font-weight:600;flex-shrink:0}
+.status-bar.on{display:flex}
 
-/* Messages */
-.chat-messages{
-  flex:1;overflow-y:auto;padding:18px 16px;
-  display:flex;flex-direction:column;gap:14px;
-}
+.safari-notice{display:none;align-items:center;gap:8px;padding:10px 16px;background:var(--amber-lt);border-bottom:1px solid #fde68a;font-size:12px;color:#92400e;flex-shrink:0}
+.safari-notice.on{display:flex}
+.sn-close{margin-left:auto;background:none;border:none;color:#92400e;font-size:16px}
 
-.msg{display:flex;gap:10px;max-width:82%}
-.msg.companion{align-self:flex-start}
+.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f8f4f0}
+
+.msg{display:flex;gap:9px;max-width:84%}
+.msg.comp{align-self:flex-start}
 .msg.user{align-self:flex-end;flex-direction:row-reverse}
+.mav{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.msg.comp .mav{background:var(--teal-lt)}
+.msg.user .mav{background:var(--green-lt)}
+.mbody{}
+.mbubble{padding:11px 15px;border-radius:18px;font-size:14px;line-height:1.7}
+.msg.comp .mbubble{background:#fff;border:1px solid var(--border);border-top-left-radius:4px;color:var(--text1);box-shadow:0 1px 4px rgba(0,0,0,0.05);font-family:'Lora',serif}
+.msg.user .mbubble{background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;border-top-right-radius:4px}
+.mtime{font-size:10px;color:var(--text3);margin-top:3px;padding:0 3px}
+.msg.user .mtime{text-align:right}
 
-.msg-av{
-  width:36px;height:36px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-}
-.msg.companion .msg-av{background:linear-gradient(135deg,#e0f7fa,#f5f3ff)}
-.msg.user .msg-av{background:var(--green-lt)}
+.tap-btn{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:6px 14px;border-radius:20px;background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff;border:none;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(8,145,178,0.25);transition:all 0.2s}
+.tap-btn.playing{background:linear-gradient(135deg,#dc2626,#9f1239)}
+.tap-btn.done{background:#059669;pointer-events:none}
 
-.msg-body{}
-.msg-bubble{
-  padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.7;
-}
-.msg.companion .msg-bubble{
-  background:#fff;border:1px solid var(--border2);
-  border-top-left-radius:5px;color:var(--text1);
-  box-shadow:var(--shadow2);
-  font-family:'Lora',serif;
-}
-.msg.user .msg-bubble{
-  background:linear-gradient(135deg,#0891b2,#0e7490);
-  color:#fff;border-top-right-radius:5px;
-}
-.msg-time{font-size:10px;color:var(--text3);margin-top:4px;padding:0 4px}
-.msg.user .msg-time{text-align:right}
-
-/* Typing */
-.typing-ind{
-  display:flex;align-items:center;gap:5px;padding:14px 16px;
-  background:#fff;border:1px solid var(--border2);border-radius:18px;
-  border-top-left-radius:5px;width:fit-content;box-shadow:var(--shadow2);
-}
+.typing-ind{display:flex;align-items:center;gap:5px;padding:12px 15px;background:#fff;border:1px solid var(--border);border-radius:18px;border-top-left-radius:4px;width:fit-content;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
 .td{width:8px;height:8px;border-radius:50%;background:var(--text3);animation:ty 1.2s ease-in-out infinite}
-.td:nth-child(2){animation-delay:.2s} .td:nth-child(3){animation-delay:.4s}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
 @keyframes ty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
-/* Mood check-in banner */
-.mood-banner{
-  background:linear-gradient(135deg,#fff8ed,#fdf6ee);
-  border:1px solid #fde68a;border-radius:14px;
-  padding:14px 16px;margin:0 16px;flex-shrink:0;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-}
-.mood-banner-text{font-size:13px;color:var(--text2);font-weight:600;flex:1}
-.mood-btns{display:flex;gap:6px;flex-wrap:wrap}
-.mood-btn{
-  padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);
-  background:#fff;cursor:pointer;font-size:13px;font-family:'Nunito',sans-serif;
-  transition:all 0.15s;
-}
-.mood-btn:hover{border-color:var(--teal);background:var(--teal-lt)}
+.mood-banner{display:none;align-items:center;gap:10px;padding:11px 16px;background:var(--amber-lt);border-top:1px solid #fde68a;flex-shrink:0;flex-wrap:wrap}
+.mood-banner.on{display:flex}
+.mbtext{font-size:13px;color:var(--text2);font-weight:600}
+.mb-btns{display:flex;gap:7px}
+.mb-btn{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:13px;transition:all 0.15s}
+.mb-btn:hover{border-color:var(--teal);background:var(--teal-lt)}
 
-/* Quick comforts */
-.quick-comforts{
-  display:flex;gap:7px;padding:10px 16px 0;overflow-x:auto;flex-shrink:0;
-}
-.quick-comforts::-webkit-scrollbar{height:0}
-.qc-btn{
-  padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);
-  background:#fff;cursor:pointer;font-size:12px;font-weight:600;
-  font-family:'Nunito',sans-serif;white-space:nowrap;transition:all 0.15s;
-  color:var(--text2);flex-shrink:0;
-}
-.qc-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-lt)}
+.qc-row{display:flex;gap:7px;padding:10px 16px 0;overflow-x:auto;flex-shrink:0}
+.qc-row::-webkit-scrollbar{height:0}
+.qc{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;white-space:nowrap;color:var(--text2);flex-shrink:0;transition:all 0.15s}
+.qc:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-lt)}
 
-/* Input area */
-.chat-input-area{
-  padding:12px 16px 20px;background:#fff;
-  border-top:1px solid var(--border2);flex-shrink:0;
-}
-.input-row{display:flex;gap:8px;align-items:flex-end}
-.text-input{
-  flex:1;border:1.5px solid var(--border);border-radius:24px;
-  padding:12px 18px;font-family:'Nunito',sans-serif;font-size:14px;
-  color:var(--text1);resize:none;min-height:48px;max-height:120px;
-  transition:border-color 0.2s;background:var(--warm2);line-height:1.5;
-}
-.text-input:focus{outline:none;border-color:var(--teal);background:#fff}
-.mic-btn{
-  width:48px;height:48px;border-radius:50%;border:none;
-  background:linear-gradient(135deg,#0891b2,#0e7490);
-  color:#fff;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;font-size:19px;transition:all 0.2s;flex-shrink:0;
-  box-shadow:0 2px 10px rgba(8,145,178,0.4);
-}
+.vc-bar{display:flex;align-items:center;gap:12px;padding:8px 16px;background:var(--bg3);border-top:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.vcl{font-size:11px;color:var(--text2);font-weight:600;white-space:nowrap}
+.vcs{width:70px;accent-color:var(--teal)}
+.stop-btn{margin-left:auto;padding:5px 12px;border-radius:8px;border:1.5px solid var(--rose);background:var(--rose-lt);color:var(--rose);font-size:12px;font-weight:700;transition:all 0.15s}
+.stop-btn:hover{background:var(--rose);color:#fff}
+
+.inp-area{padding:12px 16px 18px;background:#fff;border-top:1px solid var(--border);flex-shrink:0}
+.inp-row{display:flex;gap:8px;align-items:flex-end}
+.tinput{flex:1;border:1.5px solid var(--border);border-radius:24px;padding:11px 16px;font-size:14px;color:var(--text1);resize:none;min-height:46px;max-height:120px;background:var(--bg3);line-height:1.5;transition:border-color 0.2s}
+.tinput:focus{outline:none;border-color:var(--teal);background:#fff}
+.mic-btn{width:46px;height:46px;border-radius:50%;border:none;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 8px rgba(8,145,178,0.35);transition:all 0.2s}
 .mic-btn:hover{transform:scale(1.05)}
 .mic-btn.listening{background:linear-gradient(135deg,#e11d48,#be123c);animation:mp 1s ease-in-out infinite}
 @keyframes mp{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.send-btn{
-  width:48px;height:48px;border-radius:50%;border:none;
-  background:linear-gradient(135deg,#0891b2,#7c3aed);
-  color:#fff;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;font-size:19px;transition:all 0.2s;flex-shrink:0;
-  box-shadow:0 2px 10px rgba(124,58,237,0.35);
-}
+.send-btn{width:46px;height:46px;border-radius:50%;border:none;background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 8px rgba(124,58,237,0.3);transition:all 0.2s}
 .send-btn:hover{transform:scale(1.05)}
-.input-hint{font-size:11px;color:var(--text3);margin-top:7px;text-align:center}
+.inp-hint{font-size:11px;color:var(--text3);margin-top:6px;text-align:center}
 
-/* Voice controls */
-.voice-controls{
-  display:flex;align-items:center;gap:12px;padding:8px 16px;
-  background:var(--warm2);border-top:1px solid var(--border2);flex-shrink:0;flex-wrap:wrap;
-}
-.vc-label{font-size:11px;color:var(--text2);font-weight:600;white-space:nowrap}
-.vc-slider{width:70px;accent-color:var(--teal);cursor:pointer}
-.stop-btn{
-  margin-left:auto;padding:5px 12px;border-radius:8px;
-  border:1.5px solid var(--rose);background:var(--rose-lt);
-  color:var(--rose);font-size:12px;font-weight:700;cursor:pointer;
-  font-family:'Nunito',sans-serif;transition:all 0.15s;
-}
-.stop-btn:hover{background:var(--rose);color:#fff}
-
-/* Crisis banner */
-.crisis-banner{
-  background:linear-gradient(135deg,#fff1f4,#fce7f3);
-  border:1.5px solid #fda4af;border-radius:14px;
-  padding:14px 16px;margin:0 16px 10px;flex-shrink:0;display:none;
-}
-.crisis-banner.active{display:block}
-.crisis-title{font-size:13px;font-weight:700;color:var(--rose-dk);margin-bottom:6px}
+.crisis-box{display:none;margin:0 16px 10px;padding:14px 16px;background:var(--rose-lt);border:1.5px solid #fda4af;border-radius:14px;flex-shrink:0}
+.crisis-box.on{display:block}
+.crisis-title{font-size:13px;font-weight:700;color:#9f1239;margin-bottom:6px}
 .crisis-text{font-size:12px;color:#9f1239;line-height:1.6}
-.crisis-numbers{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.crisis-num{padding:6px 14px;border-radius:20px;background:#fff;border:1.5px solid #fda4af;font-size:12px;font-weight:700;color:var(--rose-dk);text-decoration:none}
+.crisis-nums{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.crisis-num{padding:5px 13px;border-radius:20px;background:#fff;border:1.5px solid #fda4af;font-size:12px;font-weight:700;color:#9f1239;text-decoration:none}
 
-/* Day/date divider */
-.date-divider{text-align:center;font-size:11px;color:var(--text3);padding:4px 0;display:flex;align-items:center;gap:8px}
-.date-divider::before,.date-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-
-@media(max-width:600px){
-  .persona-grid{grid-template-columns:repeat(2,1fr)}
-  .grid-2{grid-template-columns:1fr}
-}
+@media(max-width:600px){.persona-grid{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ══════════ WELCOME SCREEN ══════════ -->
-<div class="screen active" id="screen-welcome">
-  <div class="welcome-glow">🌸</div>
-  <div style="font-family:'Lora',serif;font-size:38px;font-weight:600;letter-spacing:-0.01em">Aaroha</div>
-  <div style="font-size:15px;color:var(--text2);margin-top:10px;max-width:300px;line-height:1.7">
-    Your compassionate companion — here to listen, comfort, and support you through this journey.
-  </div>
-  <div class="welcome-hospital" style="margin-top:14px;font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px">
-    🏥 Samarthaa Hospital · ICU Ward 6A
-  </div>
-  <button class="welcome-btn" onclick="showSetup()">Begin →</button>
-  <div class="welcome-note">
-    A safe, confidential space. No judgment. No advice unless asked.<br>
-    Just a caring presence whenever you need it.
-  </div>
+<!-- WELCOME -->
+<div class="screen active" id="sw">
+  <div class="wglow">🌸</div>
+  <div class="wtitle">Aaroha</div>
+  <div class="wsub">Your compassionate companion — here to listen, comfort and support you through this journey.</div>
+  <div class="whosp">🏥 Samarthaa Hospital · ICU Ward 6A</div>
+  <button class="wbtn" id="begin-btn">Begin →</button>
+  <div class="wnote">A safe, confidential space. No judgment. No advice unless asked.<br>Just a caring presence whenever you need it.</div>
 </div>
 
-<!-- ══════════ SETUP SCREEN ══════════ -->
-<div class="screen" id="screen-setup">
-  <div class="setup-header">
-    <div class="setup-header-icon">🌸</div>
-    <div>
-      <h1>Let's get to know you</h1>
-      <p>So Aaroha can be truly present for you</p>
-    </div>
+<!-- SETUP -->
+<div class="screen" id="ss">
+  <div class="setup-hdr">
+    <span style="font-size:22px">🌸</span>
+    <div><h1>Let's get to know you</h1><p>So Aaroha can be truly present for you</p></div>
   </div>
-
   <div class="setup-body">
 
-    <!-- About You -->
-    <div class="setup-card">
-      <div class="setup-section-title">👤 About You</div>
-
-      <div class="grid-2">
-        <div class="form-row">
-          <label class="form-label">Your name *</label>
-          <input class="form-input" id="p-name" placeholder="e.g. Ramesh" maxlength="40">
-        </div>
-        <div class="form-row">
-          <label class="form-label">Age</label>
-          <input class="form-input" id="p-age" type="number" placeholder="e.g. 45" min="1" max="120">
-        </div>
+    <div class="scard">
+      <div class="stitle">👤 About You</div>
+      <div class="g2">
+        <div class="frow"><label class="flabel">Your name *</label><input class="finput" id="p-name" placeholder="e.g. Ramesh" maxlength="40"></div>
+        <div class="frow"><label class="flabel">Age</label><input class="finput" id="p-age" type="number" placeholder="e.g. 45" min="1" max="120"></div>
       </div>
-
-      <div class="grid-2">
-        <div class="form-row">
-          <label class="form-label">I am the</label>
-          <select class="form-select" id="p-role">
+      <div class="g2">
+        <div class="frow">
+          <label class="flabel">I am the</label>
+          <select class="fselect" id="p-role">
             <option value="patient">Patient (admitted)</option>
             <option value="attender" selected>Family / Attender</option>
             <option value="caregiver">Caregiver / Nurse</option>
             <option value="visitor">Visitor</option>
           </select>
         </div>
-        <div class="form-row">
-          <label class="form-label">Preferred language</label>
-          <select class="form-select" id="p-lang-select" onchange="setLangFromSelect()">
+        <div class="frow">
+          <label class="flabel">Language</label>
+          <select class="fselect" id="p-lang">
             <option value="en">English</option>
             <option value="kn">ಕನ್ನಡ (Kannada)</option>
             <option value="hi">हिंदी (Hindi)</option>
@@ -406,882 +217,693 @@ html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-seri
           </select>
         </div>
       </div>
-
-      <div class="form-row">
-        <label class="form-label">What is your situation? (helps Aaroha understand you better)</label>
-        <select class="form-select" id="p-situation">
+      <div class="frow">
+        <label class="flabel">Your situation</label>
+        <select class="fselect" id="p-sit">
           <option value="">-- Select --</option>
           <option value="patient_icu">I am a patient recovering in ICU</option>
           <option value="family_waiting">My family member is in ICU — I am waiting outside</option>
           <option value="family_serious">My loved one is critically ill — I am very worried</option>
           <option value="family_postop">Family member had surgery — waiting for recovery</option>
-          <option value="long_stay">We have been here for many days and I am exhausted</option>
-          <option value="grief">I have recently lost someone or am facing that possibility</option>
-          <option value="caregiver_burnout">I am a caregiver and feeling overwhelmed</option>
+          <option value="long_stay">We have been here many days and I am exhausted</option>
+          <option value="grief">Facing possible loss or recently lost someone</option>
+          <option value="burnout">I am a caregiver feeling overwhelmed</option>
           <option value="just_talk">I just need someone to talk to</option>
-          <option value="other">Other situation</option>
         </select>
       </div>
-
-      <div class="form-row">
-        <label class="form-label">Tell Aaroha a little about yourself <span style="font-weight:400;color:var(--text3)">(optional — makes responses feel personal)</span></label>
-        <textarea class="form-textarea" id="p-about"
-          placeholder="e.g. My mother Lakshmi is in ICU after a heart surgery. I have been here 3 days. I have two children at home. I am very tired and scared..."></textarea>
+      <div class="frow">
+        <label class="flabel">Tell Aaroha about yourself <span style="font-weight:400;color:var(--text3)">(optional — makes responses personal)</span></label>
+        <textarea class="ftextarea" id="p-about" placeholder="e.g. My mother Lakshmi is in ICU after heart surgery. I have been here 3 days. I have two children at home. I am very tired and scared..."></textarea>
       </div>
     </div>
 
-    <!-- Companion Persona -->
-    <div class="setup-card">
-      <div class="setup-section-title">💝 Choose your companion</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Who would you like to talk to?</div>
+    <div class="scard">
+      <div class="stitle">💝 Choose your companion</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px">Who would you like to talk to?</div>
       <div class="persona-grid" id="persona-grid">
-        <div class="persona-card active" onclick="selectPersona('priya')" id="persona-priya">
-          <div class="persona-avatar">👩</div>
-          <div class="persona-name">Priya</div>
-          <div class="persona-desc">Warm, nurturing, like a caring older sister</div>
-        </div>
-        <div class="persona-card" onclick="selectPersona('arjun')" id="persona-arjun">
-          <div class="persona-avatar">👨</div>
-          <div class="persona-name">Arjun</div>
-          <div class="persona-desc">Steady, calm, like a trusted elder brother</div>
-        </div>
-        <div class="persona-card" onclick="selectPersona('kaveri')" id="persona-kaveri">
-          <div class="persona-avatar">👵</div>
-          <div class="persona-name">Kaveri Ajji</div>
-          <div class="persona-desc">Gentle wisdom, like a kind grandmother</div>
-        </div>
-        <div class="persona-card" onclick="selectPersona('anand')" id="persona-anand">
-          <div class="persona-avatar">🧘</div>
-          <div class="persona-name">Anand</div>
-          <div class="persona-desc">Peaceful, spiritual, grounding presence</div>
-        </div>
-        <div class="persona-card" onclick="selectPersona('dr_meena')" id="persona-dr_meena">
-          <div class="persona-avatar">👩‍⚕️</div>
-          <div class="persona-name">Dr. Meena</div>
-          <div class="persona-desc">Compassionate doctor who explains gently</div>
-        </div>
-        <div class="persona-card" onclick="selectPersona('friend')" id="persona-friend">
-          <div class="persona-avatar">🤝</div>
-          <div class="persona-name">A Friend</div>
-          <div class="persona-desc">Casual, easy, no pressure conversation</div>
-        </div>
+        <div class="pcard active" data-persona="priya"><div class="pav">👩</div><div class="pname">Priya</div><div class="pdesc">Warm, nurturing older sister</div></div>
+        <div class="pcard" data-persona="arjun"><div class="pav">👨</div><div class="pname">Arjun</div><div class="pdesc">Steady, calm older brother</div></div>
+        <div class="pcard" data-persona="kaveri"><div class="pav">👵</div><div class="pname">Kaveri Ajji</div><div class="pdesc">Gentle wisdom, like a grandmother</div></div>
+        <div class="pcard" data-persona="anand"><div class="pav">🧘</div><div class="pname">Anand</div><div class="pdesc">Peaceful, spiritual presence</div></div>
+        <div class="pcard" data-persona="dr_meena"><div class="pav">👩‍⚕️</div><div class="pname">Dr. Meena</div><div class="pdesc">Compassionate, explains gently</div></div>
+        <div class="pcard" data-persona="friend"><div class="pav">🤝</div><div class="pname">A Friend</div><div class="pdesc">Casual, easy, no pressure</div></div>
       </div>
     </div>
 
-    <!-- How are you feeling -->
-    <div class="setup-card">
-      <div class="setup-section-title">💭 How are you feeling right now?</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:10px">Select all that apply</div>
-      <div class="mood-grid" id="mood-grid">
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="scared">😨 Scared</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="anxious">😰 Anxious</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="sad">😢 Sad</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="exhausted">😩 Exhausted</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="lonely">😔 Lonely</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="hopeful">🌟 Hopeful</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="confused">😕 Confused</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="angry">😤 Frustrated</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="grateful">🙏 Grateful</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="numb">😶 Numb / Empty</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="overwhelmed">🌊 Overwhelmed</div>
-        <div class="mood-chip" onclick="toggleMood(this)" data-mood="ok">🙂 Holding up okay</div>
+    <div class="scard">
+      <div class="stitle">💭 How are you feeling right now?</div>
+      <div class="chip-grid" id="mood-grid">
+        <button class="chip" data-mood="scared">😨 Scared</button>
+        <button class="chip" data-mood="anxious">😰 Anxious</button>
+        <button class="chip" data-mood="sad">😢 Sad</button>
+        <button class="chip" data-mood="exhausted">😩 Exhausted</button>
+        <button class="chip" data-mood="lonely">😔 Lonely</button>
+        <button class="chip" data-mood="hopeful">🌟 Hopeful</button>
+        <button class="chip" data-mood="confused">😕 Confused</button>
+        <button class="chip" data-mood="frustrated">😤 Frustrated</button>
+        <button class="chip" data-mood="grateful">🙏 Grateful</button>
+        <button class="chip" data-mood="numb">😶 Numb / Empty</button>
+        <button class="chip" data-mood="overwhelmed">🌊 Overwhelmed</button>
+        <button class="chip" data-mood="ok">🙂 Holding up okay</button>
       </div>
     </div>
 
-    <!-- What do you need -->
-    <div class="setup-card">
-      <div class="setup-section-title">🌿 What do you need most right now?</div>
-      <div class="mood-grid">
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="listen">👂 Someone to listen</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="comfort">🤗 Comfort & reassurance</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="distract">🎭 Gentle distraction</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="info">ℹ️ Understand what's happening</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="pray">🙏 Spiritual support / Prayer</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="vent">💬 Just talk and vent</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="hope">🌅 Words of hope</div>
-        <div class="mood-chip" onclick="toggleNeed(this)" data-need="breathe">🌬️ Calm down / Breathe</div>
+    <div class="scard">
+      <div class="stitle">🌿 What do you need most?</div>
+      <div class="chip-grid" id="need-grid">
+        <button class="chip" data-need="listen">👂 Someone to listen</button>
+        <button class="chip" data-need="comfort">🤗 Comfort & reassurance</button>
+        <button class="chip" data-need="distract">🎭 Gentle distraction</button>
+        <button class="chip" data-need="info">ℹ️ Understand what's happening</button>
+        <button class="chip" data-need="pray">🙏 Spiritual support</button>
+        <button class="chip" data-need="vent">💬 Just talk and vent</button>
+        <button class="chip" data-need="hope">🌅 Words of hope</button>
+        <button class="chip" data-need="breathe">🌬️ Calm down / Breathe</button>
       </div>
     </div>
 
-    <!-- Start button -->
-    <button class="start-btn" onclick="startCompanion()">
-      Meet Aaroha →
-    </button>
-
+    <button class="start-btn" id="start-btn">Meet Aaroha →</button>
     <div style="text-align:center;font-size:11px;color:var(--text3);line-height:1.7;margin-top:-8px">
-      🔒 Your conversation is private and confidential.<br>
-      Aaroha is not a substitute for medical advice or professional mental health care.
+      🔒 Private and confidential.<br>
+      Aaroha is not a substitute for medical or professional mental health care.
     </div>
 
   </div>
 </div>
 
-<!-- ══════════ COMPANION CHAT SCREEN ══════════ -->
-<div class="screen" id="screen-chat">
-
-  <!-- Top bar -->
-  <div class="chat-topbar">
-    <div class="companion-bubble" id="comp-bubble">
-      <span id="comp-avatar">👩</span>
-      <div class="online-dot"></div>
-    </div>
-    <div class="companion-info">
-      <h3 id="comp-name">Priya</h3>
-      <p id="comp-status">Here for you · Samarthaa Hospital</p>
-    </div>
-    <div class="topbar-actions">
-      <div class="speaking-badge" id="speaking-badge">
-        <div class="sw"><span></span><span></span><span></span><span></span><span></span></div>
-        Speaking
-      </div>
-      <button class="topbar-btn" onclick="stopSpeaking()" title="Stop speaking">⏹</button>
-      <button class="topbar-btn" onclick="showSetup()" title="Settings">⚙️</button>
+<!-- CHAT -->
+<div class="screen" id="sc">
+  <div class="chat-top">
+    <div class="comp-bub"><span id="comp-av">👩</span><div class="online-dot"></div></div>
+    <div class="comp-info"><h3 id="comp-name">Priya</h3><p id="comp-sub">Here for you · Samarthaa Hospital</p></div>
+    <div class="top-actions">
+      <div class="spk-badge" id="spk-badge"><div class="sw"><span></span><span></span><span></span><span></span><span></span></div>Speaking</div>
+      <button class="top-btn" onclick="stopAll()">⏹</button>
+      <button class="top-btn" onclick="goSetup()">⚙️</button>
     </div>
   </div>
 
-  <!-- Status bar -->
-  <div class="status-bar" id="status-bar">
-    <span>🎤</span><span id="status-text">Listening...</span>
-  </div>
+  <div class="status-bar" id="status-bar"><span>🎤</span><span id="status-txt"></span></div>
 
-  <!-- Safari notice -->
   <div class="safari-notice" id="safari-notice">
     <span>🍎</span>
-    <span>You're on Safari — tap 🔊 under each message to hear Aaroha speak. For voice input, please type your message.</span>
-    <button onclick="document.getElementById('safari-notice').classList.remove('show')" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#92400e;font-size:16px">✕</button>
+    <span>On Safari — tap 🔊 under each message to hear Aaroha. Type your messages below.</span>
+    <button class="sn-close" onclick="document.getElementById('safari-notice').classList.remove('on')">✕</button>
   </div>
 
-  <!-- Crisis banner -->
-  <div class="crisis-banner" id="crisis-banner">
-    <div class="crisis-title">💙 If you are in crisis or having thoughts of harming yourself</div>
-    <div class="crisis-text">Please reach out immediately. You are not alone. Help is available.</div>
-    <div class="crisis-numbers">
+  <div class="crisis-box" id="crisis-box">
+    <div class="crisis-title">💙 If you are thinking of harming yourself</div>
+    <div class="crisis-text">You are not alone. Please reach out immediately. Help is here.</div>
+    <div class="crisis-nums">
       <a class="crisis-num" href="tel:9152987821">📞 iCall: 9152987821</a>
-      <a class="crisis-num" href="tel:14416">📞 Vandrevala: 1860-2662-345</a>
+      <a class="crisis-num" href="tel:18602662345">📞 Vandrevala: 1860-2662-345</a>
       <a class="crisis-num" href="tel:112">📞 Emergency: 112</a>
     </div>
   </div>
 
-  <!-- Messages -->
-  <div class="chat-messages" id="chat-messages"></div>
+  <div class="messages" id="messages"></div>
 
-  <!-- Mood check-in -->
-  <div class="mood-banner" id="mood-banner" style="display:none">
-    <div class="mood-banner-text">How are you feeling now?</div>
-    <div class="mood-btns">
-      <button class="mood-btn" onclick="quickMood('better')">😊 Better</button>
-      <button class="mood-btn" onclick="quickMood('same')">😐 Same</button>
-      <button class="mood-btn" onclick="quickMood('worse')">😔 Harder</button>
+  <div class="mood-banner" id="mood-banner">
+    <div class="mbtext">How are you feeling now?</div>
+    <div class="mb-btns">
+      <button class="mb-btn" onclick="moodCheck('better')">😊 Better</button>
+      <button class="mb-btn" onclick="moodCheck('same')">😐 Same</button>
+      <button class="mb-btn" onclick="moodCheck('harder')">😔 Harder</button>
     </div>
   </div>
 
-  <!-- Quick comforts -->
-  <div class="quick-comforts" id="quick-comforts"></div>
+  <div class="qc-row" id="qc-row"></div>
 
-  <!-- Voice controls -->
-  <div class="voice-controls">
-    <span class="vc-label">🔊</span>
-    <input type="range" class="vc-slider" id="vol-slider" min="0" max="1" step="0.1" value="1">
-    <span class="vc-label">⚡</span>
-    <input type="range" class="vc-slider" id="rate-slider" min="0.6" max="1.4" step="0.1" value="0.88">
-    <button class="stop-btn" onclick="stopSpeaking()">⏹ Stop voice</button>
+  <div class="vc-bar">
+    <span class="vcl">🔊</span><input type="range" class="vcs" id="vol" min="0" max="1" step="0.1" value="1">
+    <span class="vcl">⚡</span><input type="range" class="vcs" id="rate" min="0.6" max="1.5" step="0.1" value="0.9">
+    <button class="stop-btn" onclick="stopAll()">⏹ Stop voice</button>
   </div>
 
-  <!-- Input -->
-  <div class="chat-input-area">
-    <div class="input-row">
-      <textarea class="text-input" id="user-input"
-        placeholder="Share what's on your mind..."
-        rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-      <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Speak">🎤</button>
-      <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
+  <div class="inp-area">
+    <div class="inp-row">
+      <textarea class="tinput" id="tinput" placeholder="Share what's on your mind..." rows="1"
+        onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+      <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
+      <button class="send-btn" onclick="send()">➤</button>
     </div>
-    <div class="input-hint" id="input-hint" id="input-hint">🎤 Tap mic to speak (Chrome) · ⌨️ Type your message · Aaroha is listening</div>
+    <div class="inp-hint" id="inp-hint">🎤 Tap mic to speak · ⌨️ Or type · Aaroha is listening</div>
   </div>
-
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
-//  DATA & CONFIG
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════
 const HOSPITAL = 'Samarthaa Hospital, ICU Ward 6A, Bengaluru';
 
-const LANG_MAP = {
-  en:{ label:'English',  code:'en-IN', tl:'en',  stt:'en-IN'  },
-  kn:{ label:'Kannada',  code:'kn-IN', tl:'kn',  stt:'kn-IN'  },
-  hi:{ label:'Hindi',    code:'hi-IN', tl:'hi',  stt:'hi-IN'  },
-  te:{ label:'Telugu',   code:'te-IN', tl:'te',  stt:'te-IN'  },
-  ta:{ label:'Tamil',    code:'ta-IN', tl:'ta',  stt:'ta-IN'  },
-  ml:{ label:'Malayalam',code:'ml-IN', tl:'ml',  stt:'ml-IN'  },
-  mr:{ label:'Marathi',  code:'mr-IN', tl:'mr',  stt:'mr-IN'  },
-  bn:{ label:'Bengali',  code:'bn-IN', tl:'bn',  stt:'bn-IN'  },
-  gu:{ label:'Gujarati', code:'gu-IN', tl:'gu',  stt:'gu-IN'  },
-  pa:{ label:'Punjabi',  code:'pa-IN', tl:'pa',  stt:'pa-IN'  },
-  ur:{ label:'Urdu',     code:'ur-PK', tl:'ur',  stt:'ur-PK'  },
-  fr:{ label:'French',   code:'fr-FR', tl:'fr',  stt:'fr-FR'  },
-  ar:{ label:'Arabic',   code:'ar-SA', tl:'ar',  stt:'ar-SA'  },
-  es:{ label:'Spanish',  code:'es-ES', tl:'es',  stt:'es-ES'  },
+const LANGS = {
+  en:{l:'English', code:'en-IN', tl:'en', stt:'en-IN'},
+  kn:{l:'Kannada', code:'kn-IN', tl:'kn', stt:'kn-IN'},
+  hi:{l:'Hindi',   code:'hi-IN', tl:'hi', stt:'hi-IN'},
+  te:{l:'Telugu',  code:'te-IN', tl:'te', stt:'te-IN'},
+  ta:{l:'Tamil',   code:'ta-IN', tl:'ta', stt:'ta-IN'},
+  ml:{l:'Malayalam',code:'ml-IN',tl:'ml', stt:'ml-IN'},
+  mr:{l:'Marathi', code:'mr-IN', tl:'mr', stt:'mr-IN'},
+  bn:{l:'Bengali', code:'bn-IN', tl:'bn', stt:'bn-IN'},
+  gu:{l:'Gujarati',code:'gu-IN', tl:'gu', stt:'gu-IN'},
+  pa:{l:'Punjabi', code:'pa-IN', tl:'pa', stt:'pa-IN'},
+  ur:{l:'Urdu',    code:'ur-PK', tl:'ur', stt:'ur-PK'},
+  fr:{l:'French',  code:'fr-FR', tl:'fr', stt:'fr-FR'},
+  ar:{l:'Arabic',  code:'ar-SA', tl:'ar', stt:'ar-SA'},
+  es:{l:'Spanish', code:'es-ES', tl:'es', stt:'es-ES'},
 };
 
 const PERSONAS = {
-  priya:    { name:'Priya',       avatar:'👩',  style:'warm, nurturing older sister figure. Speaks with genuine warmth, uses terms of endearment like "dear" naturally. Emotionally attuned, gives space to feelings first before offering any perspective.' },
-  arjun:    { name:'Arjun',       avatar:'👨',  style:'steady, calm older brother figure. Grounded and reassuring. Does not panic. Offers quiet strength. Occasionally shares brief stories of resilience. Very good listener.' },
-  kaveri:   { name:'Kaveri Ajji', avatar:'👵',  style:'wise, gentle grandmother figure. Speaks with the warmth of lived experience. Occasionally references prayer, nature, or timeless wisdom. Never judges. Makes people feel unconditionally accepted.' },
-  anand:    { name:'Anand',       avatar:'🧘',  style:'peaceful, spiritually grounded presence. Calm, reflective. Gently guides breathing or mindfulness when someone is anxious. References inner strength. Non-denominational spiritual wisdom.' },
-  dr_meena: { name:'Dr. Meena',  avatar:'👩‍⚕️', style:'compassionate doctor who speaks in plain language. Explains medical situations gently without causing panic. Validates fears. Bridges the gap between clinical reality and emotional need.' },
-  friend:   { name:'A Friend',   avatar:'🤝',  style:'casual, warm friend. No formality. Talks like a real person — uses "yeah", "I get it", "that sounds really hard". Does not lecture or over-advise. Just present and real.' },
+  priya:    {name:'Priya',      av:'👩',    style:'a warm, nurturing older sister. Uses gentle terms of endearment naturally. Emotionally attuned, acknowledges feelings before offering perspective.'},
+  arjun:    {name:'Arjun',      av:'👨',    style:'a steady, calm older brother. Grounded and reassuring. Offers quiet strength. Good listener. Never panics.'},
+  kaveri:   {name:'Kaveri Ajji',av:'👵',    style:'a wise, gentle grandmother. Speaks from lived experience. References prayer and nature. Makes people feel unconditionally accepted.'},
+  anand:    {name:'Anand',      av:'🧘',    style:'a peaceful, spiritually grounded presence. Calm and reflective. Gently guides breathing when someone is anxious. Non-denominational wisdom.'},
+  dr_meena: {name:'Dr. Meena', av:'👩‍⚕️',   style:'a compassionate doctor who speaks in plain language. Explains gently without causing panic. Validates fears.'},
+  friend:   {name:'A Friend',  av:'🤝',    style:'a casual warm friend. No formality. Says "yeah", "I get it", "that sounds really hard". Just present and real.'},
 };
 
-const QUICK_COMFORTS = {
-  patient:   ['I\'m feeling scared', 'What will happen next?', 'I feel alone', 'I need some peace', 'Tell me something hopeful', 'Help me breathe'],
-  attender:  ['I\'m exhausted', 'I don\'t know what to do', 'Will they be okay?', 'I feel helpless', 'I need strength', 'How do I cope?'],
-  caregiver: ['I feel burned out', 'I need a moment', 'How do I stay strong?', 'I feel overwhelmed'],
-  visitor:   ['I don\'t know what to say', 'How can I help?', 'I feel sad being here'],
+const QC = {
+  patient:   ['I feel scared','What will happen next?','I feel alone','Tell me something hopeful','Help me breathe'],
+  attender:  ['I am exhausted','I do not know what to do','Will they be okay?','I feel helpless','How do I cope?'],
+  caregiver: ['I feel burned out','I need a moment','How do I stay strong?'],
+  visitor:   ['I do not know what to say','How can I help?','I feel sad here'],
 };
 
-// ── App State ──
-let profile = {};
-let chatHistory = [];
-let isSpeaking = false;
-let isListening = false;
-let recognition = null;
-let currentAudio = null;
-let selectedMoods = [];
-let selectedNeeds = [];
-let selectedPersona = 'priya';
-let messageCount = 0;
-let crisisDetected = false;
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let P = {};          // profile
+let history = [];    // chat history
+let persona = 'priya';
+let moods = [];
+let needs = [];
+let speaking = false;
+let listening = false;
+let recog = null;
+let curAudio = null;
+let msgN = 0;
+let msgCount = 0;
+let crisisShown = false;
 
-// ══════════════════════════════════════════════════════
-//  SCREEN NAVIGATION
-// ══════════════════════════════════════════════════════
-function showSetup() {
-  document.getElementById('screen-welcome').classList.remove('active');
-  document.getElementById('screen-chat').classList.remove('active');
-  document.getElementById('screen-setup').classList.add('active');
-}
-
-function showChat() {
-  document.getElementById('screen-welcome').classList.remove('active');
-  document.getElementById('screen-setup').classList.remove('active');
-  document.getElementById('screen-chat').classList.add('active');
-}
-
-// ══════════════════════════════════════════════════════
-//  SETUP INTERACTIONS
-// ══════════════════════════════════════════════════════
-function selectPersona(id) {
-  selectedPersona = id;
-  document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('active'));
-  document.getElementById('persona-' + id).classList.add('active');
-}
-
-function toggleMood(el) {
-  el.classList.toggle('active');
-  const mood = el.dataset.mood;
-  if (selectedMoods.includes(mood)) selectedMoods = selectedMoods.filter(m => m !== mood);
-  else selectedMoods.push(mood);
-}
-
-function toggleNeed(el) {
-  el.classList.toggle('active');
-  const need = el.dataset.need;
-  if (selectedNeeds.includes(need)) selectedNeeds = selectedNeeds.filter(n => n !== need);
-  else selectedNeeds.push(need);
-}
-
-function setLangFromSelect() {
-  // just stores selection — used in startCompanion
-}
-
-// ══════════════════════════════════════════════════════
-//  START COMPANION
-// ══════════════════════════════════════════════════════
-function startCompanion() {
-  const name = document.getElementById('p-name').value.trim() || 'Friend';
-  const age  = document.getElementById('p-age').value;
-  const role = document.getElementById('p-role').value;
-  const about= document.getElementById('p-about').value.trim();
-  const sit  = document.getElementById('p-situation').value;
-  const langKey = document.getElementById('p-lang-select').value;
-
-  profile = {
-    name, age, role, about, situation: sit,
-    moods: [...selectedMoods], needs: [...selectedNeeds],
-    persona: selectedPersona, lang: LANG_MAP[langKey] || LANG_MAP['en'],
-    langKey
-  };
-
-  // Update UI
-  const persona = PERSONAS[selectedPersona];
-  document.getElementById('comp-avatar').textContent = persona.avatar;
-  document.getElementById('comp-name').textContent = persona.name;
-  document.getElementById('comp-status').textContent = 'Here for you · ' + HOSPITAL.split(',')[0];
-
-  // Set quick comforts
-  const qcs = QUICK_COMFORTS[role] || QUICK_COMFORTS.attender;
-  document.getElementById('quick-comforts').innerHTML = qcs.map(q =>
-    `<button class="qc-btn" onclick="quickComfort('${q.replace(/'/g,"\\'")}')">💬 ${q}</button>`
-  ).join('');
-
-  // Show chat
-  showChat();
-
-  // Show Safari notice if needed (function is defined by this point)
-  if (typeof showSafariNoticeIfNeeded === 'function') showSafariNoticeIfNeeded();
-
-  // Build system prompt & start
-  chatHistory = [{ role:'system', content: buildSystemPrompt() }];
-  messageCount = 0;
-
-  // Opening message
-  sendToAI(buildOpeningPrompt(), true);
-}
-
-function buildSystemPrompt() {
-  const p = profile;
-  const persona = PERSONAS[p.persona];
-  const lang = p.lang.label;
-
-  const moodStr  = p.moods.length  ? p.moods.join(', ')  : 'not specified';
-  const needStr  = p.needs.length  ? p.needs.join(', ')  : 'not specified';
-  const sitLabels = {
-    patient_icu:'is a patient recovering in ICU', family_waiting:'is a family member waiting outside the ICU',
-    family_serious:'has a critically ill loved one in ICU and is very worried',
-    family_postop:'has a family member who just had surgery', long_stay:'has been at the hospital for many days and is exhausted',
-    grief:'is facing possible loss or has recently lost someone', caregiver_burnout:'is a caregiver feeling overwhelmed',
-    just_talk:'just needs someone to talk to', other:'is in a difficult situation at the hospital'
-  };
-  const sitDesc = sitLabels[p.situation] || 'is going through a difficult time at the hospital';
-
-  return `You are ${persona.name}, an emotional companion at ${HOSPITAL}.
-Your personality: ${persona.style}
-
-PERSON YOU ARE TALKING TO:
-- Name: ${p.name}${p.age ? ', age ' + p.age : ''}
-- Role: ${p.role} — ${p.name} ${sitDesc}
-- How they feel right now: ${moodStr}
-- What they need: ${needStr}
-${p.about ? '- About them (in their own words): "' + p.about + '"' : ''}
-
-YOUR CORE APPROACH:
-1. Use ${p.name}'s name naturally in conversation (not every message, but warmly)
-2. Acknowledge their specific feelings — don't be generic
-3. Reference their actual situation when it feels natural and supportive
-4. Be present first — comfort before information
-5. Never give medical diagnoses or specific medical advice
-6. Keep responses conversational — 2 to 4 sentences usually
-7. Occasionally ask a gentle open question to keep the conversation going
-8. Remember what they shared earlier in the conversation
-
-LANGUAGE: You MUST respond ONLY in ${lang}. Every word must be in ${lang}.
-
-ETHICAL BOUNDARIES (non-negotiable):
-- No romantic, sexual, or intimate content ever
-- No encouraging harmful decisions or illegal acts
-- If someone expresses suicidal thoughts or self-harm, respond with deep compassion, then gently but clearly share crisis resources (iCall: 9152987821, Vandrevala: 1860-2662-345, Emergency: 112)
-- You are a companion, not a therapist — encourage professional help when needed
-- Never pretend to be a real human if directly asked
-
-WHAT YOU ARE NOT:
-- Not a doctor (except Dr. Meena persona who still cannot give diagnosis)
-- Not a therapist
-- Not a replacement for human connection — gently encourage them to also connect with real people
-
-Hospital care team if they need medical help: Dr. Mahesh KM (Intensivist), Nurse Asha (Ward 6A), Emergency: 112`;
-}
-
-function buildOpeningPrompt() {
-  const p = profile;
-  const lang = p.lang.label;
-  const moodStr = p.moods.length ? p.moods.join(' and ') : 'uncertain';
-  const needStr = p.needs.length ? p.needs.join(' and ') : 'support';
-
-  return `Greet ${p.name} warmly for the first time. 
-They are feeling ${moodStr} and need ${needStr}.
-Their situation: they ${p.situation ? 'are ' + p.situation.replace(/_/g,' ') : 'are going through a difficult time at the hospital'}.
-${p.about ? 'They shared: "' + p.about + '"' : ''}
-
-Give a warm, personal, genuine opening message that:
-- Acknowledges who ${p.name} is and what they are going through specifically
-- Makes them feel truly seen and not alone
-- Is NOT generic — reference their actual situation
-- Opens the door for them to share more
-- Is 3-4 sentences maximum
-
-Respond ONLY in ${lang}.`;
-}
-
-// ══════════════════════════════════════════════════════
-//  AI COMMUNICATION
-// ══════════════════════════════════════════════════════
-async function sendToAI(userMsg, isOpener = false) {
-  showTyping(true);
-
-  if (!isOpener) {
-    chatHistory.push({ role:'user', content: userMsg });
-    addMessage('user', userMsg);
-    messageCount++;
-    // Show mood check-in every 8 messages
-    if (messageCount > 0 && messageCount % 8 === 0) {
-      setTimeout(() => document.getElementById('mood-banner').style.display='flex', 2000);
-    }
-  }
-
-  // Crisis keyword detection
-  checkForCrisis(userMsg);
-
-  try {
-    const systemMsg = chatHistory.find(m => m.role === 'system')?.content || '';
-    const msgs = isOpener
-      ? [{ role:'user', content: userMsg }]
-      : chatHistory.filter(m => m.role !== 'system');
-
-    const resp = await fetch('/api/counsel', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ system: systemMsg, messages: msgs })
-    });
-    const data = await resp.json();
-    const reply = data.content?.[0]?.text || 'I\'m here with you. Please try again in a moment.';
-
-    showTyping(false);
-    chatHistory.push({ role:'assistant', content: reply });
-    // Keep history manageable — last 20 messages
-    if (chatHistory.filter(m => m.role !== 'system').length > 20) {
-      const sys = chatHistory.find(m => m.role === 'system');
-      const msgs = chatHistory.filter(m => m.role !== 'system').slice(-18);
-      chatHistory = [sys, ...msgs];
-    }
-    addMessage('companion', reply);
-    speak(reply);
-
-  } catch(err) {
-    showTyping(false);
-    const errMsg = profile.lang.tl === 'en'
-      ? 'I\'m here with you ' + profile.name + '. There was a small connection issue — please try again.'
-      : 'I am here. Please try again.';
-    addMessage('companion', errMsg);
-    speak(errMsg);
-  }
-}
-
-async function sendMessage() {
-  const inp = document.getElementById('user-input');
-  const text = inp.value.trim();
-  if (!text) return;
-  inp.value = ''; autoResize(inp);
-  document.getElementById('mood-banner').style.display = 'none';
-  stopSpeaking();
-  await sendToAI(text);
-}
-
-function quickComfort(text) {
-  document.getElementById('user-input').value = text;
-  sendMessage();
-}
-
-function quickMood(mood) {
-  document.getElementById('mood-banner').style.display = 'none';
-  const messages = {
-    better: 'I am feeling a little better now, thank you.',
-    same:   'Still feeling the same, but glad to be talking.',
-    worse:  'I am feeling harder right now. It is difficult.'
-  };
-  document.getElementById('user-input').value = messages[mood] || mood;
-  sendMessage();
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-
-// Crisis detection
-function checkForCrisis(text) {
-  if (crisisDetected) return;
-  const crisisWords = ['suicide','kill myself','end my life','don\'t want to live','self harm','hurt myself',
-    'no reason to live','want to die','give up on life','खुद को मारना','आत्महत्या','ಆತ್ಮಹತ್ಯೆ','जीना नहीं'];
-  const lower = text.toLowerCase();
-  if (crisisWords.some(w => lower.includes(w))) {
-    crisisDetected = true;
-    document.getElementById('crisis-banner').classList.add('active');
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  TTS ENGINE
-//  Priority: Server TTS proxy (all langs) → Browser TTS fallback
-// ══════════════════════════════════════════════════════
-
-// Detect platform
+// Platform detection
 const IS_IOS    = /iPad|iPhone|iPod/.test(navigator.userAgent);
 const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 const HAS_STT   = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
-function chunkText(text, maxLen = 160) {
-  // Split on sentence endings, keeping the punctuation
-  const parts = text.match(/[^.!?।
-]+[.!?।
-]*/g) || [text];
-  const chunks = []; let curr = '';
-  for (const s of parts) {
-    if ((curr + s).length > maxLen && curr) { chunks.push(curr.trim()); curr = s; }
-    else curr += s;
+// ═══════════════════════════════════════════════
+//  INIT — wire up all buttons cleanly
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  // Begin button
+  document.getElementById('begin-btn').addEventListener('click', goSetup);
+
+  // Start button
+  document.getElementById('start-btn').addEventListener('click', startChat);
+
+  // Persona cards
+  document.querySelectorAll('.pcard').forEach(function(card) {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.pcard').forEach(function(c){ c.classList.remove('active'); });
+      card.classList.add('active');
+      persona = card.dataset.persona;
+    });
+  });
+
+  // Mood chips
+  document.querySelectorAll('#mood-grid .chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chip.classList.toggle('on');
+      var m = chip.dataset.mood;
+      var i = moods.indexOf(m);
+      if (i > -1) moods.splice(i,1); else moods.push(m);
+    });
+  });
+
+  // Need chips
+  document.querySelectorAll('#need-grid .chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chip.classList.toggle('on');
+      var n = chip.dataset.need;
+      var i = needs.indexOf(n);
+      if (i > -1) needs.splice(i,1); else needs.push(n);
+    });
+  });
+
+  // Safari/iOS adjustments
+  if (IS_IOS || IS_SAFARI) {
+    var micBtn = document.getElementById('mic-btn');
+    if (micBtn) {
+      micBtn.textContent = '⌨️';
+      micBtn.style.background = 'linear-gradient(135deg,#64748b,#475569)';
+    }
+    document.getElementById('inp-hint').textContent = '⌨️ Type your message · Tap 🔊 on any message to hear it';
   }
-  if (curr.trim()) chunks.push(curr.trim());
-  return chunks.length ? chunks : [text.substring(0, maxLen)];
+
+  // Event delegation for tap-to-hear buttons (avoids inline onclick issues)
+  document.getElementById('messages').addEventListener('click', function(e) {
+    var btn = e.target.closest('.tap-btn');
+    if (!btn) return;
+    var msgId = btn.dataset.msgid;
+    if (msgId) tapToHear(msgId, btn);
+  });
+
+  // Preload voices
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = function(){ window.speechSynthesis.getVoices(); };
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function goSetup() {
+  document.getElementById('sw').classList.remove('active');
+  document.getElementById('sc').classList.remove('active');
+  document.getElementById('ss').classList.add('active');
+}
+
+function goChat() {
+  document.getElementById('sw').classList.remove('active');
+  document.getElementById('ss').classList.remove('active');
+  document.getElementById('sc').classList.add('active');
+  if (IS_IOS || IS_SAFARI) {
+    document.getElementById('safari-notice').classList.add('on');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  START COMPANION
+// ═══════════════════════════════════════════════
+function startChat() {
+  var name  = (document.getElementById('p-name').value || '').trim() || 'Friend';
+  var age   = document.getElementById('p-age').value || '';
+  var role  = document.getElementById('p-role').value;
+  var langK = document.getElementById('p-lang').value;
+  var sit   = document.getElementById('p-sit').value;
+  var about = (document.getElementById('p-about').value || '').trim();
+
+  P = {
+    name:    name,
+    age:     age,
+    role:    role,
+    lang:    LANGS[langK] || LANGS.en,
+    langKey: langK,
+    sit:     sit,
+    about:   about,
+    moods:   moods.slice(),
+    needs:   needs.slice(),
+    persona: persona,
+  };
+
+  // Update UI
+  var per = PERSONAS[persona];
+  document.getElementById('comp-av').textContent   = per.av;
+  document.getElementById('comp-name').textContent = per.name;
+  document.getElementById('comp-sub').textContent  = 'Here for you · Samarthaa Hospital';
+
+  // Quick comforts
+  var qcs = QC[role] || QC.attender;
+  var qcRow = document.getElementById('qc-row');
+  qcRow.innerHTML = '';
+  qcs.forEach(function(q) {
+    var btn = document.createElement('button');
+    btn.className = 'qc';
+    btn.textContent = '💬 ' + q;
+    btn.addEventListener('click', function(){ quickSay(q); });
+    qcRow.appendChild(btn);
+  });
+
+  // Clear messages
+  document.getElementById('messages').innerHTML = '';
+  history = [];
+  msgCount = 0;
+  crisisShown = false;
+
+  // Build system prompt
+  history.push({ role:'system', content: buildPrompt() });
+
+  goChat();
+
+  // Opening message
+  askAI(buildOpener(), true);
+}
+
+function buildPrompt() {
+  var per   = PERSONAS[P.persona];
+  var lang  = P.lang.l;
+  var mStr  = P.moods.length ? P.moods.join(', ') : 'not specified';
+  var nStr  = P.needs.length ? P.needs.join(', ') : 'support';
+  var sitMap = {
+    patient_icu:'is a patient recovering in ICU',
+    family_waiting:'is a family member waiting outside ICU',
+    family_serious:'has a critically ill loved one in ICU',
+    family_postop:'has a family member recovering from surgery',
+    long_stay:'has been at the hospital for many days, is exhausted',
+    grief:'is facing possible loss or recently lost someone',
+    burnout:'is a caregiver feeling overwhelmed',
+    just_talk:'just needs someone to talk to',
+  };
+  var sitDesc = sitMap[P.sit] || 'is going through a difficult time at the hospital';
+
+  return 'You are ' + per.name + ' — ' + per.style + '\n' +
+    'You are an emotional companion at ' + HOSPITAL + '.\n\n' +
+    'PERSON YOU ARE TALKING TO:\n' +
+    '- Name: ' + P.name + (P.age ? ', age ' + P.age : '') + '\n' +
+    '- They ' + sitDesc + '\n' +
+    '- Current feelings: ' + mStr + '\n' +
+    '- What they need: ' + nStr + '\n' +
+    (P.about ? '- In their own words: "' + P.about + '"\n' : '') +
+    '\nYOUR APPROACH:\n' +
+    '1. Use ' + P.name + '\'s name naturally (not every message)\n' +
+    '2. Acknowledge their specific situation — never be generic\n' +
+    '3. Be present first — comfort before information\n' +
+    '4. Keep responses to 2-4 sentences — short for speaking aloud\n' +
+    '5. Occasionally ask one gentle open question\n' +
+    '6. Remember what they share during the conversation\n\n' +
+    'LANGUAGE: Respond ONLY in ' + lang + '. Every single word must be in ' + lang + '.\n\n' +
+    'BOUNDARIES (absolute):\n' +
+    '- No romantic, sexual or intimate content ever\n' +
+    '- No medical diagnosis or specific treatment advice\n' +
+    '- If suicidal thoughts: respond with compassion, share: iCall 9152987821, Vandrevala 1860-2662-345, Emergency 112\n' +
+    '- You are a companion, not a therapist\n' +
+    '- Encourage real human connection when appropriate\n\n' +
+    'Hospital team: Dr. Mahesh KM (Intensivist), Nurse Asha (Ward 6A)';
+}
+
+function buildOpener() {
+  var lang = P.lang.l;
+  var mStr = P.moods.length ? P.moods.join(' and ') : 'uncertain';
+  var nStr = P.needs.length ? P.needs.join(' and ') : 'support';
+  return 'Greet ' + P.name + ' warmly for the first time.\n' +
+    'They are feeling ' + mStr + ' and need ' + nStr + '.\n' +
+    (P.about ? 'They shared: "' + P.about + '"\n' : '') +
+    'Give a warm, personal opening — make them feel truly seen.\n' +
+    'Reference their actual situation specifically — do not be generic.\n' +
+    'Open the door for them to share more. 3-4 sentences maximum.\n' +
+    'Respond ONLY in ' + lang + '.';
+}
+
+// ═══════════════════════════════════════════════
+//  AI
+// ═══════════════════════════════════════════════
+async function askAI(userMsg, isOpener) {
+  showTyping(true);
+  if (!isOpener) {
+    history.push({ role:'user', content: userMsg });
+    addMsg('user', userMsg);
+    msgCount++;
+    if (msgCount > 0 && msgCount % 8 === 0) {
+      setTimeout(function(){ document.getElementById('mood-banner').classList.add('on'); }, 2000);
+    }
+    checkCrisis(userMsg);
+  }
+
+  try {
+    var sysMsg = '';
+    var msgs   = [];
+    history.forEach(function(m) {
+      if (m.role === 'system') sysMsg = m.content;
+      else msgs.push(m);
+    });
+
+    var resp = await fetch('/api/counsel', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        system: sysMsg,
+        messages: isOpener ? [{role:'user',content:userMsg}] : msgs
+      })
+    });
+    var data = await resp.json();
+    var reply = (data.content && data.content[0] && data.content[0].text)
+      ? data.content[0].text
+      : 'I am here with you. Please try again in a moment.';
+
+    showTyping(false);
+    history.push({ role:'assistant', content: reply });
+    if (history.filter(function(m){ return m.role!=='system'; }).length > 22) {
+      var sys = history.find(function(m){ return m.role==='system'; });
+      var rest = history.filter(function(m){ return m.role!=='system'; }).slice(-20);
+      history = [sys].concat(rest);
+    }
+    addMsg('comp', reply);
+    // Auto-speak only on non-Safari (Safari needs tap)
+    if (!IS_IOS && !IS_SAFARI) speak(reply);
+
+  } catch(e) {
+    showTyping(false);
+    var err = 'I am here with you, ' + P.name + '. There was a small connection issue — please try again.';
+    addMsg('comp', err);
+    if (!IS_IOS && !IS_SAFARI) speak(err);
+  }
+}
+
+async function send() {
+  var inp = document.getElementById('tinput');
+  var txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = ''; resize(inp);
+  document.getElementById('mood-banner').classList.remove('on');
+  stopAll();
+  await askAI(txt, false);
+}
+
+function quickSay(txt) {
+  document.getElementById('tinput').value = txt;
+  send();
+}
+
+function moodCheck(mood) {
+  document.getElementById('mood-banner').classList.remove('on');
+  var msgs = { better:'I am feeling a little better now, thank you.', same:'Still feeling the same, but glad to be talking.', harder:'I am feeling harder right now. It is difficult.' };
+  document.getElementById('tinput').value = msgs[mood] || mood;
+  send();
+}
+
+function onKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+
+// ═══════════════════════════════════════════════
+//  TTS
+// ═══════════════════════════════════════════════
+function chunks(text, max) {
+  max = max || 160;
+  var parts = text.match(/[^.!?।\n]+[.!?।\n]*/g) || [text];
+  var result = []; var cur = '';
+  parts.forEach(function(s) {
+    if ((cur+s).length > max && cur) { result.push(cur.trim()); cur = s; }
+    else cur += s;
+  });
+  if (cur.trim()) result.push(cur.trim());
+  return result.length ? result : [text.substring(0, max)];
 }
 
 async function speak(text) {
-  stopSpeaking();
-  isSpeaking = true;
-  document.getElementById('speaking-badge').classList.add('active');
-  const chunks = chunkText(text);
-  const vol  = parseFloat(document.getElementById('vol-slider').value);
-  const rate = parseFloat(document.getElementById('rate-slider').value);
-  for (const chunk of chunks) {
-    if (!isSpeaking) break;
-    await speakChunk(chunk, vol, rate);
+  stopAll();
+  speaking = true;
+  document.getElementById('spk-badge').classList.add('on');
+  var vol  = parseFloat(document.getElementById('vol').value);
+  var spd  = parseFloat(document.getElementById('rate').value);
+  var cks  = chunks(text);
+  for (var i=0; i<cks.length; i++) {
+    if (!speaking) break;
+    await playChunk(cks[i], vol, spd);
   }
-  isSpeaking = false;
-  document.getElementById('speaking-badge').classList.remove('active');
+  speaking = false;
+  document.getElementById('spk-badge').classList.remove('on');
 }
 
-// Single chunk — tries server TTS first, falls back to browser TTS
-function speakChunk(text, vol, rate) {
-  return new Promise(resolve => {
-    if (!isSpeaking) { resolve(); return; }
-
-    // Store resolver so stopSpeaking() can cancel mid-chunk
-    window._ttsResolve = resolve;
-
-    const finish = () => {
-      window._ttsResolve = null;
-      resolve();
-    };
-
-    const tl = profile.lang?.tl || 'en';
-
-    // iOS Safari: Audio from fetch requires user-gesture context per chunk
-    // Use browser TTS directly on iOS — it supports Indian langs on newer devices
-    if (IS_IOS) {
-      doBrowserTTS(text, vol, rate, finish);
-      return;
-    }
-
-    // Desktop/Android: use server proxy
-    const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}&t=${Date.now()}`;
-    const audio = new Audio();
-    audio.volume = vol;
-    audio.playbackRate = Math.min(rate, 1.5);
-    currentAudio = audio;
-
-    // Timeout — if audio doesn't start in 4s, fall back to browser TTS
-    const timeout = setTimeout(() => {
-      if (!isSpeaking) { finish(); return; }
-      audio.pause();
-      doBrowserTTS(text, vol, rate, finish);
-    }, 4000);
-
-    audio.oncanplaythrough = () => {
-      clearTimeout(timeout);
-      if (!isSpeaking) { finish(); return; }
-      audio.play().catch(() => {
-        clearTimeout(timeout);
-        doBrowserTTS(text, vol, rate, finish);
-      });
-    };
-
-    audio.onended  = () => { clearTimeout(timeout); finish(); };
-
-    // On error — use browser TTS but DON'T do it twice
-    let errorHandled = false;
-    audio.onerror  = () => {
-      if (errorHandled) return;
-      errorHandled = true;
-      clearTimeout(timeout);
-      doBrowserTTS(text, vol, rate, finish);
-    };
-
-    audio.src = url;
-    audio.load();
+function playChunk(text, vol, spd) {
+  return new Promise(function(resolve) {
+    window._res = resolve;
+    if (!speaking) { resolve(); return; }
+    var tl  = (P.lang && P.lang.tl) ? P.lang.tl : 'en';
+    var url = '/api/tts?text=' + encodeURIComponent(text) + '&lang=' + tl + '&t=' + Date.now();
+    var a   = new Audio(url);
+    a.volume = vol; a.playbackRate = spd;
+    curAudio = a;
+    var done = false;
+    var fin = function() { if (!done) { done=true; window._res=null; resolve(); } };
+    var fb  = function() { if (!done) { done=true; window._res=null; browserSpeak(text,vol,spd).then(resolve); } };
+    var t   = setTimeout(fb, 5000);
+    a.oncanplaythrough = function() { clearTimeout(t); if (!speaking){fin();return;} a.play().catch(fb); };
+    a.onended  = function() { clearTimeout(t); fin(); };
+    a.onerror  = function() { clearTimeout(t); fb(); };
+    a.src = url; a.load();
   });
 }
 
-// Browser built-in TTS (works on all platforms including iOS Safari)
-function doBrowserTTS(text, vol, rate, done) {
-  if (!isSpeaking) { done(); return; }
-  if (!window.speechSynthesis) { done(); return; }
-
-  window.speechSynthesis.cancel(); // clear queue first
-
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang   = profile.lang?.code || 'en-IN';
-  u.volume = vol;
-  u.rate   = rate;
-
-  // Try to find best matching voice
-  const voices = window.speechSynthesis.getVoices();
-  const tl = profile.lang?.tl || 'en';
-  // Exact match first, then partial
-  const voice = voices.find(v => v.lang === profile.lang?.code)
-             || voices.find(v => v.lang.startsWith(tl))
-             || voices.find(v => v.lang.startsWith('en'));
-  if (voice) u.voice = voice;
-
-  u.onend   = () => done();
-  u.onerror = () => done();
-
-  window.speechSynthesis.speak(u);
+function browserSpeak(text, vol, spd) {
+  return new Promise(function(resolve) {
+    if (!speaking || !window.speechSynthesis) { resolve(); return; }
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang   = (P.lang && P.lang.code) ? P.lang.code : 'en-IN';
+    u.volume = vol; u.rate = spd;
+    var voices = window.speechSynthesis.getVoices();
+    var tl = (P.lang && P.lang.tl) ? P.lang.tl : 'en';
+    var v = voices.find(function(v){ return v.lang === u.lang; })
+         || voices.find(function(v){ return v.lang.startsWith(tl); })
+         || voices.find(function(v){ return v.lang.startsWith('en'); });
+    if (v) u.voice = v;
+    u.onend = u.onerror = function(){ resolve(); };
+    window.speechSynthesis.speak(u);
+  });
 }
 
-function stopSpeaking() {
-  isSpeaking = false;
-  // Stop server TTS audio
-  if (currentAudio) {
-    try { currentAudio.pause(); currentAudio.src = ''; } catch(e){}
-    currentAudio = null;
-  }
-  // Stop browser TTS
-  if (window.speechSynthesis) {
-    try { window.speechSynthesis.cancel(); } catch(e){}
-  }
-  // Resolve any pending promise to exit the chunk loop
-  if (window._ttsResolve) {
-    window._ttsResolve();
-    window._ttsResolve = null;
-  }
-  document.getElementById('speaking-badge').classList.remove('active');
+function stopAll() {
+  speaking = false;
+  if (curAudio) { try { curAudio.pause(); curAudio.src=''; } catch(e){} curAudio=null; }
+  if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch(e){} }
+  if (window._res) { window._res(); window._res=null; }
+  document.getElementById('spk-badge').classList.remove('on');
 }
 
-// ══════════════════════════════════════════════════════
-//  STT — Speech Recognition
-//  Chrome/Android: Web Speech API (full support)
-//  Safari/iOS: No SpeechRecognition API — type input only
-// ══════════════════════════════════════════════════════
+// Safari: tap-to-hear
+function tapToHear(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var bubble = el.querySelector('.mbubble');
+  if (!bubble) return;
+  btn.textContent = '⏸ Playing...';
+  btn.classList.add('playing');
+  stopAll();
+  speakWithBtn(bubble.innerText || bubble.textContent, btn);
+}
+
+async function speakWithBtn(text, btn) {
+  speaking = true;
+  document.getElementById('spk-badge').classList.add('on');
+  var vol = parseFloat(document.getElementById('vol').value);
+  var spd = parseFloat(document.getElementById('rate').value);
+  var cks = chunks(text);
+  for (var i=0; i<cks.length; i++) {
+    if (!speaking) break;
+    await playChunk(cks[i], vol, spd);
+  }
+  speaking = false;
+  document.getElementById('spk-badge').classList.remove('on');
+  if (btn) { btn.textContent = '✅ Done'; btn.classList.remove('playing'); btn.classList.add('done'); }
+}
+
+// ═══════════════════════════════════════════════
+//  STT
+// ═══════════════════════════════════════════════
 function toggleMic() {
-  if (!HAS_STT) {
-    // Safari/iOS — focus the text input instead
-    const inp = document.getElementById('user-input');
-    inp.focus();
-    showStatus('Voice not supported on Safari — please type your message');
-    setTimeout(hideStatus, 3000);
+  if (IS_IOS || IS_SAFARI || !HAS_STT) {
+    document.getElementById('tinput').focus();
     return;
   }
-  if (isListening) { stopListening(); return; }
-  startListening();
+  if (listening) { stopMic(); return; }
+  startMic();
 }
 
-function startListening() {
+function startMic() {
   if (!HAS_STT) return;
-  stopSpeaking();
-
+  stopAll();
   try {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang = profile.lang?.stt || 'en-IN';
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      isListening = true;
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recog = new SR();
+    recog.lang = (P.lang && P.lang.stt) ? P.lang.stt : 'en-IN';
+    recog.continuous = false; recog.interimResults = true; recog.maxAlternatives = 1;
+    recog.onstart = function() {
+      listening = true;
       document.getElementById('mic-btn').classList.add('listening');
       document.getElementById('mic-btn').textContent = '🔴';
-      showStatus('Listening in ' + (profile.lang?.label || 'English') + '...');
+      showStatus('Listening in ' + ((P.lang && P.lang.l) || 'English') + '...');
     };
-
-    recognition.onresult = (e) => {
-      const t = Array.from(e.results).map(r => r[0].transcript).join('');
-      document.getElementById('user-input').value = t;
-      autoResize(document.getElementById('user-input'));
+    recog.onresult = function(e) {
+      var t = Array.from(e.results).map(function(r){ return r[0].transcript; }).join('');
+      document.getElementById('tinput').value = t;
+      resize(document.getElementById('tinput'));
     };
-
-    recognition.onend = () => {
-      isListening = false;
+    recog.onend = function() {
+      listening = false;
       document.getElementById('mic-btn').classList.remove('listening');
       document.getElementById('mic-btn').textContent = '🎤';
       hideStatus();
-      const t = document.getElementById('user-input').value.trim();
-      if (t) sendMessage();
+      var t = document.getElementById('tinput').value.trim();
+      if (t) send();
     };
-
-    recognition.onerror = (e) => {
-      isListening = false;
+    recog.onerror = function(e) {
+      listening = false;
       document.getElementById('mic-btn').classList.remove('listening');
       document.getElementById('mic-btn').textContent = '🎤';
       hideStatus();
-      if (e.error === 'not-allowed') {
-        showStatus('Microphone permission denied. Please allow mic access.');
-        setTimeout(hideStatus, 3000);
-      }
+      if (e.error === 'not-allowed') { showStatus('Mic permission denied. Please allow mic access.'); setTimeout(hideStatus,3000); }
     };
-
-    recognition.start();
-  } catch(err) {
-    isListening = false;
-    showStatus('Could not start microphone. Please type instead.');
+    recog.start();
+  } catch(e) {
+    listening = false;
+    showStatus('Could not start mic — please type instead.');
     setTimeout(hideStatus, 3000);
   }
 }
 
-function stopListening() {
-  try { if (recognition) { recognition.stop(); recognition = null; } } catch(e){}
-  isListening = false;
+function stopMic() {
+  try { if (recog) { recog.stop(); recog=null; } } catch(e){}
+  listening = false;
   document.getElementById('mic-btn').classList.remove('listening');
   document.getElementById('mic-btn').textContent = '🎤';
   hideStatus();
 }
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  UI HELPERS
-// ══════════════════════════════════════════════════════
-let msgCounter = 0;
-function addMessage(role, text) {
-  const c = document.getElementById('chat-messages');
-  const time = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const persona = PERSONAS[profile.persona] || PERSONAS.priya;
-  const av = role === 'companion' ? persona.avatar : '🙂';
-  const msgId = 'msg-' + (++msgCounter);
-  const d = document.createElement('div');
+// ═══════════════════════════════════════════════
+function addMsg(role, text) {
+  var c    = document.getElementById('messages');
+  var time = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  var per  = PERSONAS[P.persona] || PERSONAS.priya;
+  var av   = role==='comp' ? per.av : '🙂';
+  var id   = 'msg-'+(++msgN);
+  var d    = document.createElement('div');
   d.className = 'msg ' + role;
-  d.id = msgId;
+  d.id = id;
 
-  // On Safari/iOS, show "Tap to hear" button for companion messages
-  const safariHearBtn = (role === 'companion' && (IS_IOS || IS_SAFARI))
-    ? `<button class="tap-hear-btn" id="btn-${msgId}" onclick="tapToHear('${msgId}', this)">🔊 Tap to hear</button>`
-    : '';
+  // Tap-to-hear button for Safari on companion messages
+  var tapHear = '';
+  if (role==='comp' && (IS_IOS || IS_SAFARI)) {
+    tapHear = '<button class="tap-btn" data-msgid="' + id + '">🔊 Tap to hear</button>';
+  }
 
-  d.innerHTML = `
-    <div class="msg-av">${av}</div>
-    <div class="msg-body">
-      <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>
-      ${safariHearBtn}
-      <div class="msg-time">${time}</div>
-    </div>`;
+  d.innerHTML =
+    '<div class="mav">' + av + '</div>' +
+    '<div class="mbody">' +
+      '<div class="mbubble">' + text.replace(/\n/g,'<br>') + '</div>' +
+      tapHear +
+      '<div class="mtime">' + time + '</div>' +
+    '</div>';
   c.appendChild(d);
   c.scrollTop = c.scrollHeight;
 }
 
-// Called when user taps the "Tap to hear" button — satisfies Safari autoplay policy
-function tapToHear(msgId, btn) {
-  const msgEl = document.getElementById(msgId);
-  if (!msgEl) return;
-  const bubble = msgEl.querySelector('.msg-bubble');
-  if (!bubble) return;
-  const text = bubble.innerText || bubble.textContent;
-
-  // Update button state
-  btn.textContent = '⏸ Playing...';
-  btn.classList.add('playing');
-
-  // Stop any current audio first
-  stopSpeaking();
-
-  // Now speak — user gesture context is active so autoplay works
-  speakSafari(text, btn);
-}
-
-async function speakSafari(text, btn) {
-  isSpeaking = true;
-  document.getElementById('speaking-badge').classList.add('active');
-
-  const chunks = chunkText(text);
-  const vol  = parseFloat(document.getElementById('vol-slider').value);
-  const rate = parseFloat(document.getElementById('rate-slider').value);
-
-  for (const chunk of chunks) {
-    if (!isSpeaking) break;
-    await speakChunkSafari(chunk, vol, rate);
-  }
-
-  isSpeaking = false;
-  document.getElementById('speaking-badge').classList.remove('active');
-  if (btn) {
-    btn.textContent = '✅ Done';
-    btn.classList.remove('playing');
-    btn.classList.add('done');
-  }
-}
-
-function speakChunkSafari(text, vol, rate) {
-  return new Promise(resolve => {
-    window._ttsResolve = resolve;
-    const finish = () => { window._ttsResolve = null; resolve(); };
-
-    // Try server TTS first (user gesture is active so autoplay allowed)
-    const tl = profile.lang?.tl || 'en';
-    const url = `/api/tts?text=${encodeURIComponent(text)}&lang=${tl}&t=${Date.now()}`;
-    const audio = new Audio(url);
-    audio.volume = vol;
-    audio.playbackRate = rate;
-    currentAudio = audio;
-
-    let errorHandled = false;
-    const fallback = () => {
-      if (errorHandled) return;
-      errorHandled = true;
-      doBrowserTTS(text, vol, rate, finish);
-    };
-
-    const timeout = setTimeout(fallback, 5000);
-    audio.oncanplaythrough = () => {
-      clearTimeout(timeout);
-      if (!isSpeaking) { finish(); return; }
-      audio.play().catch(fallback);
-    };
-    audio.onended = () => { clearTimeout(timeout); finish(); };
-    audio.onerror = () => { clearTimeout(timeout); fallback(); };
-    audio.src = url;
-    audio.load();
-  });
-}
-
 function showTyping(show) {
-  const c = document.getElementById('chat-messages');
-  const ex = document.getElementById('typing-msg');
+  var c  = document.getElementById('messages');
+  var ex = document.getElementById('typ');
   if (ex) ex.remove();
   if (!show) return;
-  const persona = PERSONAS[profile.persona] || PERSONAS.priya;
-  const d = document.createElement('div');
-  d.className = 'msg companion'; d.id = 'typing-msg';
-  d.innerHTML = `<div class="msg-av">${persona.avatar}</div><div class="typing-ind"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
-  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  var per = PERSONAS[P.persona] || PERSONAS.priya;
+  var d = document.createElement('div');
+  d.className='msg comp'; d.id='typ';
+  d.innerHTML='<div class="mav">'+per.av+'</div><div class="typing-ind"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
 }
 
-function showStatus(t) { document.getElementById('status-text').textContent = t; document.getElementById('status-bar').classList.add('active'); }
-function hideStatus()   { document.getElementById('status-bar').classList.remove('active'); }
-function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
-
-if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-  // Pre-load voices
-  window.speechSynthesis.getVoices();
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  // Update UI for Safari/iOS
-  if (IS_IOS || IS_SAFARI) {
-    // Mic button — show keyboard icon since STT not available
-    const micBtn = document.getElementById('mic-btn');
-    if (micBtn) {
-      micBtn.textContent = '⌨️';
-      micBtn.title = 'Tap to focus text input';
-      micBtn.style.background = 'linear-gradient(135deg,#64748b,#475569)';
-    }
-    const hint = document.getElementById('input-hint');
-    if (hint) hint.textContent = '⌨️ Type your message · Tap 🔊 on any message to hear it';
-  }
-});
-
-// Show Safari notice when chat screen becomes active
-function showSafariNoticeIfNeeded() {
-  if (IS_IOS || IS_SAFARI) {
-    const n = document.getElementById('safari-notice');
-    if (n) n.classList.add('show');
+function checkCrisis(text) {
+  if (crisisShown) return;
+  var words = ['suicide','kill myself','end my life','self harm','hurt myself','no reason to live','want to die','khud ko maarna','aatmahatya'];
+  var low = text.toLowerCase();
+  if (words.some(function(w){ return low.includes(w); })) {
+    crisisShown = true;
+    document.getElementById('crisis-box').classList.add('on');
   }
 }
+
+function showStatus(t) { document.getElementById('status-txt').textContent=t; document.getElementById('status-bar').classList.add('on'); }
+function hideStatus()   { document.getElementById('status-bar').classList.remove('on'); }
+function resize(el)     { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 </script>
 </body>
 </html>
