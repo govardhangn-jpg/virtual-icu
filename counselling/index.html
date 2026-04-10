@@ -933,9 +933,12 @@ function playChunk(text, vol, rate) {
     const audio = new Audio(url);
     audio.volume = vol; audio.playbackRate = rate; audio.crossOrigin = 'anonymous';
     currentAudio = audio;
-    audio.onended = () => resolve();
-    audio.onerror = () => browserTTS(text, vol, rate).then(resolve);
-    audio.play().catch(() => browserTTS(text, vol, rate).then(resolve));
+    let settled = false;
+    const done = () => { if (!settled) { settled = true; resolve(); } };
+    const fallback = () => { if (!settled) { settled = true; browserTTS(text, vol, rate).then(resolve); } };
+    audio.onended = done;
+    audio.onerror = fallback;
+    audio.play().catch(fallback);
   });
 }
 
