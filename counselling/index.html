@@ -28,11 +28,12 @@ html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-seri
 /* ── Screens ── */
 .screen{display:none;min-height:100vh}
 .screen.active{display:block}
+#screen-welcome.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+#screen-chat.active{display:flex;flex-direction:column}
 
 /* ══════════════ WELCOME SCREEN ══════════════ */
 #screen-welcome{
   background:linear-gradient(160deg,#fdf6ee 0%,#e0f7fa 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:40px 20px;text-align:center;
 }
 .welcome-glow{
@@ -129,10 +130,9 @@ html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-seri
 
 /* ══════════════ COMPANION CHAT SCREEN ══════════════ */
 #screen-chat{
-  display:none;flex-direction:column;height:100vh;
+  height:100vh;
   background:var(--warm);
 }
-#screen-chat.active{display:flex}
 
 .chat-topbar{
   background:linear-gradient(135deg,#0891b2,#7c3aed);
@@ -327,7 +327,6 @@ html,body{min-height:100vh;background:var(--warm);font-family:'Nunito',sans-seri
   .grid-2{grid-template-columns:1fr}
 }
 </style>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
 </head>
 <body>
 
