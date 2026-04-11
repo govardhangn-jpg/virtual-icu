@@ -3,3 +3,139 @@
 15:57:42  ✅ bleak 3.0.1 loaded
 16:00:04  ✅ bleak 3.0.1 loaded
 16:01:56  ✅ bleak 3.0.1 loaded
+16:03:31  ✅ bleak 3.0.1 loaded
+16:04:54  ✅ bleak 3.0.1 loaded
+16:04:55  ⏱️  Auto mode — reading every 15 minutes
+16:04:55     Press Ctrl+C to stop
+
+16:04:55  📍 Using saved device: BLESmart_0000049CFFDF7B0D149E
+16:04:55     Address: FF:DF:7B:0D:14:9E
+16:04:55  📶 Connecting to FF:DF:7B:0D:14:9E...
+16:05:25  ❌ Bluetooth error: Device with address FF:DF:7B:0D:14:9E was not found.
+16:05:25  ⏳ Next reading in 15 minutes...
+16:05:41  ✅ bleak 3.0.1 loaded
+16:05:41  ⏱️  Auto mode — reading every 15 minutes
+16:05:41     Press Ctrl+C to stop
+
+16:05:41  📍 Using saved device: BLESmart_0000049CFFDF7B0D149E
+16:05:41     Address: FF:DF:7B:0D:14:9E
+16:05:41  📶 Connecting to FF:DF:7B:0D:14:9E...
+16:05:42  ✅ Connected
+16:05:42  ❌ Bluetooth error: Characteristic 00002a35-0000-1000-8000-00805f9b34fb was not found!
+16:05:42  ⏳ Next reading in 15 minutes...
+16:08:29  ✅ bleak 3.0.1 loaded
+16:08:29  ⏱️  Auto mode — reading every 15 minutes
+16:08:29     Press Ctrl+C to stop
+
+16:08:29  📍 Using saved device: BLESmart_0000049CFFDF7B0D149E
+16:08:29     Address: FF:DF:7B:0D:14:9E
+16:08:51  📶 Connecting to FF:DF:7B:0D:14:9E...
+16:09:21  ❌ Bluetooth error: Device with address FF:DF:7B:0D:14:9E was not found.
+16:09:21  ⏳ Next reading in 15 minutes...
+16:10:47  ✅ bleak 3.0.1 loaded
+16:10:47  ⏱️  Auto mode — reading every 15 minutes
+16:10:47     Press Ctrl+C to stop
+
+16:10:47  📍 Using saved device: BLESmart_0000049CFFDF7B0D149E
+16:10:47     Address: FF:DF:7B:0D:14:9E
+16:11:01  📶 Connecting to FF:DF:7B:0D:14:9E...
+16:11:02  ✅ Connected — discovering services...
+16:11:02     📋 Notifiable: 00002a05-0000-1000-8000-00805f9b34fb  props=['indicate', 'read']
+16:11:02     📋 Notifiable: b305b680-aee7-11e1-a730-0002a5d5c51b  props=['notify', 'write-without-response', 'write', 'read']
+16:11:02     📋 Notifiable: 49123040-aee8-11e1-a74d-0002a5d5c51b  props=['notify', 'read']
+16:11:02     Found 13 characteristics, 3 notifiable
+16:11:02     Will try 3 characteristic(s)
+16:11:02     Subscribing to 00002a05-0000-1000-8000-00805f9b34fb...
+16:11:02     Could not subscribe to 00002a05-0000-1000-8000-00805f9b34fb: Could not start notify on 0009: Access Denied
+16:11:02     Subscribing to b305b680-aee7-11e1-a730-0002a5d5c51b...
+16:11:02  👂 Waiting for data (30 seconds)...
+16:11:32     No data on b305b680-aee7-11e1-a730-0002a5d5c51b
+16:11:32     Subscribing to 49123040-aee8-11e1-a74d-0002a5d5c51b...
+16:11:32     Could not subscribe to 49123040-aee8-11e1-a74d-0002a5d5c51b: Not connected
+16:11:32  ⚠️  No reading received.
+16:11:32     Make sure you:
+16:11:32     1. Took a full BP reading on the Omron first
+16:11:32     2. Pressed the Bluetooth/MEMORY button after
+16:11:32     3. The 🔵 symbol was blinking when you pressed ENTER
+16:11:32  ⏳ Next reading in 15 minutes...
+16:12:30  ✅ bleak 3.0.1 loaded
+16:12:30  ⏱️  Auto mode — reading every 15 minutes
+16:12:30     Press Ctrl+C to stop
+
+16:12:30  📍 Using saved device: BLESmart_0000049CFFDF7B0D149E
+16:12:30     Address: FF:DF:7B:0D:14:9E
+16:12:56  📶 Connecting to FF:DF:7B:0D:14:9E...
+16:13:26  ❌ Bluetooth error: Device with address FF:DF:7B:0D:14:9E was not found.
+16:13:26  ⏳ Next reading in 15 minutes...
+16:16:30  bleak 3.0.1 loaded
+16:16:31  Auto mode — reading every 15 minutes
+16:16:31  Press Ctrl+C to stop
+
+16:16:43  Connecting to FF:DF:7B:0D:14:9E ...
+16:16:44  Connected!
+16:16:44    Notifiable characteristic: 00002a05-0000-1000-8000-00805f9b34fb
+16:16:44    Notifiable characteristic: b305b680-aee7-11e1-a730-0002a5d5c51b
+16:16:44    Notifiable characteristic: 49123040-aee8-11e1-a74d-0002a5d5c51b
+16:16:44  Subscribing to 00002a05-0000-1000-8000-00805f9b34fb ...
+16:16:44  Could not subscribe to 00002a05-0000-1000-8000-00805f9b34fb: Could not start notify on 0009: Access Denied
+16:16:44  Subscribing to b305b680-aee7-11e1-a730-0002a5d5c51b ...
+16:16:44  Waiting for reading (90 seconds)...
+16:18:14  No data received on b305b680-aee7-11e1-a730-0002a5d5c51b
+16:18:14  Subscribing to 49123040-aee8-11e1-a74d-0002a5d5c51b ...
+16:18:14  Could not subscribe to 49123040-aee8-11e1-a74d-0002a5d5c51b: Not connected
+16:18:14  No reading received.
+16:18:14  Tips:
+16:18:14    - Press START on Omron while the script is waiting
+16:18:14    - Make sure Bluetooth symbol was showing when you pressed ENTER
+16:18:14  Next reading in 15 minutes...
+16:20:18  bleak 3.0.1 loaded
+16:20:19  Auto mode — reading every 15 minutes
+16:20:19  Press Ctrl+C to stop
+
+16:20:32  Connecting to FF:DF:7B:0D:14:9E ...
+16:20:32  Connected!
+16:20:32    Notifiable characteristic: 00002a05-0000-1000-8000-00805f9b34fb
+16:20:32    Notifiable characteristic: b305b680-aee7-11e1-a730-0002a5d5c51b
+16:20:32    Notifiable characteristic: 49123040-aee8-11e1-a74d-0002a5d5c51b
+16:20:32  Subscribing to 00002a05-0000-1000-8000-00805f9b34fb ...
+16:20:32  Could not subscribe to 00002a05-0000-1000-8000-00805f9b34fb: Could not start notify on 0009: Access Denied
+16:20:32  Subscribing to b305b680-aee7-11e1-a730-0002a5d5c51b ...
+16:20:33  Waiting for reading (90 seconds)...
+16:22:03  No data received on b305b680-aee7-11e1-a730-0002a5d5c51b
+16:22:03  Subscribing to 49123040-aee8-11e1-a74d-0002a5d5c51b ...
+16:22:03  Could not subscribe to 49123040-aee8-11e1-a74d-0002a5d5c51b: Not connected
+16:22:03  No reading received.
+16:22:03  Tips:
+16:22:03    - Press START on Omron while the script is waiting
+16:22:03    - Make sure Bluetooth symbol was showing when you pressed ENTER
+16:22:03  Next reading in 15 minutes...
+06:56:30  bleak 3.0.1 loaded
+06:56:30  Auto mode — reading every 15 minutes
+06:56:30  Press Ctrl+C to stop
+
+06:56:42  Connecting to FF:DF:7B:0D:14:9E ...
+06:56:43  Connected!
+06:56:43    Notifiable characteristic: 00002a05-0000-1000-8000-00805f9b34fb
+06:56:43    Notifiable characteristic: b305b680-aee7-11e1-a730-0002a5d5c51b
+06:56:43    Notifiable characteristic: 49123040-aee8-11e1-a74d-0002a5d5c51b
+06:56:43  Subscribing to 00002a05-0000-1000-8000-00805f9b34fb ...
+06:56:43  Could not subscribe to 00002a05-0000-1000-8000-00805f9b34fb: Could not start notify on 0009: Access Denied
+06:56:43  Subscribing to b305b680-aee7-11e1-a730-0002a5d5c51b ...
+06:56:43  Waiting for reading (90 seconds)...
+06:58:13  No data received on b305b680-aee7-11e1-a730-0002a5d5c51b
+06:58:13  Subscribing to 49123040-aee8-11e1-a74d-0002a5d5c51b ...
+06:58:13  Could not subscribe to 49123040-aee8-11e1-a74d-0002a5d5c51b: Not connected
+06:58:13  No reading received.
+06:58:13  Tips:
+06:58:13    - Press START on Omron while the script is waiting
+06:58:13    - Make sure Bluetooth symbol was showing when you pressed ENTER
+06:58:13  Next reading in 15 minutes...
+06:58:37  bleak 3.0.1 loaded
+06:58:38  Auto mode — reading every 15 minutes
+06:58:38  Press Ctrl+C to stop
+
+06:58:41  Connecting to FF:DF:7B:0D:14:9E ...
+06:59:11  Bluetooth error: Device with address FF:DF:7B:0D:14:9E was not found.
+06:59:11  Tip: Make sure Bluetooth symbol is showing on Omron before pressing ENTER
+06:59:11  Next reading in 15 minutes...
+07:02:28  bleak 3.0.1 loaded
