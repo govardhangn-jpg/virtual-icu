@@ -1,6 +1,7 @@
 // ══════════════════════════════════════════════
 //  SAMARTHAA HOSPITAL — ICU Ward 6A
-//  VitalWatch v2.4.1
+//  VitalWatch v2.4.1 — Updated: 2026-04-11
+//  Cache-bust: v7
 // ══════════════════════════════════════════════
 
 const HOSPITAL = {
@@ -19,9 +20,9 @@ const STAKEHOLDERS = [
     specialty: 'Critical Care',
     status: 'oncall',
     alertPriority: 1,
-    phone: '+919741605315',
-    phoneDisplay: '+919741605315',
-    whatsapp: '+919741605315',
+    phone: '+916366158568',
+    phoneDisplay: '+91-6366158568',
+    whatsapp: '+916366158568',
     email: 'dr.mahesh@samarthaa.in',
     color: 'rgba(0,212,170,0.15)',
     textColor: '#00d4aa'
@@ -35,7 +36,7 @@ const STAKEHOLDERS = [
     status: 'available',
     alertPriority: 2,
     phone: '+919886428892',
-    phoneDisplay: '+919886428892',
+    phoneDisplay: '+91-9886428892',
     whatsapp: '+919886428892',
     email: 'dr.nagendra@samarthaa.in',
     color: 'rgba(59,130,246,0.15)',
@@ -50,7 +51,7 @@ const STAKEHOLDERS = [
     status: 'available',
     alertPriority: 3,
     phone: '+919741605315',
-    phoneDisplay: '+919741605315',
+    phoneDisplay: '+91-9741605315',
     whatsapp: '+919741605315',
     email: 'dr.rekha@samarthaa.in',
     color: 'rgba(167,139,250,0.15)',
@@ -65,7 +66,7 @@ const STAKEHOLDERS = [
     status: 'oncall',
     alertPriority: 2,
     phone: '+919632288745',
-    phoneDisplay: '+919632288745',
+    phoneDisplay: '+91-9632288745',
     whatsapp: '+919632288745',
     email: 'nurse.asha@samarthaa.in',
     color: 'rgba(245,158,11,0.15)',
@@ -80,7 +81,7 @@ const STAKEHOLDERS = [
     status: 'available',
     alertPriority: 5,
     phone: '+919632288745',
-    phoneDisplay: '+919632288745',
+    phoneDisplay: '+91-9632288745',
     whatsapp: '+919632288745',
     email: 'admin@samarthaa.in',
     color: 'rgba(139,149,176,0.15)',
@@ -92,17 +93,17 @@ const STAKEHOLDERS = [
 // Defines who gets called/messaged for each alert level
 const ALERT_ROUTING = {
   critical: {
-    call:     ['S001', 'S004'],               // Phone call: Dr. Mahesh + Nurse Asha
-    whatsapp: ['S001', 'S002', 'S004'],       // WhatsApp: + Dr. Nagendra
-    sms:      ['S001', 'S002', 'S003', 'S004']// SMS: all doctors + nurse
+    call:     ['S001'],          // Call Dr. Mahesh only (saves Twilio quota)
+    whatsapp: ['S001', 'S004'], // WhatsApp: Dr. Mahesh + Nurse Asha
+    sms:      []                 // SMS off — upgrade Twilio to enable
   },
   warning: {
-    call:     [],                              // No call for warnings
-    whatsapp: ['S001', 'S004'],               // Dr. Mahesh + Nurse Asha
-    sms:      ['S001', 'S004']
+    call:     [],
+    whatsapp: ['S001'],
+    sms:      []
   },
   report: {
-    whatsapp: ['S001', 'S002', 'S003', 'S004', 'S005'], // All staff
+    whatsapp: ['S001', 'S005'],
     email:    ['S001', 'S002', 'S003', 'S004', 'S005']
   }
 };

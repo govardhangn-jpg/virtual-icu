@@ -706,37 +706,15 @@ function directCall(sid) {
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   if (isMobile) {
-    // Mobile — open native dialler directly
+    // Mobile — open native phone dialler directly
     window.location.href = 'tel:' + s.phone;
   } else {
-    // Desktop — trigger call via Twilio server
-    showToast('📞 Calling ' + s.name + ' (' + s.phoneDisplay + ') via server...');
-    fetch('/api/call', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to:       s.phone,
-        patient:  'Care Team Direct Call',
-        message:  'Direct call from ' + HOSPITAL.name + ' ICU Ward 6A dashboard.',
-        hospital: HOSPITAL.name,
-        ward:     HOSPITAL.ward
-      })
-    })
-    .then(r => r.json())
-    .then(data => {
-      if (data.success) {
-        showToast('✅ Call initiated to ' + s.name + ' — ' + s.phoneDisplay);
-      } else {
-        // Twilio not set up — show number to call manually
-        showCallModal(s);
-      }
-    })
-    .catch(() => showCallModal(s));
+    // Desktop — show call modal with clickable number + options
+    showCallModal(s);
   }
 }
 
 function showCallModal(s) {
-  // Remove existing modal if any
   const existing = document.getElementById('call-modal');
   if (existing) existing.remove();
 
@@ -745,38 +723,52 @@ function showCallModal(s) {
   modal.className = 'modal-overlay';
   modal.style.display = 'flex';
   modal.innerHTML = `
-    <div class="modal">
-      <div class="modal-header">
-        <h3>📞 Call ${s.name}</h3>
-        <button onclick="document.getElementById('call-modal').remove()">✕</button>
+    <div class="modal" style="max-width:380px;text-align:center">
+      <div class="modal-header" style="justify-content:space-between">
+        <h3>📞 Contact</h3>
+        <button onclick="document.getElementById('call-modal').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-2)">✕</button>
       </div>
-      <div style="text-align:center;padding:20px 0">
-        <div style="font-size:32px;margin-bottom:12px">${s.initials ? s.initials : '👤'}</div>
-        <div style="font-size:18px;font-weight:700;color:var(--text-1);margin-bottom:4px">${s.name}</div>
-        <div style="font-size:13px;color:var(--text-2);margin-bottom:20px">${s.role}</div>
-        <a href="tel:${s.phone}" style="
-          display:inline-flex;align-items:center;gap:8px;
-          padding:14px 32px;border-radius:50px;
-          background:var(--green);color:#fff;
-          font-size:16px;font-weight:700;text-decoration:none;
-          box-shadow:0 4px 16px rgba(5,150,105,0.35)">
-          📞 ${s.phoneDisplay}
-        </a>
-        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center">
-          <a href="https://wa.me/${s.whatsapp}" target="_blank" style="
-            padding:8px 20px;border-radius:20px;border:1.5px solid #25d366;
-            color:#25d366;text-decoration:none;font-size:13px;font-weight:600">
+
+      <div style="padding:16px 0 8px">
+        <div style="width:60px;height:60px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:${s.textColor};margin:0 auto 12px">${s.initials}</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:4px">${s.name}</div>
+        <div style="font-size:13px;color:var(--text-2);margin-bottom:4px">${s.specialty}</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:20px">${s.role}</div>
+
+        <!-- Big phone number — tap to call on mobile, copy on desktop -->
+        <div style="font-size:22px;font-weight:700;letter-spacing:0.05em;margin-bottom:20px;color:var(--text-1)">
+          ${s.phoneDisplay}
+        </div>
+
+        <!-- Action buttons -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="tel:${s.phone}"
+             style="display:flex;align-items:center;justify-content:center;gap:8px;
+                    padding:14px;border-radius:12px;
+                    background:#059669;color:#fff;
+                    font-size:15px;font-weight:700;text-decoration:none">
+            📞 Call ${s.phoneDisplay}
+          </a>
+          <a href="https://wa.me/${s.whatsapp}?text=${encodeURIComponent('Hello ' + s.name + ', this is a message from Samarthaa Hospital ICU Ward 6A.')}"
+             target="_blank"
+             style="display:flex;align-items:center;justify-content:center;gap:8px;
+                    padding:12px;border-radius:12px;
+                    background:#25d366;color:#fff;
+                    font-size:14px;font-weight:700;text-decoration:none">
             💬 WhatsApp
           </a>
-          <a href="sms:${s.phone}" style="
-            padding:8px 20px;border-radius:20px;border:1.5px solid var(--blue);
-            color:var(--blue);text-decoration:none;font-size:13px;font-weight:600">
-            ✉ SMS
+          <a href="sms:${s.phone}?body=Message from Samarthaa Hospital ICU Ward 6A"
+             style="display:flex;align-items:center;justify-content:center;gap:8px;
+                    padding:12px;border-radius:12px;border:1.5px solid var(--border);
+                    color:var(--text-1);font-size:14px;font-weight:600;text-decoration:none">
+            ✉ Send SMS
           </a>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-outline" onclick="document.getElementById('call-modal').remove()">Close</button>
+
+        <div style="margin-top:16px;font-size:11px;color:var(--text-3)">
+          On desktop: click the number to call via your default phone app,<br>
+          or use your mobile phone to dial the number above.
+        </div>
       </div>
     </div>`;
   document.body.appendChild(modal);
