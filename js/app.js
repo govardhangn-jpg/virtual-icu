@@ -702,8 +702,84 @@ function renderStakeholders() {
 function directCall(sid) {
   const s = STAKEHOLDERS.find(x => x.id === sid);
   if (!s) return;
-  // Opens native phone dialler immediately
-  window.location.href = 'tel:' + s.phone;
+
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Mobile — open native dialler directly
+    window.location.href = 'tel:' + s.phone;
+  } else {
+    // Desktop — trigger call via Twilio server
+    showToast('📞 Calling ' + s.name + ' (' + s.phoneDisplay + ') via server...');
+    fetch('/api/call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to:       s.phone,
+        patient:  'Care Team Direct Call',
+        message:  'Direct call from ' + HOSPITAL.name + ' ICU Ward 6A dashboard.',
+        hospital: HOSPITAL.name,
+        ward:     HOSPITAL.ward
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        showToast('✅ Call initiated to ' + s.name + ' — ' + s.phoneDisplay);
+      } else {
+        // Twilio not set up — show number to call manually
+        showCallModal(s);
+      }
+    })
+    .catch(() => showCallModal(s));
+  }
+}
+
+function showCallModal(s) {
+  // Remove existing modal if any
+  const existing = document.getElementById('call-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'call-modal';
+  modal.className = 'modal-overlay';
+  modal.style.display = 'flex';
+  modal.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📞 Call ${s.name}</h3>
+        <button onclick="document.getElementById('call-modal').remove()">✕</button>
+      </div>
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:32px;margin-bottom:12px">${s.initials ? s.initials : '👤'}</div>
+        <div style="font-size:18px;font-weight:700;color:var(--text-1);margin-bottom:4px">${s.name}</div>
+        <div style="font-size:13px;color:var(--text-2);margin-bottom:20px">${s.role}</div>
+        <a href="tel:${s.phone}" style="
+          display:inline-flex;align-items:center;gap:8px;
+          padding:14px 32px;border-radius:50px;
+          background:var(--green);color:#fff;
+          font-size:16px;font-weight:700;text-decoration:none;
+          box-shadow:0 4px 16px rgba(5,150,105,0.35)">
+          📞 ${s.phoneDisplay}
+        </a>
+        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center">
+          <a href="https://wa.me/${s.whatsapp}" target="_blank" style="
+            padding:8px 20px;border-radius:20px;border:1.5px solid #25d366;
+            color:#25d366;text-decoration:none;font-size:13px;font-weight:600">
+            💬 WhatsApp
+          </a>
+          <a href="sms:${s.phone}" style="
+            padding:8px 20px;border-radius:20px;border:1.5px solid var(--blue);
+            color:var(--blue);text-decoration:none;font-size:13px;font-weight:600">
+            ✉ SMS
+          </a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="document.getElementById('call-modal').remove()">Close</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
 }
 
 function directWhatsApp(sid) {
